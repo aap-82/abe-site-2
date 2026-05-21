@@ -2,19 +2,18 @@
 /**
  * / — the ABE Education homepage.
  *
- * Validation-pass rebuild from library components, following the two-file
- * page architecture: SEO meta in src/content/pages-homepage/index.md,
- * composition here.
+ * Built from library components, following the two-file page architecture:
+ * SEO meta in src/content/pages-homepage/index.md, composition here.
  *
- * Two gaps surfaced and flagged inline with placeholders:
- *   - Section 2 "What courses do we offer" needs a Streamcard component.
- *   - Section 3 "Find your course by state" needs a multi-link StateNavigator
- *     variant (several course links per state).
+ * Section 2 "What courses do we offer" composes the CourseStreams section.
+ * Section 3 "Find your course by state" composes StateNavigator in its
+ * multi-link `links` variant — several course links per state.
  */
 import { getEntry } from 'astro:content';
-import { slugify } from '@/lib/slugify';
 import HomepageLayout from '@layouts/HomepageLayout/HomepageLayout.astro';
 import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import CourseStreams from '@sections/CourseStreams/CourseStreams.astro';
+import StateNavigator from '@sections/StateNavigator/StateNavigator.astro';
 import ScopeLimitNote from '@sections/ScopeLimitNote/ScopeLimitNote.astro';
 import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
 import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
@@ -33,6 +32,76 @@ const navItems = [
   { name: 'White Card courses', url: '/white-card' },
   { name: 'Owner Builder courses', url: '/owner-builder' },
   { name: 'CPD courses', url: '/cpd' },
+];
+
+const courseStreams = [
+  {
+    num: '01',
+    eyebrow: 'Build or renovate your own home',
+    title: 'Owner Builder',
+    body: `The approved education you complete before applying for an Owner Builder permit, matched to the regulator that issues your permit in your state.`,
+    ctaLabel: 'Browse Owner Builder courses',
+    ctaHref: '/owner-builder',
+    footnote: 'Approved by QBCC, Consumer Protection WA, CBOS Tasmania and Access Canberra',
+  },
+  {
+    num: '02',
+    eyebrow: 'Work on any construction site',
+    title: 'White Card',
+    body: `The General Construction Induction card every worker needs before stepping onto a construction site, delivered online by our RTO partners.`,
+    ctaLabel: 'Browse White Card courses',
+    ctaHref: '/white-card',
+    footnote: 'Delivered by Blue Dog Training, AlertForce and Upskill Institute',
+  },
+  {
+    num: '03',
+    eyebrow: 'Keep your registration current',
+    title: 'CPD',
+    body: `Continuing professional development for building, plumbing and electrical practitioners in Tasmania, and for real-estate agents in Western Australia.`,
+    ctaLabel: 'Browse CPD courses',
+    ctaHref: '/cpd',
+    footnote: 'State-approved continuing professional development',
+  },
+];
+
+const stateLinks = [
+  {
+    name: 'New South Wales',
+    courses: [
+      { label: 'White Card NSW', href: '/white-card-nsw' },
+      { label: 'Owner Builder NSW', href: '/owner-builder-nsw' },
+    ],
+  },
+  {
+    name: 'Queensland',
+    courses: [
+      { label: 'White Card QLD', href: '/white-card-qld' },
+      { label: 'Owner Builder QLD', href: '/owner-builder-qld' },
+    ],
+  },
+  {
+    name: 'Western Australia',
+    courses: [
+      { label: 'White Card WA', href: '/white-card-wa' },
+      { label: 'Owner Builder WA', href: '/owner-builder-wa' },
+      { label: 'CPD for real-estate agents', href: '/cpd' },
+    ],
+  },
+  {
+    name: 'Tasmania',
+    courses: [
+      { label: 'White Card TAS', href: '/white-card-tas' },
+      { label: 'Owner Builder TAS', href: '/owner-builder-tas' },
+      { label: 'CPD for building practitioners', href: '/cpd' },
+    ],
+  },
+  {
+    name: 'Australian Capital Territory',
+    courses: [
+      { label: 'White Card ACT', href: '/white-card-act' },
+      { label: 'Owner Builder ACT', href: '/owner-builder-act' },
+    ],
+  },
 ];
 
 const whyItems = [
@@ -79,31 +148,13 @@ const faqs = [
     body="Every course is built and reviewed by industry-credentialled experts, then delivered online so you can complete it from a phone, tablet, or laptop. You will never sit in a classroom, drive across the state, or take a day off work to get certified. More than 31,000 students have used ABE Education to meet a regulator's training requirement, first time, on time."
   />
 
-  <aside class="vgap">
-    <p class="vgap__label">Placeholder — missing component</p>
-    <p class="vgap__body">
-      Section 2, "What courses do we offer", composes three stream cards
-      (Owner Builder, White Card, CPD) — each a heading, a body paragraph,
-      and a cross-reference link to its hub. No Streamcard component exists in
-      the library yet; build a Streamcard section to fill this slot.
-    </p>
-  </aside>
+  <CourseStreams heading="What courses do we offer?" streams={courseStreams} />
 
-  <AnswerCapsuleSection
+  <StateNavigator
     heading="Find your course by state"
-    answer="ABE Education courses are offered across five Australian states and territories: New South Wales, Queensland, Western Australia, Tasmania, and the Australian Capital Territory. Each course is matched to the regulator that approves it in your state, so the certificate you receive is the one your state's permit, licence, or compliance authority will accept."
-    body="Choose your state to see every ABE course available there, from White Card and Owner Builder through to the CPD streams. Each link goes to the course page for that jurisdiction, where the regulator, certificate, and price are listed in full."
+    variant="links"
+    states={stateLinks}
   />
-
-  <aside class="vgap">
-    <p class="vgap__label">Placeholder — component variant missing</p>
-    <p class="vgap__body">
-      The state navigator here lists five states, each with several course
-      links (NSW has White Card NSW and Owner Builder NSW; Tasmania has five).
-      StateNavigator currently supports a single link per state — a
-      multi-link variant is needed before this block can be composed.
-    </p>
-  </aside>
 
   <ScopeLimitNote>
     Not in this list = not currently offered. ABE does not deliver courses in
@@ -165,29 +216,3 @@ const faqs = [
     primaryHref="/courses"
   />
 </HomepageLayout>
-
-<style>
-  /* Validation-pass placeholder — a flagged gap, not final page content. */
-  .vgap {
-    border: 1px dashed var(--color-ink-4);
-    background: var(--color-bg-alt);
-    padding: var(--spacing-lg);
-  }
-  .vgap__label {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-warning-deep);
-  }
-  .vgap__body {
-    margin: var(--spacing-xs) 0 0;
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.55;
-    color: var(--color-ink-2);
-    max-width: 70ch;
-  }
-</style>

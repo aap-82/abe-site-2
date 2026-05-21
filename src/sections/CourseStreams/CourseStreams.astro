@@ -1,0 +1,92 @@
+---
+/**
+ * CourseStreams — the homepage "what courses do we offer" section.
+ *
+ * An H2 followed by a 1px-hairline grid of `plate` Streamcards, one per ABE
+ * course stream (Owner Builder, White Card, CPD). Each card carries its
+ * stream number, eyebrow, title, a body paragraph, a CTA to the stream hub,
+ * and a mono caps credential footnote.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the component renders <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+import Streamcard from '@components/Streamcard/Streamcard.astro';
+
+interface Stream {
+  /** Two-digit stream number, e.g. "01". */
+  num: string;
+  /** Short eyebrow line. */
+  eyebrow: string;
+  /** Stream title, e.g. "Owner Builder". */
+  title: string;
+  /** One-paragraph description. */
+  body: string;
+  /** CTA label, rendered mono caps. */
+  ctaLabel: string;
+  /** CTA target — the stream hub. */
+  ctaHref: string;
+  /** Mono caps credential footnote. */
+  footnote: string;
+}
+
+interface Props {
+  /** The section H2. */
+  heading: string;
+  /** The course streams, in display order. */
+  streams: Stream[];
+  /** Anchor override; defaults to slugify(heading). */
+  anchorId?: string;
+}
+
+const { heading, streams, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="cstreams" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline cstreams__heading">{heading}</h2>
+  <div class="cstreams__grid">
+    {
+      streams.map((s) => (
+        <Streamcard
+          num={s.num}
+          eyebrow={s.eyebrow}
+          title={s.title}
+          ctaLabel={s.ctaLabel}
+          ctaHref={s.ctaHref}
+          footnote={s.footnote}
+        >
+          <p>{s.body}</p>
+        </Streamcard>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .cstreams {
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .cstreams__heading {
+    color: var(--color-ink);
+    margin: 0 0 var(--spacing-lg);
+  }
+
+  /* Hairline grid — 1px gaps over a Rule ground, the same treatment as
+     StateNavigator's grid. Each plate Streamcard brings its own Cream-1
+     fill, so the gaps read as 1px dividers. */
+  .cstreams__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1px;
+    background: var(--color-rule);
+    border: 1px solid var(--color-rule);
+  }
+
+  @media (max-width: 720px) {
+    .cstreams__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

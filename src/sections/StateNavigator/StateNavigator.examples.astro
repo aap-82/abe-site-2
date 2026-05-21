@@ -33,6 +33,45 @@ const states = [
     detail: 'Meets Section 32 owner-builder eligibility.',
   },
 ];
+
+const stateLinks = [
+  {
+    name: 'New South Wales',
+    courses: [
+      { label: 'White Card NSW', href: '/white-card-nsw' },
+      { label: 'Owner Builder NSW', href: '/owner-builder-nsw' },
+    ],
+  },
+  {
+    name: 'Queensland',
+    courses: [
+      { label: 'White Card QLD', href: '/white-card-qld' },
+      { label: 'Owner Builder QLD', href: '/owner-builder-qld' },
+    ],
+  },
+  {
+    name: 'Western Australia',
+    courses: [
+      { label: 'White Card WA', href: '/white-card-wa' },
+      { label: 'Owner Builder WA', href: '/owner-builder-wa' },
+      { label: 'CPD for real-estate agents', href: '/cpd' },
+    ],
+  },
+  {
+    name: 'Tasmania',
+    courses: [
+      { label: 'White Card TAS', href: '/white-card-tas' },
+      { label: 'Owner Builder TAS', href: '/owner-builder-tas' },
+    ],
+  },
+  {
+    name: 'Australian Capital Territory',
+    courses: [
+      { label: 'White Card ACT', href: '/white-card-act' },
+      { label: 'Owner Builder ACT', href: '/owner-builder-act' },
+    ],
+  },
+];
 ---
 
 <div class="space-y-12">
@@ -77,6 +116,29 @@ const states = [
         heading="Owner Builder courses by state"
         variant="table"
         states={states}
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Links variant
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A grid of state cards, each listing several course links. Use on the
+      homepage, where one state offers more than one course.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StateNavigator
+        heading="Find your course by state"
+        variant="links"
+        states={stateLinks}
       />
     </div>
   </section>

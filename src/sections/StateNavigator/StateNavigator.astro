@@ -3,13 +3,15 @@
  * StateNavigator — the choose-your-state navigator.
  *
  * Analysis §2.2 / §3.4: the "Choose your state" block on hub and homepage.
- * Lists the states ABE serves, each linking down to its course spoke page.
- * Two layouts via the `variant` prop:
+ * Lists the states ABE serves. Three layouts via the `variant` prop:
  *
- *   grid  — a responsive grid of state cards (homepage and hub default).
+ *   grid  — a responsive grid of state cards, each a single link to the
+ *           state's course spoke page (homepage and hub default).
  *   table — a State / Regulator / Course row table (dense hub listing).
+ *   links — a grid of state cards, each listing several course links. Use
+ *           where one state offers more than one course (the homepage).
  *
- * This is a NAVIGATION component — every state links to its spoke page.
+ * This is a NAVIGATION component — every state links out to a course page.
  * For attribute-by-option data comparison use ComparisonTable instead.
  *
  * Locked decisions reflected here:
@@ -18,22 +20,31 @@
  */
 import { slugify } from '@/lib/slugify';
 
+interface CourseLink {
+  /** Course link label, e.g. "White Card NSW". */
+  label: string;
+  /** Course page URL. */
+  href: string;
+}
+
 interface StateEntry {
   /** State or territory name, e.g. "New South Wales". */
   name: string;
-  /** The regulator that approves the course there, e.g. "QBCC". */
-  regulator: string;
-  /** Link to the state course spoke page. */
-  href: string;
-  /** One-line course detail, e.g. "Required for work over $5,000". */
-  detail: string;
+  /** The regulator that approves the course there. Used by grid and table. */
+  regulator?: string;
+  /** Link to the state course spoke page. Used by grid and table. */
+  href?: string;
+  /** One-line course detail. Used by grid and table. */
+  detail?: string;
+  /** Course links for this state. Used by the links variant. */
+  courses?: CourseLink[];
 }
 
 interface Props {
   /** The section H2. */
   heading: string;
-  /** Layout — grid of cards, or a dense row table. */
-  variant?: 'grid' | 'table';
+  /** Layout — grid of cards, dense row table, or multi-link state cards. */
+  variant?: 'grid' | 'table' | 'links';
   /** The states ABE serves. */
   states: StateEntry[];
   anchorId?: string;
@@ -47,23 +58,7 @@ const id = anchorId ?? slugify(heading);
   <h2 id={`${id}-label`} class="t-headline snav__heading">{heading}</h2>
 
   {
-    variant === 'grid' ? (
-      <ul class="snav__grid">
-        {states.map((s) => (
-          <li>
-            <a class="snav__card" href={s.href}>
-              <span class="snav__reg">{s.regulator}</span>
-              <span class="snav__name">{s.name}</span>
-              <span class="snav__detail">{s.detail}</span>
-              <span class="snav__go">
-                View course
-                <span class="snav__arrow" aria-hidden="true">→</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    ) : (
+    variant === 'table' ? (
       <div class="snav__scroll">
         <table class="snav__table">
           <thead>
@@ -86,6 +81,37 @@ const id = anchorId ?? slugify(heading);
           </tbody>
         </table>
       </div>
+    ) : variant === 'links' ? (
+      <ul class="snav__grid">
+        {states.map((s) => (
+          <li class="snav__linkcard">
+            <span class="snav__name">{s.name}</span>
+            <ul class="snav__courses">
+              {(s.courses ?? []).map((c) => (
+                <li class="snav__course">
+                  <a class="link-dotted" href={c.href}>{c.label}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <ul class="snav__grid">
+        {states.map((s) => (
+          <li>
+            <a class="snav__card" href={s.href}>
+              <span class="snav__reg">{s.regulator}</span>
+              <span class="snav__name">{s.name}</span>
+              <span class="snav__detail">{s.detail}</span>
+              <span class="snav__go">
+                View course
+                <span class="snav__arrow" aria-hidden="true">→</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     )
   }
 </section>
@@ -99,7 +125,7 @@ const id = anchorId ?? slugify(heading);
     margin: 0 0 var(--spacing-lg);
   }
 
-  /* --- Grid variant --- */
+  /* --- Grid + links variants share the 1px-hairline grid --- */
   .snav__grid {
     list-style: none;
     margin: 0;
@@ -168,6 +194,28 @@ const id = anchorId ?? slugify(heading);
   .snav__card:focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: -3px;
+  }
+
+  /* --- Links variant — a state card listing several course links --- */
+  .snav__linkcard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-lg);
+    background: var(--color-bg);
+  }
+  .snav__courses {
+    list-style: none;
+    margin: var(--spacing-xs) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .snav__course {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   /* --- Table variant --- */

@@ -1,0 +1,40 @@
+---
+import CourseStreams from './CourseStreams.astro';
+
+const streams = [
+  {
+    num: '01',
+    eyebrow: 'Build or renovate your own home',
+    title: 'Owner Builder',
+    body: 'The approved education you complete before applying for an Owner Builder permit, matched to the regulator that issues your permit.',
+    ctaLabel: 'Browse Owner Builder courses',
+    ctaHref: '/owner-builder',
+    footnote: 'Approved by QBCC, Consumer Protection WA, CBOS Tasmania and Access Canberra',
+  },
+  {
+    num: '02',
+    eyebrow: 'Work on any construction site',
+    title: 'White Card',
+    body: 'The General Construction Induction card every worker needs before entering a construction site, delivered live online by our RTO partners.',
+    ctaLabel: 'Browse White Card courses',
+    ctaHref: '/white-card',
+    footnote: 'Delivered by Blue Dog Training, AlertForce and Upskill Institute',
+  },
+  {
+    num: '03',
+    eyebrow: 'Keep your registration current',
+    title: 'CPD',
+    body: 'Continuing professional development for building, plumbing and electrical practitioners, and for real-estate agents.',
+    ctaLabel: 'Browse CPD courses',
+    ctaHref: '/cpd',
+    footnote: 'State-approved continuing professional development',
+  },
+];
+---
+
+<div
+  class="px-6 py-6"
+  style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+>
+  <CourseStreams heading="What courses do we offer?" streams={streams} />
+</div>
