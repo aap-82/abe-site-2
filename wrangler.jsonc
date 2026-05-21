@@ -1,0 +1,16 @@
+{
+  // Cloudflare Workers deploy config for the ABE Education site.
+  //
+  // The site is fully static: astro.config.mjs sets output: 'static', so
+  // `npm run build` produces plain HTML in ./dist. This config deploys that
+  // folder via Workers Static Assets — no Worker script and no
+  // @astrojs/cloudflare adapter are needed while the site stays static.
+  //
+  // If a route ever needs SSR, re-enable the adapter in astro.config.mjs and
+  // add a "main" entry here pointing at the generated Worker.
+  "name": "abe-site-2",
+  "compatibility_date": "2026-05-21",
+  "assets": {
+    "directory": "./dist"
+  }
+}
