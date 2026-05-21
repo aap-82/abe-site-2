@@ -223,11 +223,28 @@ const filePaths = [
     .sg-prose :global(li) {
       margin: 0 0 4px;
     }
+    /* Fenced code blocks — Shiki paints the dark theme and token colours;
+       we add the padding, horizontal scroll, and vertical rhythm. */
+    .sg-prose :global(pre) {
+      margin: 0 0 var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      overflow-x: auto;
+      font-size: 0.8125rem;
+      line-height: 1.55;
+    }
+    /* Inline code — a small boxed token in running prose. */
     .sg-prose :global(code) {
       font-family: var(--font-mono);
       font-size: 0.85em;
       background: var(--color-bg-deep);
       padding: 1px 4px;
+    }
+    /* Code inside a fenced block must NOT get the inline-code box —
+       that is what was painting a light box behind every token. */
+    .sg-prose :global(pre code) {
+      background: transparent;
+      padding: 0;
+      font-size: inherit;
     }
     .sg-prose :global(strong) {
       color: var(--color-ink);

@@ -415,3 +415,53 @@ Any inline link inside body prose, fact values, or list-item names renders with 
 - **Don't** invent new fonts. The four-face system (Archivo / Public Sans / Source Serif 4 / Geist Mono) is locked.
 - **Don't** introduce new colour tokens without a Q1/Q2/Q3 role assignment. New colours need a documented register, not a slot in a ramp.
 - **Don't** use em dashes in body copy. Use commas, colons, semicolons, periods, or parentheses. Not `--` either.
+
+## 7. Spacing & Layout
+
+Spacing is structural here, not decorative. The Creative North Star asks the page to read as a government white paper, and a white paper is legible because it is *ordered*: a fixed measure, wide and regular gaps between sections, nothing crowded. The cautious tradesperson scanning at 9pm reads that order as competence. Crowded, uneven spacing reads as a marketing landing page; even spacing drawn from a single scale reads as a document. Spacing carries as much of the register as the typography and the ink palette.
+
+### The spacing scale
+
+Eight tokens on an 8px base, defined in the `spacing` block of this file's frontmatter and exposed in `global.css` as `--spacing-*`. Every margin, gap, and padding on the site is drawn from this scale; no pixel value is hard-coded outside it.
+
+| Token | Value | Role |
+|---|---|---|
+| `xs` | 8px | Tight gaps inside a control; chip padding |
+| `sm` | 12px | Gaps inside a compact component |
+| `md` | 16px | Default gap between related elements; the mobile page gutter |
+| `lg` | 24px | Header-block gaps; the space between a heading and its body |
+| `xl` | 32px | The desktop page gutter; scroll-margin for anchored sections |
+| `xxl` | 48px | A content section's own vertical padding; the mobile inter-section gap |
+| `xxxl` | 64px | The gap between content sections on desktop |
+| `xxxxl` | 96px | Page-foot padding, clearing the last section from the viewport edge |
+
+### The page frame
+
+Every archetype layout (Homepage, Hub, Course, Expert) is built on one frame:
+
+- **Measure.** The content column is `max-width: 75rem`, centred with `margin: 0 auto`. The page never runs edge to edge; it holds a document-width measure on any screen.
+- **Page gutter.** Desktop padding is `xl xl xxxxl` (32px top and sides, 96px foot). Below 720px it tightens to `lg md xxxl` (24px top, 16px sides, 64px foot).
+- **Header block.** Breadcrumb, page heading, and any hero strip stack with an `lg` (24px) gap.
+- **Inter-section gap.** The content column is a vertical flex stack with a `xxxl` (64px) gap between sections on desktop, `xxl` (48px) on mobile. This is the single most consequential spacing decision on the site: 64px between sections is what makes a page read as a white paper rather than a landing page.
+
+### Section parameters
+
+A content section marks itself off with **a 1px top rule and its own vertical padding** — never a background fill. Three parameters define every section:
+
+- `border-top: 1px solid var(--color-rule)` — the hairline that opens a new section.
+- `padding: var(--spacing-xxl) 0` — 48px of vertical breathing room within the section.
+- `scroll-margin-top: var(--spacing-xl)` — so an in-page anchor jump lands clear of the heading rather than flush against the viewport top.
+
+Division of labour: the layout owns the `xxxl` gap *between* sections; each section owns its top rule and its `xxl` internal padding. A new section component reproduces these three parameters exactly.
+
+### Section background grounds
+
+The page is **one continuous Newsprint Cream-1 ground**. Content sections do not alternate background colour; they are told apart by the 1px top rule and the spacing above them, never by a fill. This is deliberate and load-bearing: alternating grey-and-white bands are the visual signature of a marketing page, while a single uninterrupted ground divided by hairline rules is the signature of a printed document.
+
+The two deeper Cream grounds are for *nested* use only, never as a section-wide background:
+
+- **Cream-2 (`bg-alt`)** is a contained panel set *inside* a section to group related content: the StatPanel number row, the trust-stripe datebar. A panel within a section, not the section ground itself.
+- **Cream-3 (`bg-deep`)** is a card nested inside a Cream-2 panel, one tone deeper so it stays distinct from the panel around it.
+- **Document Ink** is the single dark plate, used full-bleed for the trust stripe and the RegulatorBand credentials band.
+
+When a section needs visual separation, reach for the rule and the spacing first. A background fill is correct only for a contained panel *within* a section, never for the section itself.
