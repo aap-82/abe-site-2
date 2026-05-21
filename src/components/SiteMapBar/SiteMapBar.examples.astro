@@ -1,0 +1,29 @@
+---
+import SiteMapBar from './SiteMapBar.astro';
+---
+
+<div class="space-y-4">
+  <p
+    class="t-body"
+    style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+  >
+    The bar as it renders site-wide. It is normally pinned to the very top of
+    the viewport; it is held in place here so it sits inside this panel. Open
+    "All pages" to reveal the full site tree — built pages link, pages not yet
+    built are muted with a "soon" tag.
+  </p>
+
+  <div class="smb-demo" style="border: 1px solid var(--color-rule);">
+    <SiteMapBar />
+  </div>
+</div>
+
+<style>
+  /* The live component is position: sticky. Pin it as a normal-flow,
+     positioned element for the demo so the bar and its panel stay inside
+     this example panel instead of escaping to the viewport top. */
+  .smb-demo :global(.smb) {
+    position: relative;
+    top: auto;
+  }
+</style>

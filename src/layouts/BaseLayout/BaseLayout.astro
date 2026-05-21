@@ -19,6 +19,7 @@
  *        (PageHeading does)
  */
 import '@/styles/global.css';
+import SiteMapBar from '@components/SiteMapBar/SiteMapBar.astro';
 
 interface Props {
   title: string;
@@ -63,6 +64,7 @@ const { title, description, canonical, ogImage, noIndex } = Astro.props;
     <slot name="schema" />
   </head>
   <body>
+    <SiteMapBar />
     <slot />
   </body>
 </html>

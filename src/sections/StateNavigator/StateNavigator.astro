@@ -3,13 +3,16 @@
  * StateNavigator — the choose-your-state navigator.
  *
  * Analysis §2.2 / §3.4: the "Choose your state" block on hub and homepage.
- * Lists the states ABE serves. Three layouts via the `variant` prop:
+ * Lists the states ABE serves. Four layouts via the `variant` prop:
  *
  *   grid  — a responsive grid of state cards, each a single link to the
  *           state's course spoke page (homepage and hub default).
  *   table — a State / Regulator / Course row table (dense hub listing).
  *   links — a grid of state cards, each listing several course links. Use
  *           where one state offers more than one course (the homepage).
+ *   board — a grid of state cards headed by the state code, each listing
+ *           its courses with an optional status badge (e.g. "Coming soon").
+ *           Use where some courses link out and some are not yet live.
  *
  * This is a NAVIGATION component — every state links out to a course page.
  * For attribute-by-option data comparison use ComparisonTable instead.
@@ -21,30 +24,38 @@
 import { slugify } from '@/lib/slugify';
 
 interface CourseLink {
-  /** Course link label, e.g. "White Card NSW". */
+  /** Course link label, e.g. "White Card". */
   label: string;
-  /** Course page URL. */
-  href: string;
+  /** Course page URL. Required by the links variant; omit in board for a
+   *  course that is not yet available. */
+  href?: string;
+  /** RTO attribution, rendered inline as "(via …)". Board variant only. */
+  via?: string;
+  /** Status badge text, e.g. "Coming soon". Board variant only. */
+  status?: string;
 }
 
 interface StateEntry {
   /** State or territory name, e.g. "New South Wales". */
   name: string;
+  /** Short state code, e.g. "NSW". Used as the heading by the board variant. */
+  abbr?: string;
   /** The regulator that approves the course there. Used by grid and table. */
   regulator?: string;
   /** Link to the state course spoke page. Used by grid and table. */
   href?: string;
   /** One-line course detail. Used by grid and table. */
   detail?: string;
-  /** Course links for this state. Used by the links variant. */
+  /** Course links for this state. Used by the links and board variants. */
   courses?: CourseLink[];
 }
 
 interface Props {
   /** The section H2. */
   heading: string;
-  /** Layout — grid of cards, dense row table, or multi-link state cards. */
-  variant?: 'grid' | 'table' | 'links';
+  /** Layout — grid of cards, dense row table, multi-link state cards, or
+   *  state-code cards with a per-course status badge. */
+  variant?: 'grid' | 'table' | 'links' | 'board';
   /** The states ABE serves. */
   states: StateEntry[];
   anchorId?: string;
@@ -90,6 +101,33 @@ const id = anchorId ?? slugify(heading);
               {(s.courses ?? []).map((c) => (
                 <li class="snav__course">
                   <a class="link-dotted" href={c.href}>{c.label}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    ) : variant === 'board' ? (
+      <ul class="snav__grid snav__board">
+        {states.map((s) => (
+          <li class="snav__boardcard">
+            <p class="snav__abbr">{s.abbr ?? s.name}</p>
+            {s.abbr && <p class="snav__statename">{s.name}</p>}
+            <ul class="snav__courses snav__courses--board">
+              {(s.courses ?? []).map((c) => (
+                <li class="snav__course snav__course--board">
+                  {c.href ? (
+                    <a class="link-dotted" href={c.href}>
+                      {c.label}
+                      {c.via && <span class="snav__via"> (via {c.via})</span>}
+                    </a>
+                  ) : (
+                    <span class="snav__coursetext">
+                      {c.label}
+                      {c.via && <span class="snav__via"> (via {c.via})</span>}
+                    </span>
+                  )}
+                  {c.status && <span class="snav__badge">{c.status}</span>}
                 </li>
               ))}
             </ul>
@@ -216,6 +254,65 @@ const id = anchorId ?? slugify(heading);
     font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.5;
+  }
+
+  /* --- Board variant — a state-code column with a per-course status list --- */
+  .snav__board {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+  .snav__boardcard {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    background: var(--color-bg);
+  }
+  .snav__abbr {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .snav__statename {
+    margin: 6px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .snav__courses--board {
+    margin-top: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+  .snav__course--board {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+  .snav__coursetext {
+    color: var(--color-ink-2);
+  }
+  .snav__via {
+    color: var(--color-ink-2);
+  }
+  .snav__badge {
+    flex-shrink: 0;
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-rule);
+    padding: 3px 5px;
+    line-height: 1.3;
   }
 
   /* --- Table variant --- */

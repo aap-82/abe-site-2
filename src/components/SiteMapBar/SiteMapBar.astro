@@ -1,0 +1,347 @@
+---
+/**
+ * SiteMapBar — a build-phase site-structure bar pinned to the top of every page.
+ *
+ * Rendered once in BaseLayout (every content page) and once in
+ * StyleguideLayout, so it appears site-wide with no per-page wiring. The slim
+ * summary strip shows build progress and a Styleguide link; opening "All
+ * pages" reveals the full page tree — built pages link, pages not yet built
+ * are muted with a "soon" tag.
+ *
+ * This is BUILD-PHASE CHROME. To retire it before public launch, remove the
+ * <SiteMapBar /> line from BaseLayout and StyleguideLayout.
+ *
+ * The `groups` array below is the single source of truth for the site
+ * structure — flip `built: true` on a page as its route ships.
+ */
+interface PageNode {
+  /** Link label. */
+  label: string;
+  /** Route path. */
+  href: string;
+  /** True once the route is published; false renders the page muted. */
+  built: boolean;
+}
+interface PageGroup {
+  /** Group heading. */
+  title: string;
+  /** Pages in this group. */
+  pages: PageNode[];
+  /** Build tooling, not a public page — excluded from the progress count. */
+  tools?: boolean;
+}
+
+const groups: PageGroup[] = [
+  {
+    title: 'Home',
+    pages: [{ label: 'Homepage', href: '/', built: true }],
+  },
+  {
+    title: 'Owner Builder',
+    pages: [
+      { label: 'Hub', href: '/owner-builder', built: true },
+      { label: 'NSW', href: '/owner-builder-nsw', built: true },
+      { label: 'QLD', href: '/owner-builder-qld', built: false },
+      { label: 'WA', href: '/owner-builder-wa', built: false },
+      { label: 'TAS', href: '/owner-builder-tas', built: false },
+      { label: 'ACT', href: '/owner-builder-act', built: false },
+    ],
+  },
+  {
+    title: 'White Card',
+    pages: [
+      { label: 'Hub', href: '/white-card', built: true },
+      { label: 'NSW', href: '/white-card-nsw', built: true },
+      { label: 'QLD', href: '/white-card-qld', built: false },
+      { label: 'WA', href: '/white-card-wa', built: false },
+      { label: 'TAS', href: '/white-card-tas', built: false },
+      { label: 'ACT', href: '/white-card-act', built: false },
+    ],
+  },
+  {
+    title: 'CPD',
+    pages: [{ label: 'Hub', href: '/cpd', built: false }],
+  },
+  {
+    title: 'Experts',
+    pages: [
+      { label: 'Dominic Ogburn', href: '/experts/dominic-ogburn', built: true },
+      { label: 'Warwick Smith', href: '/experts/warwick-smith', built: true },
+    ],
+  },
+  {
+    title: 'Insurance',
+    pages: [
+      { label: 'Owner-Builder cover', href: '/insurance/owner-builder', built: false },
+      { label: 'Builder cover', href: '/insurance/builders', built: false },
+      { label: 'Tradie cover', href: '/insurance/tradie', built: false },
+      { label: 'Real-estate cover', href: '/insurance/real-estate', built: false },
+    ],
+  },
+  {
+    title: 'Company',
+    pages: [
+      { label: 'About', href: '/about', built: false },
+      { label: 'Contact', href: '/contact', built: false },
+      { label: 'All courses', href: '/courses', built: false },
+    ],
+  },
+  {
+    title: 'Legal',
+    pages: [
+      { label: 'Privacy', href: '/privacy', built: false },
+      { label: 'Terms', href: '/terms', built: false },
+      { label: 'ASQA disclosure', href: '/asqa-disclosure', built: false },
+    ],
+  },
+  {
+    title: 'Build tools',
+    tools: true,
+    pages: [
+      { label: 'Styleguide', href: '/styleguide', built: true },
+      { label: 'Conventions', href: '/styleguide/conventions', built: true },
+      { label: 'Sample course page', href: '/sample/white-card-online-nsw', built: true },
+    ],
+  },
+];
+
+const sitePages = groups.filter((g) => !g.tools).flatMap((g) => g.pages);
+const builtCount = sitePages.filter((p) => p.built).length;
+const totalCount = sitePages.length;
+
+// Normalise away any trailing slash so the current-page match is reliable.
+const currentPath = Astro.url.pathname.replace(/(.)\/$/, '$1');
+---
+
+<div class="smb">
+  <details class="smb__details">
+    <summary class="smb__bar">
+      <span class="smb__brand">ABE Site Map</span>
+      <span class="smb__count">{builtCount}/{totalCount} pages built</span>
+      <span class="smb__cue">All pages</span>
+    </summary>
+
+    <div class="smb__panel">
+      <div class="smb__grid">
+        {
+          groups.map((g) => (
+            <section class="smb__group">
+              <h2 class="smb__grouptitle">{g.title}</h2>
+              <ul class="smb__list">
+                {g.pages.map((p) =>
+                  p.built ? (
+                    <li>
+                      <a
+                        class:list={[
+                          'smb__page',
+                          { 'smb__page--current': p.href === currentPath },
+                        ]}
+                        href={p.href}
+                        aria-current={p.href === currentPath ? 'page' : undefined}
+                      >
+                        <span class="smb__label">{p.label}</span>
+                      </a>
+                    </li>
+                  ) : (
+                    <li>
+                      <span class="smb__page smb__page--soon" title="Page not built yet">
+                        <span class="smb__label">{p.label}</span>
+                        <span class="smb__soon">soon</span>
+                      </span>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </details>
+
+  <a class="smb__styleguide" href="/styleguide">Styleguide &rarr;</a>
+</div>
+
+<style>
+  /* Build-phase chrome — a slim dark bar, intentionally outside the site's
+     own palette so it never reads as page content. */
+  .smb {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: stretch;
+    background: var(--color-ink);
+    color: var(--color-bg);
+    font-family: var(--font-mono);
+  }
+
+  .smb__details {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Summary — the always-visible strip. */
+  .smb__bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 16px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    font-size: 11px;
+  }
+  .smb__bar::-webkit-details-marker {
+    display: none;
+  }
+  .smb__bar:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .smb__brand {
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .smb__count {
+    opacity: 0.55;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .smb__cue {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.72;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .smb__cue::after {
+    content: '▾';
+    font-size: 9px;
+  }
+  .smb__details[open] .smb__cue::after {
+    content: '▴';
+  }
+
+  /* Styleguide link — sits in the bar, outside the disclosure. */
+  .smb__styleguide {
+    display: flex;
+    align-items: center;
+    padding: 9px 16px;
+    color: var(--color-bg);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .smb__styleguide:hover {
+    background: var(--color-accent);
+  }
+  .smb__styleguide:focus-visible {
+    outline: 2px solid var(--color-bg);
+    outline-offset: -4px;
+  }
+
+  /* Panel — the full page tree, overlaid below the bar when open. */
+  .smb__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--color-ink);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+    padding: 22px 16px 26px;
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+  .smb__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px 28px;
+    max-width: 75rem;
+    margin: 0 auto;
+  }
+
+  .smb__grouptitle {
+    margin: 0 0 8px;
+    padding-bottom: 7px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+    opacity: 0.5;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+  }
+  .smb__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .smb__page {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 5px 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.3;
+    text-decoration: none;
+  }
+  a.smb__page {
+    color: var(--color-bg);
+  }
+  a.smb__page:hover .smb__label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  a.smb__page:focus-visible {
+    outline: 2px solid var(--color-bg);
+    outline-offset: 1px;
+  }
+  .smb__page--current {
+    font-weight: 700;
+  }
+  .smb__page--current .smb__label::before {
+    content: '› ';
+  }
+  .smb__page--soon {
+    opacity: 0.34;
+    cursor: not-allowed;
+  }
+  .smb__soon {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    padding: 2px 4px;
+    line-height: 1;
+  }
+
+  @media (max-width: 560px) {
+    .smb__count {
+      display: none;
+    }
+    .smb__brand {
+      font-size: 10px;
+    }
+  }
+</style>
