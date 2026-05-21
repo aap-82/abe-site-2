@@ -1,0 +1,79 @@
+---
+/**
+ * VerificationNote — the one-line verification stamp.
+ *
+ *     ────────────────────────────────────────────
+ *               VERIFIED AGAINST QBCC VERIFIED ON 19 MAY 2026
+ *
+ * Right-aligned. Two mono caps labels (VERIFIED AGAINST, VERIFIED ON) at
+ * 10px Geist Mono in Ink-4 (quieter), source and date at 12px Public Sans in
+ * Ink-3. The date is uppercased to the DD MMM YYYY stamp form (e.g. 11 APR
+ * 2026). 1px solid Rule divider above.
+ *
+ * Source is provided as a slot; multiple sources are bullet-separated
+ * inside the slot with a double-spaced • bullet.
+ *
+ * For the stacked two-row footnote, use `VerificationFootnote`.
+ */
+
+interface Props {
+  /** ISO date YYYY-MM-DD of the verification. */
+  lastVerified: string;
+}
+
+const { lastVerified } = Astro.props;
+
+const formatted = new Date(lastVerified)
+  .toLocaleDateString('en-AU', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+  .toUpperCase();
+---
+
+<p class="vnote">
+  <span class="vnote__label">Verified against</span>{' '}
+  <span class="vnote__value"><slot /></span>{' '}
+  <span class="vnote__label">Verified on</span>{' '}
+  <time class="vnote__value" datetime={lastVerified}>{formatted}</time>
+</p>
+
+<style>
+  .vnote {
+    margin: var(--spacing-md) 0 0;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-rule);
+    text-align: right;
+  }
+
+  /* Label — 10px Geist Mono caps, Ink-3. Every property explicit so it
+     cannot drift from VerificationFootnote / SourceCitation. */
+  .vnote__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-4);
+    margin-right: 0.4em;
+  }
+
+  /* Wider gap before the second label (VERIFIED ON) so the two
+     label-value pairs read as distinct groups. */
+  .vnote .vnote__label ~ .vnote__label {
+    margin-left: 0.75em;
+  }
+
+  /* Value — 12px Public Sans regular, Ink-3, mixed case. */
+  .vnote__value {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-ink-3);
+  }
+</style>

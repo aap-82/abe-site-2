@@ -1,0 +1,55 @@
+---
+/**
+ * CrossRefLink — cross-page navigation to another ABE page.
+ *
+ * Paired with MicroCTA. MicroCTA = in-page anchor jump with ↑/↓ arrow.
+ * CrossRefLink = navigation to another ABE page, no arrow. Arrows on the
+ * site are reserved exclusively for in-page jumps so the reader's mental
+ * model stays tight: "arrow = scroll, no arrow = new page".
+ *
+ * Visual grammar:
+ *   - Mono caps label, Ink-3 default
+ *   - Dotted underline beneath the label
+ *   - On hover: shifts to Maroon
+ *
+ * Use for:
+ *   - Hub-to-spoke links ("Browse the NSW Owner Builder course")
+ *   - Spoke-to-hub links ("View all Owner Builder states")
+ *   - Cross-category links ("Find the White Card for your state")
+ *
+ * For in-page anchor jumps, use `MicroCTA` instead.
+ */
+
+interface Props {
+  /** Target URL (relative or absolute). */
+  href: string;
+  /** Visible link text. */
+  label: string;
+}
+
+const { href, label } = Astro.props;
+---
+
+<p class="xref">
+  <a href={href} class="xref__link t-label">
+    {label}
+  </a>
+</p>
+
+<style>
+  .xref {
+    margin: var(--spacing-lg) 0;
+  }
+
+  .xref__link {
+    color: var(--color-ink-3);
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .xref__link:hover {
+    color: var(--color-accent);
+  }
+</style>

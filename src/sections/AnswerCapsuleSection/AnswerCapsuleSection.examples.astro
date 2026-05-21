@@ -1,0 +1,71 @@
+---
+import AnswerCapsuleSection from './AnswerCapsuleSection.astro';
+import VerificationNote from '../../components/VerificationNote/VerificationNote.astro';
+---
+
+<div class="space-y-12">
+  <!-- Variant 1 — full pattern with slot + MicroCTA (NSW Owner Builder §1) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Full pattern: heading, capsule, body, slot, MicroCTA
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <AnswerCapsuleSection
+        heading="What is the NSW Owner Builder Course and who needs it?"
+        answer="The NSW Owner Builder Course is the approved education you must complete before applying for an Owner Builder Permit when residential building work on your home is valued at $20,000 or more. It covers the five nationally recognised units of competency set by Building Commission NSW. You finish online and receive a Statement of Attainment."
+        body="If you plan to supervise or do building work valued over $10,000 on your own home and you're not contracting a licensed builder, you need an Owner Builder Permit from Building Commission NSW. Once the work value reaches $20,000, you also need to complete the approved education or hold an equivalent qualification. The permit is administered through Service NSW."
+        nextSectionHeading="How does the course work?"
+        nextSectionLabel="See how the course works"
+      >
+        <VerificationNote lastVerified="2026-04-28">
+          <a
+            href="https://www.nsw.gov.au/housing-and-construction/building-or-renovating-a-home/owner-builder/when-a-permit-needed"
+            class="link-dotted"
+            rel="external"
+          >
+            Building Commission NSW
+          </a>
+        </VerificationNote>
+      </AnswerCapsuleSection>
+    </div>
+  </section>
+
+  <!-- Variant 2 — no MicroCTA (final section of a page) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      No MicroCTA (final section of a page)
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <AnswerCapsuleSection
+        heading="Where can I take an ABE Education course?"
+        answer="All ABE courses are 100% online. White Card is offered in NSW, QLD, WA, TAS, and ACT. Owner Builder is offered in NSW, QLD, WA, TAS, and ACT. CPD is offered to building, plumbing, and electrical practitioners in Tasmania, and to real-estate agents in WA."
+        body="Choose your state on the relevant course-stream hub, and the spoke page tells you which regulator approves the course, who issues the certificate, and what the permit fees are for that jurisdiction. Every approval link goes to the relevant .gov.au page so you can verify before enrolling."
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — slot empty (no trust signals) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Minimal: heading, capsule, body, MicroCTA only
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <AnswerCapsuleSection
+        heading="How quickly can I get certified?"
+        answer="Most White Card students finish the same day. Owner Builder courses are longer and typically take a few days to a week, depending on the state. Once you pass, your certificate is issued by the relevant authority, usually within 1 to 2 business days."
+        body="Same-day certification works because the White Card is a single live-trainer session via Zoom; you complete the assessment in the same sitting and the Statement of Training emails out before you log off. Owner Builder takes longer because it covers more material, but every state's process is self-paced and online."
+        nextSectionHeading="How do I verify accreditation?"
+        nextSectionLabel="Verifying accreditation"
+      />
+    </div>
+  </section>
+</div>

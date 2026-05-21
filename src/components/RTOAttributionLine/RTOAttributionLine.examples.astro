@@ -1,0 +1,46 @@
+---
+import RTOAttributionLine from './RTOAttributionLine.astro';
+---
+
+<div class="space-y-10">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      RTO-partnered course-state page (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The NSW Owner Builder hero attribution — AlertForce delivers the
+      training, ABE Education handles enrolment.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <RTOAttributionLine rto="AlertForce" rtoCode="RTO 91826" />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Different RTO and enrolment partner
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The <code>enrolPartner</code> prop overrides the default.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <RTOAttributionLine
+        rto="Upskill Institute"
+        rtoCode="RTO 45708"
+        enrolPartner="ABE Education"
+      />
+    </div>
+  </section>
+</div>

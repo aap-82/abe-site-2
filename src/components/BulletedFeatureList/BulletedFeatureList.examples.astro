@@ -1,0 +1,86 @@
+---
+import BulletedFeatureList from './BulletedFeatureList.astro';
+
+const whyAbeItems = [
+  {
+    title: 'Verifiable authority',
+    text:
+      'every regulator approval links back to a .gov.au page you can check yourself',
+  },
+  {
+    title: 'Named experts',
+    text:
+      'our content is reviewed by industry-credentialled people, not anonymous training teams',
+  },
+  {
+    title: '100% online',
+    text: 'start in minutes, complete on your schedule, on any device',
+  },
+  {
+    title: 'Australian support',
+    text:
+      'phone and email support during business hours (AEST and AEDT) from a team based in Sydney',
+  },
+  {
+    title: 'State-specific content',
+    text:
+      'each course is written for the regulator that issues your certificate, not generic copy with the state name swapped in',
+  },
+];
+
+const verifiedSignalsItems = [
+  { text: 'SafeWork NSW Approved Provider (Approval No. RTO800520)' },
+  { text: 'Nationally Recognised RTO 45708, verifiable at training.gov.au' },
+  { text: 'Same-day Statement of Training' },
+  { text: 'White Card delivered in approximately 2 weeks' },
+  { text: 'Live trainer on every session, not pre-recorded videos' },
+];
+
+const plainListItems = [
+  { text: 'Construction site hazards, risk assessment, and the hierarchy of hazard controls' },
+  { text: 'Duty of care and WHS legislative requirements' },
+  { text: 'Safety signs, symbols, and emergency response procedures' },
+  { text: 'Correct selection, donning, and removal of PPE' },
+];
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — bullet mode with bold lead-ins (canonical "Why ABE") -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      bullet mode with bold lead-ins (homepage "Why ABE")
+    </h3>
+    <div
+      class="mt-2 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BulletedFeatureList items={whyAbeItems} />
+    </div>
+  </section>
+
+  <!-- Variant 2 — ticked mode for verified signals -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      ticked mode (verified trust signals, White Card NSW)
+    </h3>
+    <div
+      class="mt-2 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BulletedFeatureList style="ticked" items={verifiedSignalsItems} />
+    </div>
+  </section>
+
+  <!-- Variant 3 — plain bullets, no lead-ins -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      bullet mode without lead-ins (course content list)
+    </h3>
+    <div
+      class="mt-2 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BulletedFeatureList items={plainListItems} />
+    </div>
+  </section>
+</div>

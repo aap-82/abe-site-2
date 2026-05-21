@@ -1,0 +1,90 @@
+---
+/**
+ * MetaSection — sample-page helper implementing the Section Card Meta Block
+ * (DESIGN.md §5 signature pattern).
+ *
+ * A two-column grid: a sticky 14rem left meta column carrying the Display
+ * section number, the maroon Title eyebrow, and the uppercase Headline H2;
+ * and a wide right column holding the section body (slot). The sticky meta
+ * column turns a long scroll into a navigable, annotated document.
+ *
+ * This lives in src/sample/ (not src/pages, not the library) so it is neither
+ * a route nor a styleguide entry. It is demonstration scaffolding, not a
+ * locked library component.
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Props {
+  /** Two-digit section number, e.g. "01". */
+  num: string;
+  /** Maroon Title eyebrow, sentence case, e.g. "Overview". */
+  eyebrow: string;
+  /** Section H2 (rendered uppercase). */
+  heading: string;
+  /** Anchor override; defaults to slugify(heading). */
+  anchorId?: string;
+}
+
+const { num, eyebrow, heading, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="ms">
+  <div class="ms__meta">
+    <div class="ms__num t-display">{num}</div>
+    <div class="ms__eyebrow t-title">{eyebrow}</div>
+    <h2 class="ms__h2 t-headline">{heading}</h2>
+  </div>
+  <div class="ms__body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .ms {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: var(--spacing-xxl);
+    padding: var(--spacing-xxxl) 0;
+    border-top: 1px solid var(--color-rule);
+    scroll-margin-top: var(--spacing-xl);
+  }
+
+  /* Sticky meta column: persists while the reader scrolls the section body. */
+  .ms__meta {
+    position: sticky;
+    top: var(--spacing-lg);
+    align-self: start;
+    height: max-content;
+  }
+  .ms__num {
+    color: var(--color-ink-4);
+    line-height: 0.9;
+  }
+  .ms__eyebrow {
+    color: var(--color-accent);
+    margin-top: var(--spacing-sm);
+  }
+  .ms__h2 {
+    color: var(--color-ink);
+    text-transform: uppercase;
+    margin: var(--spacing-xs) 0 0;
+  }
+
+  /* The body column never runs wider than a comfortable reading measure. */
+  .ms__body {
+    min-width: 0;
+    max-width: 70ch;
+  }
+
+  @media (max-width: 880px) {
+    .ms {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+      padding: var(--spacing-xxl) 0;
+    }
+    .ms__meta {
+      position: static;
+    }
+  }
+</style>

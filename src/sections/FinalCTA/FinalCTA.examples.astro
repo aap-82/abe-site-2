@@ -1,0 +1,55 @@
+---
+import FinalCTA from './FinalCTA.astro';
+---
+
+<div class="space-y-12">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Primary + secondary (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The Owner Builder hub closing CTA — a filled v3 button plus a quiet
+      secondary link with a trailing note.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <FinalCTA
+        heading="Get certified for your state — start your Owner Builder course today"
+        body="Choose your state above to see course detail, pricing, and the certificate you will receive. Most students get certified within a few days of completing the assessment."
+        primaryLabel="See courses by state"
+        primaryHref="#choose-state"
+        secondaryLabel="Talk to our enrolments team"
+        secondaryHref="/contact"
+        secondaryNote="phone, email, or live chat during business hours."
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Primary only
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      With no secondary props, the section closes on the primary button alone.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <FinalCTA
+        heading="Start your White Card course today"
+        body="Finish the live online session and receive your Statement of Training the same day."
+        primaryLabel="Enrol in the White Card course"
+        primaryHref="/white-card-nsw"
+      />
+    </div>
+  </section>
+</div>

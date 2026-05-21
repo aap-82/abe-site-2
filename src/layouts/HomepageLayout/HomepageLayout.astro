@@ -1,0 +1,101 @@
+---
+/**
+ * HomepageLayout — the homepage archetype layout.
+ *
+ * Used by the site root (/). Wraps BaseLayout, builds and injects the
+ * homepage JSON-LD graph, and renders the homepage chrome — the PageHeading
+ * above a slot for the content sections. The homepage is the site root, so
+ * it carries no BreadcrumbBar.
+ *
+ * Locked decisions reflected here:
+ *   #5 — schema is assembled by buildHomepageGraph and injected into
+ *        BaseLayout's "schema" slot.
+ *   #6 — lastUpdated comes from frontmatter, passed to PageHeading.
+ */
+import BaseLayout from '@layouts/BaseLayout/BaseLayout.astro';
+import PageHeading from '@components/PageHeading/PageHeading.astro';
+import { buildHomepageGraph } from '@/lib/buildHomepageGraph';
+import type { HomepageGraphLink } from '@/lib/buildHomepageGraph';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  /** Visible page H1. */
+  pageHeading: string;
+  /** ISO date YYYY-MM-DD from frontmatter (decision #6). */
+  lastUpdated: string;
+  /** Primary hub links — become the schema SiteNavigationElement nodes. */
+  navItems: HomepageGraphLink[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  noIndex,
+  pageHeading,
+  lastUpdated,
+  navItems,
+} = Astro.props;
+
+const schema = buildHomepageGraph({
+  url: canonical,
+  name: title,
+  description,
+  navItems,
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  noIndex={noIndex}
+>
+  <script
+    type="application/ld+json"
+    slot="schema"
+    set:html={schema}
+    is:inline
+  />
+
+  <div class="home">
+    <header class="home__head">
+      <PageHeading heading={pageHeading} lastUpdated={lastUpdated} />
+    </header>
+
+    <main class="home__main">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .home {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-xxxxl);
+  }
+
+  .home__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxxl);
+    margin-top: var(--spacing-xxxl);
+  }
+
+  @media (max-width: 720px) {
+    .home {
+      padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xxxl);
+    }
+    .home__main {
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xxl);
+    }
+  }
+</style>

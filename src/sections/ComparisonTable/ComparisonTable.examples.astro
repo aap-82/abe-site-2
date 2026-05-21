@@ -1,0 +1,47 @@
+---
+import ComparisonTable from './ComparisonTable.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — state-by-state requirements (5 columns) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      State-by-state requirements (5 columns, with intro)
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <ComparisonTable
+        heading="What does each state require?"
+        answer="Every state requires an approved owner-builder course and a White Card, but the permit authority, fees, and insurance thresholds differ. Here is the side-by-side."
+        rowHeader="Requirement"
+        columns={['NSW', 'QLD', 'WA', 'TAS', 'ACT']}
+        rows={[
+          { label: 'Owner-builder course', cells: ['Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+          { label: 'White Card', cells: ['Required', 'Required', 'Required', 'Required', 'Required'] },
+          { label: 'Permit issued by', cells: ['Service NSW', 'QBCC', 'DMIRS', 'CBOS', 'Access Canberra'] },
+          { label: 'Home warranty insurance', cells: ['Over $20k', 'Over $3,300', 'Required', 'Over $20k', 'Over $12k'] },
+        ]}
+        caption="Illustrative summary. Verify current requirements and thresholds with each state regulator before applying."
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — two-option comparison, no intro -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Two-option comparison (no intro)
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <ComparisonTable
+        heading="Online or in person?"
+        rowHeader="Attribute"
+        columns={['Online', 'In person']}
+        rows={[
+          { label: 'Duration', cells: ['Self-paced, about 6 hours', 'One 7-hour live session'] },
+          { label: 'Cost', cells: ['$59', '$145'] },
+          { label: 'Card delivery', cells: ['Within 2 weeks', 'Within 2 weeks'] },
+          { label: 'Best for', cells: ['Shift workers, remote learners', 'Hands-on learners'] },
+        ]}
+      />
+    </div>
+  </section>
+</div>

@@ -1,0 +1,46 @@
+---
+/**
+ * PremiumBadge — the paid-tier / featured-content tag.
+ *
+ * A small inline chip that marks prestige or paid content: a "Premium" course,
+ * a "Featured" expert, a bundled paid tier. Mirrors the state-chip pattern
+ * (DESIGN.md §5 Chips) in the semantic `premium` colour, as an outlined tag.
+ *
+ * Design-system notes:
+ *   - Uses the semantic `premium` colour (DESIGN.md §2 Semantic status colours):
+ *     `premium-deep` text and a 1px `premium` violet border on a transparent
+ *     background. An outlined tag, never a filled surface.
+ *   - Geist Mono caps (label voice), sharp corners (no border-radius), flat.
+ *   - Inline by design: drop it next to a title or list item. Not a callout and
+ *     not a button; it labels, it does not act.
+ *
+ * Content comes from the default slot, with the `label` prop as a fallback so
+ * both <PremiumBadge>Featured</PremiumBadge> and <PremiumBadge label="Featured" />
+ * work.
+ */
+interface Props {
+  /** Fallback text when no slot content is passed. */
+  label?: string;
+}
+
+const { label = 'Premium' } = Astro.props;
+---
+
+<span class="premium-badge"><slot>{label}</slot></span>
+
+<style>
+  .premium-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-premium-deep);
+    background: transparent;
+    border: 1px solid var(--color-premium);
+    padding: 4px 8px;
+    /* Sharp corners — no border-radius, per the locked system. */
+  }
+</style>

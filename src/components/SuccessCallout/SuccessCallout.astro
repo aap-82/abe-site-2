@@ -1,0 +1,74 @@
+---
+/**
+ * SuccessCallout — the confirmation / completion note.
+ *
+ * The success member of the callout family: a positive outcome of a process the
+ * reader just completed, e.g. "enrolment confirmed", "assessment passed",
+ * "payment received". Same structure as WarningCallout, in the semantic
+ * `success` colour.
+ *
+ * IMPORTANT boundary (Two-Accent Rule, DESIGN.md §2): success green confirms a
+ * PROCESS OUTCOME. It is NOT the regulator-approval signal — "approved by
+ * Service NSW", "nationally recognised", and other verification claims stay in
+ * Regulator Blue. If the green here is labelling a credential rather than a
+ * completed action, the wrong register is being used.
+ *
+ * Design-system notes:
+ *   - Uses the semantic `success` colour (DESIGN.md §2 Semantic status colours):
+ *     a 1px green border with a `success-deep` mono caps label, on a transparent
+ *     background. Body stays Ink; semantic colours frame and label, never
+ *     colour body copy.
+ *   - A left-border colour stripe is still forbidden: a full 1px frame, never a
+ *     stripe. Flat, sharp corners.
+ */
+interface Props {
+  /** Mono caps label naming the callout. Rendered uppercase by CSS. */
+  label?: string;
+}
+
+const { label = 'Confirmed' } = Astro.props;
+---
+
+<aside class="success-callout">
+  <p class="success-callout__label">{label}</p>
+  <div class="success-callout__body"><slot /></div>
+</aside>
+
+<style>
+  /* The confirmation callout: a 1px green frame in the semantic success
+     colour. A full frame, never a colour stripe; no fill. */
+  .success-callout {
+    border: 1px solid var(--color-success);
+    background: transparent;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .success-callout__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-success-deep);
+  }
+
+  .success-callout__body {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-ink);
+    max-width: 70ch;
+  }
+
+  /* Reset margins if the author passes paragraph elements into the slot. */
+  .success-callout__body :global(p) {
+    margin: 0;
+  }
+  .success-callout__body :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+import PullQuote from './PullQuote.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — quote with eyebrow + cite -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Quote — eyebrow + cite
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <PullQuote
+        eyebrow="Key point"
+        text="An owner-builder permit lets you manage your own residential build, but you take on the legal duties of a licensed builder for six years."
+        cite="Service NSW, verified 21 May 2026"
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — quote, minimal (no eyebrow, no cite) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Quote — minimal
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <PullQuote
+        text="Every nationally recognised course is recorded against your USI, so your training follows you for life."
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — key stat with eyebrow -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Stat — value + label + eyebrow
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <PullQuote
+        variant="stat"
+        eyebrow="Since 2019"
+        value="2,400+"
+        label="Owner builders trained through ABE Education"
+      />
+    </div>
+  </section>
+
+  <!-- Variant 4 — key stat, price -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Stat — price
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <PullQuote variant="stat" value="$294" label="QLD owner-builder permit fee" />
+    </div>
+  </section>
+</div>

@@ -1,0 +1,56 @@
+---
+/**
+ * AnswerCapsule — the 📌 Answer block.
+ *
+ * The cornerstone of the ABE content library: a snippet-able 40–60 word
+ * direct answer that sits under an H2 question heading. Paired with
+ * BodyParagraph below for the expanded explanation.
+ *
+ * Typography per DESIGN.md §3:
+ *   - Eyebrow label: Geist Mono 11px uppercase, tracking 0.1em,
+ *     Regulator Blue Deep (matches the abe-homepage section-eyebrow
+ *     register on the verification axis)
+ *   - Body text: Source Serif 4 prose (the editorial-longform register
+ *     reserved for §02 answer capsules)
+ *
+ * The previous border-left:4px Maroon stripe was an explicit design-system
+ * anti-pattern (DESIGN.md §6 "the single most recognisable AI design tell")
+ * and has been removed.
+ *
+ * Locked decisions reflected here:
+ *   #1 — no heading slot (heading lives on the parent section).
+ *   #3 — all styling via design-system tokens.
+ */
+
+interface Props {
+  /** The 40–60 word answer body. */
+  text: string;
+  /**
+   * Optional section eyebrow shown above the text in Regulator Blue Deep.
+   * Defaults to `Overview`. Pass `null` to suppress.
+   */
+  eyebrow?: string | null;
+}
+
+const { text, eyebrow = 'Overview' } = Astro.props;
+---
+
+<div class="answer-capsule mt-4">
+  {eyebrow && (
+    <div class="t-label answer-capsule__eyebrow">{eyebrow}</div>
+  )}
+  <p class="t-prose answer-capsule__text">{text}</p>
+</div>
+
+<style>
+  .answer-capsule__eyebrow {
+    color: var(--color-info-deep);
+    margin-bottom: 8px;
+  }
+
+  .answer-capsule__text {
+    color: var(--color-ink);
+    max-width: 75ch;
+    margin: 0;
+  }
+</style>

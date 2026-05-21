@@ -1,0 +1,50 @@
+---
+/**
+ * PageHeading — H1 plus visible LastUpdatedDate.
+ *
+ * Renders the page's main heading using Display register, with the freshness
+ * stamp directly underneath. The first content block on every archetype
+ * layout below the BreadcrumbBar.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading comes from the `heading` prop; the component renders <h1>.
+ *   #6 — lastUpdated is required and comes from frontmatter.
+ */
+
+import LastUpdatedDate from '../LastUpdatedDate/LastUpdatedDate.astro';
+
+interface Props {
+  /** The page H1 text. */
+  heading: string;
+  /** ISO date YYYY-MM-DD from frontmatter. */
+  lastUpdated: string;
+}
+
+const { heading, lastUpdated } = Astro.props;
+---
+
+<header class="page-heading">
+  <h1 class="page-heading__h1" style="color: var(--color-ink);">
+    {heading}
+  </h1>
+  <div class="page-heading__date">
+    <LastUpdatedDate date={lastUpdated} />
+  </div>
+</header>
+
+<style>
+  .page-heading {
+    margin: var(--spacing-lg) 0 var(--spacing-xl);
+  }
+
+  /* Page H1 — Display register at slightly smaller scale than section numbers. */
+  .page-heading__h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--spacing-sm);
+    max-width: 38ch;
+  }
+</style>

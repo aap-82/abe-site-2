@@ -1,0 +1,58 @@
+---
+import AboveFoldCTABox from './AboveFoldCTABox.astro';
+---
+
+<div class="space-y-10">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      White Card hero conversion box (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Key facts, a Display-register price with a sale note, a filled CTA, and
+      a closing reassurance line.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <AboveFoldCTABox
+        facts={[
+          'Sessions run Monday to Friday',
+          'Online via Zoom — train from anywhere in NSW',
+        ]}
+        price="$129"
+        priceNote="was $149 (save $20), SafeWork card fee included. Afterpay available."
+        ctaLabel="Book your session"
+        ctaHref="/white-card-nsw/enrol"
+        reassurance="Most students are on site within 24 hours of finishing."
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Minimal — price and action only
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      With no <code>facts</code> or <code>reassurance</code>, the box reduces
+      to a price and its primary action.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <AboveFoldCTABox
+        price="$180"
+        priceNote="Statement of Attainment included."
+        ctaLabel="Start the Owner Builder course"
+        ctaHref="/owner-builder-nsw/enrol"
+      />
+    </div>
+  </section>
+</div>

@@ -1,0 +1,283 @@
+---
+/**
+ * StatPanel — the light "proof" stats panel (the "Why choose ABE" section).
+ *
+ * The third member of the stats family, alongside the RegulatorBand (dark blue
+ * band) and the PullQuote `stat` (single key figure). This is the light,
+ * sourced presentation: a stacked section header, then a row of big-number
+ * stats on a Cream-2 panel with 1px hairline dividers, then a "Listed by /
+ * Verified" sources footer.
+ *
+ * Design-system treatment:
+ *   - Numerals are max-contrast Ink (Contrast-First Rule — the number IS the
+ *     content). The unit (`+`, `%`, `/5`) is a small Document Maroon superscript,
+ *     the only accent. (The live site renders one numeral in maroon; that would
+ *     break Contrast-First, so it is corrected here.)
+ *   - Labels, the footer, and the source links are the Geist Mono caps label
+ *     voice. Source links carry the dotted-underline grammar, hover to Maroon.
+ *   - Dividers are the gap-hairline grid (1px Rule showing through the gaps),
+ *     responsive-safe, no thick stripes, no shadow, sharp corners.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the section renders its own <h2>.
+ *   #3 — design-system tokens only.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Stat {
+  /** Mono caps label, e.g. "Students certified". */
+  label: string;
+  /** The big numeral, e.g. "31,000", "95", "4.8", "2". */
+  value: string;
+  /** Optional Maroon unit superscript, e.g. "+", "%", "/5". */
+  suffix?: string;
+  /** One-line description under the numeral. */
+  description: string;
+}
+
+interface SourceLink {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  /** Section H2, e.g. "Why choose ABE Education?". */
+  heading: string;
+  /** Optional small section number shown above the heading, e.g. "03". */
+  num?: string;
+  /** Optional intro paragraph under the heading. */
+  intro?: string;
+  /** 3-4 stats. */
+  stats: Stat[];
+  /** Footer "Listed by" sources. */
+  listedBy?: SourceLink[];
+  /** Footer "Verified" ISO date YYYY-MM-DD. */
+  verified?: string;
+  anchorId?: string;
+}
+
+const {
+  heading,
+  num,
+  intro,
+  stats,
+  listedBy = [],
+  verified,
+  anchorId,
+} = Astro.props;
+
+const id = anchorId ?? slugify(heading);
+const verifiedFormatted = verified
+  ? new Date(verified).toLocaleDateString('en-AU', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+  : null;
+const hasFooter = listedBy.length > 0 || Boolean(verifiedFormatted);
+---
+
+<section id={id} class="statpanel">
+  <header class="statpanel__head">
+    {num && <span class="statpanel__num">{num}</span>}
+    <h2 class="statpanel__heading">{heading}</h2>
+    {intro && <p class="statpanel__intro">{intro}</p>}
+  </header>
+
+  <ul class="statpanel__grid">
+    {
+      stats.map((s) => (
+        <li class="statpanel__stat">
+          <span class="statpanel__label">{s.label}</span>
+          <span class="statpanel__value">
+            {s.value}
+            {s.suffix && <sup class="statpanel__suffix">{s.suffix}</sup>}
+          </span>
+          <span class="statpanel__desc">{s.description}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    hasFooter && (
+      <div class="statpanel__footer">
+        {listedBy.length > 0 && (
+          <div class="statpanel__meta">
+            <span class="statpanel__meta-label">Listed by</span>
+            <span class="statpanel__meta-value">
+              {listedBy.map((l, i) => (
+                <>
+                  {i > 0 && <span class="statpanel__sep" aria-hidden="true"> · </span>}
+                  {l.href ? (
+                    <a href={l.href} rel="external">{l.label}</a>
+                  ) : (
+                    l.label
+                  )}
+                </>
+              ))}
+            </span>
+          </div>
+        )}
+        {verifiedFormatted && (
+          <div class="statpanel__meta">
+            <span class="statpanel__meta-label">Verified</span>
+            <time class="statpanel__meta-value" datetime={verified}>{verifiedFormatted}</time>
+          </div>
+        )}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .statpanel {
+    padding: var(--spacing-xxxl) 0;
+    scroll-margin-top: var(--spacing-xl);
+  }
+
+  /* Stacked section header. */
+  .statpanel__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .statpanel__heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.875rem, 3vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: var(--spacing-sm) 0 0;
+    max-width: 20ch;
+  }
+  .statpanel__intro {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-ink-2);
+    margin: var(--spacing-md) 0 0;
+    max-width: 60ch;
+  }
+
+  /* Stats grid — gap-hairline dividers (1px Rule shows through the gaps). */
+  .statpanel__grid {
+    list-style: none;
+    margin: var(--spacing-xxl) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--color-rule);
+  }
+  .statpanel__stat {
+    background: var(--color-bg-alt);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+  }
+  .statpanel__label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .statpanel__value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    margin: var(--spacing-sm) 0 var(--spacing-md);
+    font-feature-settings: "lnum", "tnum";
+  }
+  /* The unit is the only maroon — small raised superscript, inherits mono. */
+  .statpanel__suffix {
+    font-size: 0.42em;
+    font-weight: 700;
+    color: var(--color-accent);
+    vertical-align: super;
+    margin-left: 0.08em;
+  }
+  .statpanel__desc {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    margin-top: auto;
+    max-width: 28ch;
+  }
+
+  /* Sources footer — dotted rule, then "Listed by" / "Verified" rows. */
+  .statpanel__footer {
+    margin: var(--spacing-lg) 0 0;
+    padding-top: var(--spacing-md);
+    border-top: 1px dotted var(--color-ink-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  .statpanel__meta {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: var(--spacing-md);
+    align-items: baseline;
+  }
+  .statpanel__meta-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .statpanel__meta-value {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .statpanel__meta-value a {
+    color: var(--color-ink-3);
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .statpanel__meta-value a:hover {
+    color: var(--color-accent);
+  }
+  .statpanel__sep {
+    color: var(--color-ink-4);
+  }
+
+  @media (max-width: 900px) {
+    .statpanel__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 520px) {
+    .statpanel__grid {
+      grid-template-columns: 1fr;
+    }
+    .statpanel__meta {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>

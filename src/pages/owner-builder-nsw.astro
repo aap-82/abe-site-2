@@ -1,0 +1,216 @@
+---
+/**
+ * /owner-builder-nsw — the NSW Owner Builder course-state page (RTO-partnered).
+ *
+ * Validation-pass rebuild from library components, two-file architecture:
+ * SEO meta in src/content/pages-course-state/owner-builder-nsw.md, the
+ * composition here. RTO-partnered, so the `disclosure` context drives the
+ * hero RTOAttributionLine and the footer ASQA disclosures.
+ *
+ * Zero missing-component gaps. Minor fidelity notes: the units-of-competency
+ * outcomes sentence renders as a BodyParagraph (UnitOfCompetencyList has no
+ * outcomes slot), and links inside the role-separation table flatten to text
+ * (ComparisonTable cells are plain strings).
+ */
+import { getEntry } from 'astro:content';
+import CoursePageLayout from '@layouts/CoursePageLayout/CoursePageLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import UnitOfCompetencyList from '@sections/UnitOfCompetencyList/UnitOfCompetencyList.astro';
+import PricingTable from '@sections/PricingTable/PricingTable.astro';
+import ComparisonTable from '@sections/ComparisonTable/ComparisonTable.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+import BulletedFeatureList from '@components/BulletedFeatureList/BulletedFeatureList.astro';
+import VerificationNote from '@components/VerificationNote/VerificationNote.astro';
+import LegalCallout from '@components/LegalCallout/LegalCallout.astro';
+import ASQADisclosure from '@components/ASQADisclosure/ASQADisclosure.astro';
+import ExpertReviewerCard from '@components/ExpertReviewerCard/ExpertReviewerCard.astro';
+import type { DisclosureContext } from '@data/disclosures/asqa-templates';
+
+const entry = await getEntry('pages-course-state', 'owner-builder-nsw');
+if (!entry) throw new Error('Missing content entry: pages-course-state/owner-builder-nsw');
+const meta = entry.data;
+
+const disclosure: DisclosureContext = {
+  enrolPartner: 'ABE Education',
+  enrolPartnerLegal: 'ABE Education Pty Ltd',
+  enrolPartnerAbn: '64 125 455 272',
+  rto: 'AlertForce',
+  rtoLegal: 'AlertForce Pty Ltd',
+  rtoCode: '91826',
+  courseName: 'NSW Owner Builder Course',
+  courseShort: 'NSW Owner Builder',
+  unitCodes: ['CPCCWHS2001', 'CPCCOM2001', 'CPCCCM1011', 'CPCCOM1013', 'CPCCOM1014'],
+  permitName: 'Owner Builder Permits',
+  permitRegulator: 'Building Commission NSW',
+  permitAct: 'Home Building Act 1989',
+  permitApplicationBody: 'Service NSW',
+  termsHref: '/terms',
+};
+
+const courseSteps = [
+  { title: 'Enrol online', text: `Sign up through ABE Education, set your password, and you will get straight access to the course. You need a Unique Student Identifier (USI) to enrol, a legal requirement for all nationally recognised training. If you do not have one, you can create it free at usi.gov.au.` },
+  { title: 'Work through the five units', text: `The course is fully online and self-paced. Read the learner materials, watch the supporting videos, and complete each unit in the order presented. You can pause and pick up where you left off; your progress is saved.` },
+  { title: 'Sit the assessment', text: `Each unit has a written assessment you complete inside the platform. Once you have passed all five, AlertForce reviews your work and issues your Statement of Attainment. The certificate is emailed to you and recorded against your USI.` },
+];
+
+const units = [
+  { code: 'CPCCWHS2001', title: 'Apply WHS requirements, policies and procedures in the construction industry' },
+  { code: 'CPCCOM2001', title: 'Read and interpret plans and specifications' },
+  { code: 'CPCCCM1011', title: 'Undertake basic estimation and costing' },
+  { code: 'CPCCOM1013', title: 'Plan and organise work' },
+  { code: 'CPCCOM1014', title: 'Conduct workplace communication' },
+];
+
+const requirements = [
+  { text: 'Council or water rates notice less than 1 year old, or a Certificate of Title from NSW Land Registry Services' },
+  { text: 'Approved Development Application (DA) or Complying Development Certificate (CDC); the application number alone is not enough' },
+  { text: 'Current White Card (a SafeWork NSW Statement of Training is also accepted within 60 days of training)' },
+  { text: 'Estimated cost of the building work (labour and materials)' },
+  { text: 'Signatures from all owners, leaseholders, or shareholders of the property' },
+];
+
+const pricingRows = [
+  { item: 'ABE Education course fee', cost: '$180' },
+  { item: 'AlertForce Statement of Attainment', cost: 'Included' },
+  { item: 'Building Commission NSW permit fee', cost: 'Set by Service NSW', costHref: 'https://www.nsw.gov.au/business-and-economy/licences-and-credentials' },
+  { item: 'White Card (if you do not hold one)', cost: 'Separate course' },
+];
+
+const whyItems = [
+  { title: 'Online, self-paced', text: `start today, finish on your schedule` },
+  { title: 'Nationally recognised', text: `Statement of Attainment for five CPC units, accepted by Building Commission NSW` },
+  { title: 'RTO-delivered assessment', text: `AlertForce verifies your work and issues the certificate` },
+  { title: 'Australian-owned since 2007', text: `built and maintained from Sydney` },
+  { title: 'Course content by a licensed NSW builder', text: `written by Dominic Ogburn, NSW Builder Licence 369417C` },
+  { title: 'Independent compliance review', text: `every page checked for legislative currency by Warwick Smith` },
+];
+
+const roleRows = [
+  { label: 'Function', cells: ['Registered Training Organisation', 'Authorised third-party enrolment partner'] },
+  { label: 'Delivers', cells: ['Training and assessment for the five units', 'Online learning platform and course materials'] },
+  { label: 'Issues', cells: ['Statement of Attainment', 'Tax invoice and receipts'] },
+  { label: 'Regulator', cells: ['Australian Skills Quality Authority (ASQA)', 'Australian Securities and Investments Commission (ASIC)'] },
+  { label: 'Records held', cells: ['Student records under the Standards for RTOs 2025', 'Enrolment, payment, and support records'] },
+  { label: 'Verify on', cells: ['training.gov.au, RTO 91826', 'ASIC company register'] },
+];
+
+const faqs = [
+  { question: 'When do I need an Owner Builder Permit in NSW?', answer: `You need a permit if the building work on your home is valued over $10,000 (labour and materials combined), you are not contracting a licensed builder, and the work needs a DA or CDC. Permits cover single dwelling-houses, secondary dwellings (granny flats), and dual occupancies in special circumstances.` },
+  { question: `What is the difference between the $10,000 and $20,000 thresholds?`, answer: `The $10,000 threshold triggers the permit requirement. The $20,000 threshold adds the education requirement on top: you must complete the approved course, or hold an equivalent qualification, when work is valued at $20,000 or more.` },
+  { question: 'Who delivers the NSW Owner Builder Course?', answer: `This course is delivered in partnership with AlertForce (RTO 91826), a nationally registered training organisation. Your Statement of Attainment for the five units is issued by AlertForce. ABE Education handles enrolment, the online learning platform, and student support.` },
+  { question: 'Who do I contact if I need help?', answer: `For course-related questions, contact ABE Education through the support form on our website. For permit application questions, call Building Commission NSW on 13 27 00. For assessment outcomes or your Statement of Attainment, AlertForce can be reached on 1800 900 222.` },
+  { question: `How can I verify AlertForce's RTO registration?`, answer: `You can check AlertForce on the National Training Register at training.gov.au/Organisation/Details/91826. The register is maintained by ASQA, the national VET regulator.` },
+  { question: 'How long does the course take?', answer: `Most students complete the course in 8 to 12 hours of study, spread over a few days or weeks. The course is self-paced, so you can finish it in one sitting or stretch it over a month. There is no minimum or maximum time.` },
+  { question: 'Is the White Card included?', answer: `No. The White Card is a separate course covering general construction safety, regulated by SafeWork NSW. You need both the White Card and the Owner Builder course to apply for your permit. The White Card must be done in person or in a virtual classroom with a live trainer.` },
+  { question: `Can I sell my home after I have finished?`, answer: `Yes, but if you sell within 7 years and 6 months of the permit being issued, the contract of sale must include a consumer warning that an owner-builder permit was issued. If the warning is missing, the buyer can void the contract before settlement. You also carry statutory warranties under the Home Building Act 1989 that pass to the next owner.` },
+  { question: `What can't I do under an Owner Builder Permit?`, answer: `You cannot do specialist work like electrical wiring, plumbing, drainage, gasfitting, or air-conditioning and refrigeration unless you hold the relevant trade licence. Those tasks must be done by an appropriately licensed tradesperson, and you must use a written contract if their work exceeds $5,000.` },
+];
+---
+
+<CoursePageLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  pageHeading="NSW Owner Builder Course — Online & Nationally Recognised"
+  breadcrumbs={[
+    { label: 'Home', href: '/' },
+    { label: 'Owner Builder Training', href: '/owner-builder' },
+    { label: 'NSW Owner Builder' },
+  ]}
+  reviewer={{ name: 'Warwick Smith', date: '2026-04-28', profileSlug: 'warwick-smith' }}
+  courseName="NSW Owner Builder Course"
+  provider={{ name: 'AlertForce', url: 'https://training.gov.au/Organisation/Details/91826' }}
+  faqs={faqs}
+  disclosure={disclosure}
+>
+  <AnswerCapsuleSection
+    heading="What is the NSW Owner Builder Course and who needs it?"
+    answer="The NSW Owner Builder Course is the approved education you must complete before applying for an Owner Builder Permit when residential building work on your home is valued at $20,000 or more. It covers the five nationally recognised units of competency set by Building Commission NSW. You finish online and receive a Statement of Attainment."
+    body="If you plan to supervise or do building work valued over $10,000 on your own home and you are not contracting a licensed builder, you need an Owner Builder Permit from Building Commission NSW. Once the work value reaches $20,000, you also need to complete the approved education or hold an equivalent qualification. The permit is administered through Service NSW, and your application is assessed by Building Commission NSW, usually within 3 business days."
+  >
+    <VerificationNote lastVerified="2026-04-28">
+      <a href="https://www.nsw.gov.au/housing-and-construction/building-or-renovating-a-home/owner-builder/when-a-permit-needed" class="link-dotted" rel="external">Building Commission NSW</a>
+    </VerificationNote>
+  </AnswerCapsuleSection>
+
+  <NumberedStepsSection
+    heading="How does the course work?"
+    answer="Enrol online through ABE Education, complete five units of competency at your own pace, then sit the assessment. AlertForce verifies your work and issues your Statement of Attainment. You then take that certificate to Service NSW with your White Card and supporting documents to apply for your Owner Builder Permit."
+    steps={courseSteps}
+  />
+
+  <UnitOfCompetencyList
+    heading="What will you learn?"
+    units={units}
+    supersededNote="Older versions (CPCCOHS2001A, CPCCCM2001A, CPCCCM1011A, CPCCCM1013A, CPCCCM1014A) are also accepted if you completed them previously."
+    caption="Five units of competency verified against Building Commission NSW on 28 April 2026."
+  />
+  <BodyParagraph text="You will come out of the course knowing how to read a set of building plans, estimate labour and materials, plan and sequence the build, communicate with tradies and certifiers, and stay safe on a construction site." />
+
+  <AnswerCapsuleSection
+    heading="Course requirements and eligibility"
+    answer="To apply for an NSW Owner Builder Permit you must be at least 18, hold a current White Card, own the land (or hold a 3-year-plus registered lease), and have an approved DA or CDC. You must intend to live in the home after building. Only one permit is issued per 5-year period unless special circumstances apply."
+    body="Permits are issued for single dwelling-houses, secondary dwellings (granny flats), and dual occupancies in special circumstances. Strata renovations, commercial premises, hotels, and moveable dwellings such as caravans or motor homes are excluded. You will also need the following documents to lodge your application."
+  >
+    <BulletedFeatureList items={requirements} />
+    <VerificationNote lastVerified="2026-04-28">
+      <a href="https://www.service.nsw.gov.au/transaction/apply-for-an-owner-builder-permit" class="link-dotted" rel="external">Service NSW</a>
+    </VerificationNote>
+    <BodyParagraph text="If you already hold a NSW general building work licence, a qualified supervisor certificate (general building, not limited), an accredited certifier credential, or work as a council building inspector, you may be exempt from the course requirement." />
+  </AnswerCapsuleSection>
+
+  <PricingTable
+    heading="How much does the course cost?"
+    rows={pricingRows}
+    caption="Course fee verified with ABE Education. Permit fees are set by the regulator and published centrally."
+  />
+  <LegalCallout>
+    The course fee covers training and assessment for the five units. The
+    permit fee is paid separately when you submit your application to Service
+    NSW. Fees are reviewed periodically by Building Commission NSW.
+  </LegalCallout>
+
+  <FAQSection heading="NSW Owner Builder course FAQs" items={faqs} />
+
+  <WhyChooseList
+    heading="Why ABE for your NSW Owner Builder training?"
+    answer="ABE Education has trained more than 31,000 students across owner builder and CPD courses since 2007. We partner with established RTOs to deliver nationally recognised training, and we run the online platform, content, and student support that make the course straightforward to finish."
+    items={whyItems}
+    style="ticked"
+  />
+  <ASQADisclosure variant="near-cta" context={disclosure} />
+  <ComparisonTable
+    heading="About your training provider"
+    answer="The two organisations behind this course play distinct roles. Both are named on every official document you receive."
+    columns={['AlertForce Pty Ltd (RTO 91826)', 'ABE Education Pty Ltd (ABN 64 125 455 272)']}
+    rows={roleRows}
+    caption="By enrolling through ABE Education you agree to ABE's Terms and Conditions and AlertForce's training policies, provided at enrolment."
+  />
+
+  <AnswerCapsuleSection
+    heading="How is the course content developed and reviewed?"
+    answer="ABE Education uses a two-stage process. The course content is developed by Dominic Ogburn, a licensed NSW builder with 40-plus years in residential construction and Standards Australia committee experience. Independent compliance and currency review is then carried out by Warwick Smith of Corporate Development Resource Group, a 27-year veteran of the Australian VET sector."
+    body="The two stages verify different things. Dominic builds the course against the Building Commission NSW education requirements and the units of competency specifications published by ASQA. Warwick checks that what is published on this page accurately reflects current NSW legislation, regulator names, fees, and process, not the course content itself, which is the RTO partner's domain."
+  >
+    <ExpertReviewerCard
+      name="Dominic Ogburn"
+      profileHref="/experts/dominic-ogburn"
+      role="Course Developer, CEO of ABE Education"
+      specialties={['Licensed NSW Builder 369417C', '2005 NSW Fair Trading Award', 'Standards Australia BD-038', '40+ Years Experience']}
+      bio="Forty-plus years in Australian residential construction, beginning at Stuart Brothers Pty Ltd (Sydney builders since 1886). Co-author of Your Home: Buying, Selling, Renovating, Building (Allen and Unwin, 2004). Cited in NSW Legislative Council Hansard (2001) and six Sydney Morning Herald articles. As CEO of ABE Education, Dominic has developed owner builder and CPD training completed by 31,000+ students across five jurisdictions."
+      reviewNote="Course content developed by Dominic Ogburn, ABE Education."
+    />
+    <ExpertReviewerCard
+      name="Warwick Smith"
+      profileHref="/experts/warwick-smith"
+      role="Senior Consultant, Compliance and Operations, CDRG"
+      specialties={['27+ Years in VET', 'Senior Consultant', 'Corporate Development Resource Group']}
+      bio="Senior Consultant, Compliance and Operations at Corporate Development Resource Group, with over 27 years across the Australian vocational education and training sector. Former CEO of Training Aid Australia and the Australian Institute of Compliance Professionals. Compliance Manager at TasCollege. Specialist areas include construction, compliance, and operational design."
+      reviewNote="Compliance and currency review of this published page completed on 28 April 2026."
+    />
+  </AnswerCapsuleSection>
+</CoursePageLayout>

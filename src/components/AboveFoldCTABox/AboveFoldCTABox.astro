@@ -1,0 +1,120 @@
+---
+/**
+ * AboveFoldCTABox — the hero-region conversion box.
+ *
+ * Analysis §2.1: the above-the-fold CTA block on a course-state page. A
+ * framed box carrying a few key facts, a prominent price, the primary
+ * action, and a closing reassurance line — the one element on the page
+ * built purely to convert.
+ *
+ * Prominence comes from a 1px solid ink frame (DESIGN.md §4), the strongest
+ * permitted ornament, plus a v3 (filled) CTAButton — this IS the focal
+ * element, the case the Volume Ladder Rule reserves v3 for. The "📅 📍 💰 ⏱"
+ * emoji from the content draft are dropped; the system owns no icon set.
+ */
+import CTAButton from '@components/CTAButton/CTAButton.astro';
+
+interface Props {
+  /** Key fact lines, e.g. "Sessions run Monday to Friday". */
+  facts?: string[];
+  /** The headline price, e.g. "$129". */
+  price: string;
+  /** Supporting price note, e.g. "was $149, card fee included". */
+  priceNote?: string;
+  /** Primary action label. */
+  ctaLabel: string;
+  /** Primary action href. */
+  ctaHref: string;
+  /** Closing reassurance line, e.g. "Most students are on site within 24 hours". */
+  reassurance?: string;
+}
+
+const { facts = [], price, priceNote, ctaLabel, ctaHref, reassurance } =
+  Astro.props;
+---
+
+<aside class="afc">
+  {
+    facts.length > 0 && (
+      <ul class="afc__facts">
+        {facts.map((f) => <li class="afc__fact">{f}</li>)}
+      </ul>
+    )
+  }
+
+  <p class="afc__price">
+    <span class="afc__amount">{price}</span>
+    {priceNote && <span class="afc__price-note">{priceNote}</span>}
+  </p>
+
+  <div class="afc__action">
+    <CTAButton href={ctaHref} label={ctaLabel} variant="v3" />
+  </div>
+
+  {reassurance && <p class="afc__reassurance">{reassurance}</p>}
+</aside>
+
+<style>
+  /* The hero conversion box — a 1px solid ink frame lifts it; no fill. */
+  .afc {
+    border: 1px solid var(--color-ink);
+    background: transparent;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    max-width: 30rem;
+  }
+
+  /* Key facts — quiet body lines, 1px Rule hairline between. */
+  .afc__facts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .afc__fact {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--color-ink-2);
+    padding: var(--spacing-xs) 0;
+  }
+  .afc__fact + .afc__fact {
+    border-top: 1px solid var(--color-rule);
+  }
+
+  /* Price — Display register, the loudest type on the box. */
+  .afc__price {
+    margin: var(--spacing-md) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5em;
+  }
+  .afc__amount {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    font-feature-settings: "lnum", "tnum";
+  }
+  .afc__price-note {
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-ink-2);
+  }
+
+  .afc__action {
+    margin-top: var(--spacing-lg);
+  }
+
+  .afc__reassurance {
+    margin: var(--spacing-md) 0 0;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink-3);
+  }
+</style>

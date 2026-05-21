@@ -1,0 +1,109 @@
+---
+import VerificationFootnote from './VerificationFootnote.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — White Card streamcard footnote (canonical) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      White Card streamcard footnote (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Right-aligned. Source on top, Verified on below. Two RTO partners
+      joined with a double-spaced bullet. 1px Rule line above.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <p class="t-body" style="color: var(--color-ink-2); max-width: 70ch;">
+        <em>(streamcard body content sits here — description, facts, CTA)</em>
+      </p>
+      <VerificationFootnote lastVerified="2026-05-01">
+        <a
+          href="https://training.gov.au/Organisation/Details/31193"
+          class="link-dotted"
+          rel="external"
+        >
+          RTO 31193
+        </a>
+        <span class="eg-bullet" aria-hidden="true">•</span>
+        <a
+          href="https://training.gov.au/Organisation/Details/91826"
+          class="link-dotted"
+          rel="external"
+        >
+          RTO 91826
+        </a>
+      </VerificationFootnote>
+    </div>
+  </section>
+
+  <!-- Variant 2 — single state regulator -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Single regulator source (Owner Builder QLD)
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <p class="t-body" style="color: var(--color-ink-2); max-width: 70ch;">
+        <em>(streamcard body content sits here — QBCC approval, fees, threshold)</em>
+      </p>
+      <VerificationFootnote lastVerified="2026-04-14">
+        <a
+          href="https://www.qbcc.qld.gov.au/home-owner-hub/owner-build"
+          class="link-dotted"
+          rel="external"
+        >
+          QBCC
+        </a>
+      </VerificationFootnote>
+    </div>
+  </section>
+
+  <!-- Variant 3 — hub-level multi-regulator -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Hub-level — four state regulators
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The Owner Builder hub references all four direct-approval regulators
+      across QLD/WA/TAS/ACT, joined with double-spaced bullets.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <p class="t-body" style="color: var(--color-ink-2); max-width: 70ch;">
+        <em>(hub body content sits here — state navigator, comparison table)</em>
+      </p>
+      <VerificationFootnote lastVerified="2026-05-19">
+        <a href="https://www.qbcc.qld.gov.au/" class="link-dotted" rel="external">QBCC</a>
+        <span class="eg-bullet" aria-hidden="true">•</span>
+        <a href="https://www.commerce.wa.gov.au/building-commission" class="link-dotted" rel="external">LGIRS WA</a>
+        <span class="eg-bullet" aria-hidden="true">•</span>
+        <a href="https://cbos.tas.gov.au/" class="link-dotted" rel="external">CBOS Tasmania</a>
+        <span class="eg-bullet" aria-hidden="true">•</span>
+        <a href="https://www.accesscanberra.act.gov.au/" class="link-dotted" rel="external">Access Canberra</a>
+      </VerificationFootnote>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Bullet separator for multi-source — double-space gap each side. */
+  .eg-bullet {
+    display: inline-block;
+    margin: 0 0.5em;
+    font-size: 12px;
+    color: var(--color-ink-4);
+  }
+</style>

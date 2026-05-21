@@ -1,0 +1,73 @@
+---
+import SourceCitation from './SourceCitation.astro';
+import BodyParagraph from '../BodyParagraph/BodyParagraph.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — single source -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Single source (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Right-aligned <code>SOURCE [value]</code>. 10px Geist Mono caps label,
+      12px Public Sans value, Ink-3.
+    </p>
+    <div
+      class="mt-3 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BodyParagraph
+        text="The course is fully online and self-paced. You can pause and pick up where you left off; your progress is saved."
+      />
+      <SourceCitation>
+        <a
+          href="https://www.qbcc.qld.gov.au/home-owner-hub/owner-build"
+          class="link-dotted"
+          rel="external"
+        >
+          QBCC
+        </a>
+      </SourceCitation>
+    </div>
+  </section>
+
+  <!-- Variant 2 — multiple sources, bullet-separated -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Multiple sources, bullet-separated
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Multiple sources joined with a double-spaced <code>•</code> bullet.
+    </p>
+    <div
+      class="mt-3 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BodyParagraph
+        text="Permit thresholds vary by state: $5,000 in Tasmania, $10,000 in NSW, $11,000 in Queensland, and $20,000 in Western Australia."
+      />
+      <SourceCitation>
+        <a href="https://www.qbcc.qld.gov.au/" class="link-dotted" rel="external">QBCC</a>
+        <span class="eg-bullet" aria-hidden="true">•</span>
+        <a href="https://training.gov.au/Organisation/Details/31193" class="link-dotted" rel="external">RTO 31193</a>
+      </SourceCitation>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Bullet separator for multi-source — double-space gap each side. */
+  .eg-bullet {
+    display: inline-block;
+    margin: 0 0.5em;
+    font-size: 12px;
+    color: var(--color-ink-4);
+  }
+</style>

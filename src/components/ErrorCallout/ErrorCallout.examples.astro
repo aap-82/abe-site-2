@@ -1,0 +1,57 @@
+---
+import ErrorCallout from './ErrorCallout.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 (canonical): enrolments closed -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Blocking notice (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A 1px red error frame with an <code>error-deep</code> mono caps label,
+      no fill. Body stays Ink.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ErrorCallout label="Closed">
+        Enrolments for the June intake have closed. The next available start
+        date is 14 July 2026.
+      </ErrorCallout>
+    </div>
+  </section>
+
+  <!-- Variant 2 (custom label): course unavailable in a state, with a link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Custom label, unavailable in state
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The <code>label</code> prop reframes the callout. The body slot carries an
+      inline link to the relevant authority.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ErrorCallout label="Unavailable">
+        ABE does not currently deliver this course in Victoria. Owner Builder
+        permits there are handled by the
+        <a
+          href="https://www.vba.vic.gov.au/owner-builders"
+          class="link-dotted"
+          rel="external"
+        >
+          Victorian Building Authority</a>.
+      </ErrorCallout>
+    </div>
+  </section>
+</div>

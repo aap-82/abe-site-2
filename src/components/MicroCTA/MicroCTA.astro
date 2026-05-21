@@ -1,0 +1,98 @@
+---
+/**
+ * MicroCTA — the in-page jump link that closes most content sections.
+ *
+ * Visual grammar:
+ *   - Mono caps label, Ink-3 default, dotted underline ONLY under the label
+ *   - Maroon ↓ or ↑ arrow on the right, no underline
+ *   - On hover: label shifts to Maroon, arrow translates 3px in its direction
+ *
+ * Direction:
+ *   - `down` (default) when the target heading is below the current section
+ *   - `up` when the target is above (e.g. back-to-top, return to a higher
+ *     section)
+ *
+ * For cross-page links to other ABE pages, use `CrossRefLink` instead —
+ * that component uses a → arrow and is the right register for navigation
+ * out of the current page.
+ *
+ * Locked decisions reflected here:
+ *   #7 — anchor IDs auto-generate from heading slug via src/lib/slugify.ts.
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Props {
+  /** Heading text of the target section. Slugified to build the href. */
+  targetHeading?: string;
+  /** Override the slugified href (preserves an existing URL anchor). */
+  targetId?: string;
+  /** Visible link text — pass clean text without leading/trailing arrows. */
+  label: string;
+  /** Arrow direction. Defaults to `down` (most common; target is below). */
+  direction?: 'up' | 'down';
+}
+
+const {
+  targetHeading,
+  targetId,
+  label,
+  direction = 'down',
+} = Astro.props;
+
+const resolvedId = targetId ?? (targetHeading ? slugify(targetHeading) : '');
+const href = resolvedId ? `#${resolvedId}` : '#';
+const arrow = direction === 'up' ? '↑' : '↓';
+---
+
+<p class="micro-cta">
+  <a href={href} class="micro-cta__link">
+    <span class="micro-cta__label t-label">{label}</span>
+    <span class="micro-cta__arrow" aria-hidden="true" data-direction={direction}>
+      {arrow}
+    </span>
+  </a>
+</p>
+
+<style>
+  .micro-cta {
+    margin: var(--spacing-lg) 0;
+  }
+
+  /* The link itself carries no underline; underline is on the label span only. */
+  .micro-cta__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: var(--color-ink-3);
+    text-decoration: none;
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .micro-cta__link:hover {
+    color: var(--color-accent);
+  }
+
+  /* Dotted underline lives on the label only — never under the arrow. */
+  .micro-cta__label {
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .micro-cta__arrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--color-accent);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .micro-cta__link:hover .micro-cta__arrow[data-direction="down"] {
+    transform: translateY(3px);
+  }
+  .micro-cta__link:hover .micro-cta__arrow[data-direction="up"] {
+    transform: translateY(-3px);
+  }
+</style>

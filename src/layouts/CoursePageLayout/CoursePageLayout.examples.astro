@@ -1,0 +1,60 @@
+---
+// CoursePageLayout can't render live inside the styleguide [slug] page — it
+// wraps BaseLayout, which emits a full <html> document. This static preview
+// describes the layout's chrome, slot, and composition pattern.
+---
+
+<div class="space-y-6">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Chrome order</h3>
+    <pre
+      class="mt-2"
+      style="background: var(--color-ink); color: var(--color-bg); padding: 1rem 1.25rem; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; white-space: pre-wrap;"
+    >
+{`CoursePageLayout
+└── BaseLayout
+    ├── slot "schema"  ← buildCourseGraph(...) JSON-LD
+    └── div.course
+        ├── header.course__head
+        │   ├── BreadcrumbBar (reviewer line)
+        │   ├── PageHeading
+        │   └── RTOAttributionLine     (RTO-partnered only)
+        ├── main.course__main
+        │   └── <slot />   ← content sections
+        └── footer.course__footer      (RTO-partnered only)
+            ├── ASQADisclosure footer-legal
+            └── ASQADisclosure copyright-bar`}
+    </pre>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">RTO-partnered vs ABE-direct</h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      Supplying the <code>disclosure</code> context marks the page as
+      RTO-partnered: the hero <code>RTOAttributionLine</code> and the footer
+      <code>ASQADisclosure</code> blocks render. Omit it for a course ABE
+      delivers directly.
+    </p>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Props</h3>
+    <ul
+      class="mt-3 space-y-0"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <li class="flex gap-3 px-5 py-3" style="border-bottom: 1px solid var(--color-rule);">
+        <code class="t-label" style="color: var(--color-accent); min-width: 9rem;">title / description / canonical</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Head meta and schema identity.</span>
+      </li>
+      <li class="flex gap-3 px-5 py-3" style="border-bottom: 1px solid var(--color-rule);">
+        <code class="t-label" style="color: var(--color-accent); min-width: 9rem;">courseName / provider / faqs</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Feed buildCourseGraph (Course, FAQPage).</span>
+      </li>
+      <li class="flex gap-3 px-5 py-3">
+        <code class="t-label" style="color: var(--color-accent); min-width: 9rem;">disclosure</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Optional. Drives the RTO attribution and ASQA footer.</span>
+      </li>
+    </ul>
+  </section>
+</div>

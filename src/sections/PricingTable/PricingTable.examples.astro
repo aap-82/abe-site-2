@@ -1,0 +1,64 @@
+---
+import PricingTable from './PricingTable.astro';
+---
+
+<div class="space-y-12">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Itemised pricing with a centrally-published fee (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The NSW Owner Builder pricing — a fixed course fee, an included
+      certificate, and a permit fee linked out to the regulator page.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <PricingTable
+        heading="How much does the course cost?"
+        rows={[
+          { item: 'ABE Education course fee', cost: '$180' },
+          { item: 'AlertForce Statement of Attainment', cost: 'Included' },
+          {
+            item: 'Building Commission NSW permit fee',
+            cost: 'Set by Service NSW',
+            costHref: 'https://www.nsw.gov.au/business-and-economy/licences-and-credentials',
+          },
+          { item: 'White Card (if you do not hold one)', cost: 'Separate course' },
+        ]}
+        caption="Course fee verified with ABE Education on 28 April 2026. Permit fees are set by the regulator."
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Sale pricing with RRP and a total row
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A struck-through RRP on the first row and an emphasised
+      <code>total</code> row showing the all-inclusive price.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <PricingTable
+        heading="White Card course cost"
+        rows={[
+          { item: 'White Card course (CPCWHS1001) via Zoom', cost: '$101', rrp: '$149' },
+          { item: 'SafeWork NSW card processing fee', cost: '$28 (included)' },
+        ]}
+        total={{ item: 'You pay', cost: '$129' }}
+        caption="Course fees are set by the training provider and subject to change. Confirm pricing at the time of booking."
+      />
+    </div>
+  </section>
+</div>

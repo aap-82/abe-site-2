@@ -1,0 +1,196 @@
+---
+/**
+ * ComparisonTable — document-grade comparison grid (attribute × option).
+ *
+ * The white-paper way to show dense factual data: state-by-state requirements,
+ * online-vs-in-person, plan tiers. Rows are attributes, columns are the options
+ * being compared. The first column is a row-header (scope="row"); the top row is
+ * column-headers (scope="col").
+ *
+ * On-doctrine treatment:
+ *   - Column headers + corner: Geist Mono caps, Ink-3 (label voice).
+ *   - Row labels: Public Sans 600 Ink (the attribute being compared).
+ *   - Cells: Public Sans 400 Ink.
+ *   - 1px solid ink rule under the header row; 1px Rule hairlines between rows
+ *     (Two-Ornament Rule — no zebra fills, no shadows, sharp corners).
+ *   - Horizontal scroll on small screens rather than reflowing the grid.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the section owns the <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+import AnswerCapsule from '@components/AnswerCapsule/AnswerCapsule.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+
+interface Row {
+  /** Row-header (the attribute being compared), e.g. "Permit issued by". */
+  label: string;
+  /** Values aligned 1:1 with `columns`. */
+  cells: string[];
+}
+
+interface Props {
+  heading: string;
+  /** Optional intro capsule (40–60 words). */
+  answer?: string;
+  /** Optional intro body. Renders only if `answer` is set. */
+  body?: string;
+  /** Top-left corner cell label, e.g. "Requirement". Default blank. */
+  rowHeader?: string;
+  /** Column headers, e.g. ["NSW", "QLD", "WA", "TAS", "ACT"]. */
+  columns: string[];
+  /** Comparison rows. Each `cells` array should match `columns` length. */
+  rows: Row[];
+  /** Optional caption rendered as a mono footnote below the table. */
+  caption?: string;
+  anchorId?: string;
+}
+
+const {
+  heading,
+  answer,
+  body,
+  rowHeader = '',
+  columns,
+  rows,
+  caption,
+  anchorId,
+} = Astro.props;
+const id = anchorId ?? slugify(heading);
+const hasIntro = Boolean(answer);
+---
+
+<section id={id} class="ctable">
+  <h2 class="t-headline ctable__heading">{heading}</h2>
+
+  {hasIntro && <AnswerCapsule text={answer!} />}
+  {hasIntro && body && <BodyParagraph text={body} />}
+
+  <div class="ctable__scroll">
+    <table class="ctable__table">
+      {caption && <caption class="ctable__caption">{caption}</caption>}
+      <thead>
+        <tr>
+          <th scope="col" class="ctable__corner">{rowHeader}</th>
+          {columns.map((col) => (
+            <th scope="col" class="ctable__colhead">
+              {col}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <tr>
+            <th scope="row" class="ctable__rowhead">
+              {row.label}
+            </th>
+            {row.cells.map((cell) => (
+              <td class="ctable__cell">{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .ctable {
+    padding: var(--spacing-xxl) 0;
+    scroll-margin-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-rule);
+  }
+  .ctable__heading {
+    color: var(--color-ink);
+    text-transform: uppercase;
+    margin: 0 0 var(--spacing-lg);
+    max-width: 38ch;
+  }
+  .ctable__scroll {
+    margin-top: var(--spacing-lg);
+    overflow-x: auto;
+  }
+  .ctable__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-feature-settings: "lnum", "tnum";
+  }
+  .ctable__caption {
+    caption-side: bottom;
+    margin-top: var(--spacing-md);
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  /* Header row — Geist Mono caps label voice, Ink-3, strong 1px ink underline. */
+  .ctable__corner,
+  .ctable__colhead {
+    text-align: left;
+    vertical-align: bottom;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-ink);
+  }
+  .ctable__colhead {
+    white-space: nowrap;
+  }
+
+  /* Row label — the attribute being compared. */
+  .ctable__rowhead {
+    text-align: left;
+    vertical-align: top;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-ink);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .ctable__cell {
+    text-align: left;
+    vertical-align: top;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-ink);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  /* First column hugs the section's left edge. */
+  .ctable__corner,
+  .ctable__rowhead {
+    padding-left: 0;
+  }
+
+  @media (max-width: 640px) {
+    .ctable__rowhead,
+    .ctable__cell {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 14px;
+    }
+    .ctable__corner,
+    .ctable__colhead {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 11px;
+    }
+    .ctable__corner,
+    .ctable__rowhead {
+      padding-left: 0;
+    }
+  }
+</style>

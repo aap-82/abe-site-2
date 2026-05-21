@@ -1,0 +1,60 @@
+---
+import RegulatorBand from './RegulatorBand.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — brand block + 4 credential tiles (canonical) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Brand block + 4 credential tiles (canonical)
+    </h3>
+    <div class="mt-2" style="border: 1px solid var(--color-rule);">
+      <RegulatorBand
+        heading="Accreditation and credentials"
+        brand="ABE Education"
+        brandTag="Nationally recognised training"
+        stats={[
+          { value: '5', label: 'States covered' },
+          { value: 'RTO 91826', label: 'RTO partner' },
+          { value: 'Yes', label: 'Nationally recognised' },
+          { value: '21 May 2026', label: 'Last verified' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — no brand block, 4 tiles -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      No brand block (4 tiles)
+    </h3>
+    <div class="mt-2" style="border: 1px solid var(--color-rule);">
+      <RegulatorBand
+        heading="Course credentials at a glance"
+        stats={[
+          { value: 'NSW', label: 'Issued by SafeWork' },
+          { value: 'RTO 91826', label: 'AlertForce' },
+          { value: '7 hrs', label: 'Live session' },
+          { value: '2 weeks', label: 'Card delivery' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — minimal (3 tiles) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Minimal (3 tiles)
+    </h3>
+    <div class="mt-2" style="border: 1px solid var(--color-rule);">
+      <RegulatorBand
+        heading="Regulator credentials"
+        stats={[
+          { value: '5', label: 'States covered' },
+          { value: 'Yes', label: 'Nationally recognised' },
+          { value: '21 May 2026', label: 'Last verified' },
+        ]}
+      />
+    </div>
+  </section>
+</div>

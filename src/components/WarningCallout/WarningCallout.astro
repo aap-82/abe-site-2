@@ -1,0 +1,72 @@
+---
+/**
+ * WarningCallout — the must-read constraint note.
+ *
+ * Analysis §3.1: the "⚠️ Important:" block — location and eligibility
+ * constraints a reader must not miss (e.g. "you must be located in NSW on
+ * the day of online training"). The loudest member of the callout family.
+ *
+ * Design-system notes:
+ *   - Uses the semantic `warning` colour (DESIGN.md §2 Semantic status
+ *     colours): a 1px amber border with an ochre `warning-deep` mono caps
+ *     label, on a transparent background. Amber is the system's one warm
+ *     hue, a bounded exception to the No Warm Tones Rule, applied here only
+ *     as a small status signal (border and label, no fill, never coloured
+ *     body text).
+ *   - Body text stays Ink. Semantic colours label and frame; they never
+ *     colour body copy. A left-border colour stripe is still forbidden —
+ *     the warning colour is applied as a full 1px frame, never a stripe.
+ *   - The "⚠️" emoji is dropped; the IMPORTANT mono caps label carries it.
+ *   - Body is a slot so the constraint can carry inline link-dotted links.
+ */
+interface Props {
+  /** Mono caps label naming the callout. Rendered uppercase by CSS. */
+  label?: string;
+}
+
+const { label = 'Important' } = Astro.props;
+---
+
+<aside class="warning-callout">
+  <p class="warning-callout__label">{label}</p>
+  <div class="warning-callout__body"><slot /></div>
+</aside>
+
+<style>
+  /* The loudest callout: a 1px amber frame in the semantic warning colour
+     commands attention. A full frame, never a colour stripe; no fill. */
+  .warning-callout {
+    border: 1px solid var(--color-warning);
+    background: transparent;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .warning-callout__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-warning-deep);
+  }
+
+  .warning-callout__body {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-ink);
+    max-width: 70ch;
+  }
+
+  /* Reset margins if the author passes paragraph elements into the slot. */
+  .warning-callout__body :global(p) {
+    margin: 0;
+  }
+  .warning-callout__body :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+</style>

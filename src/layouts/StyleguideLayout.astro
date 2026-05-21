@@ -1,0 +1,171 @@
+---
+import '@/styles/global.css';
+import { discoverComponents, groupByCategory, completedPages } from '@/lib/styleguide';
+
+interface Props {
+  title: string;
+  activeSlug?: string;
+}
+
+const { title, activeSlug } = Astro.props;
+const grouped = groupByCategory(discoverComponents());
+const total =
+  grouped.layouts.length + grouped.sections.length + grouped.components.length;
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{title} · ABE Styleguide</title>
+
+    <!-- Google Fonts — explicit link in head so they load in parallel
+         with HTML, not deferred behind the global.css import. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&display=swap"
+    />
+  </head>
+  <body
+    class="min-h-screen"
+    style="background: var(--color-bg); color: var(--color-ink); font-family: var(--font-body);"
+  >
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-64 shrink-0 px-5 py-6"
+        style="border-right: 1px solid var(--color-rule); background: var(--color-bg-alt);"
+      >
+        <a href="/styleguide" class="sg-wordmark">ABE Styleguide</a>
+        <p class="t-label-footnote mt-1" style="color: var(--color-ink-3);">
+          {total} components
+        </p>
+
+        <!-- Conventions — manual entry, sits above the auto-discovered groups -->
+        <nav class="mt-6">
+          <h2 class="t-label-footnote mb-2" style="color: var(--color-ink-3);">
+            reference
+          </h2>
+          <ul class="space-y-1">
+            <li>
+              <a
+                href="/styleguide/conventions"
+                class:list={['sg-link', { 'sg-link--active': activeSlug === '__conventions__' }]}
+              >
+                <span class="sg-num">01</span>Conventions
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        {
+          completedPages.length > 0 && (
+            <nav class="mt-6">
+              <h2 class="t-label-footnote mb-2" style="color: var(--color-ink-3);">
+                pages
+              </h2>
+              <ul class="space-y-1">
+                {completedPages.map((p, i) => (
+                  <li>
+                    <a href={p.href} class="sg-link">
+                      <span class="sg-num">{String(i + 1).padStart(2, '0')}</span>
+                      {p.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
+
+        {
+          (['layouts', 'sections', 'components'] as const).map((group) =>
+            grouped[group].length === 0 ? null : (
+              <nav class="mt-6">
+                <h2 class="t-label-footnote mb-2" style="color: var(--color-ink-3);">
+                  {group}
+                </h2>
+                <ul class="space-y-1">
+                  {grouped[group].map((c, i) => (
+                    <li>
+                      <a
+                        href={`/styleguide/${c.slug}`}
+                        class:list={['sg-link', { 'sg-link--active': c.slug === activeSlug }]}
+                      >
+                        <span class="sg-num">{String(i + 1).padStart(2, '0')}</span>
+                        {c.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ),
+          )
+        }
+      </aside>
+
+      <!-- Main content -->
+      <main class="flex-1 min-w-0 overflow-x-hidden px-8 py-8">
+        <div class="mx-auto max-w-5xl">
+          <slot />
+        </div>
+      </main>
+    </div>
+
+    <style>
+      /* Wordmark — Display face, the title voice. */
+      .sg-wordmark {
+        display: block;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        color: var(--color-ink);
+        text-decoration: none;
+      }
+
+      /* Sidebar link — flat, sharp corners, colour shift on hover (never
+         elevation). Active state is Maroon, the action register. */
+      .sg-link {
+        display: block;
+        padding: 6px 8px;
+        font-family: var(--font-body);
+        font-size: 0.8125rem;
+        color: var(--color-ink-2);
+        text-decoration: none;
+        transition:
+          background 140ms ease,
+          color 140ms ease;
+      }
+      .sg-link:hover {
+        background: var(--color-bg-deep);
+        color: var(--color-ink);
+      }
+      .sg-link--active {
+        background: var(--color-accent);
+        color: var(--color-bg);
+      }
+      .sg-link--active:hover {
+        background: var(--color-accent);
+        color: var(--color-bg);
+      }
+
+      /* Index number — Mono face, the label voice. */
+      .sg-num {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        margin-right: 0.5rem;
+        opacity: 0.55;
+        font-variant-numeric: tabular-nums;
+      }
+      .sg-link--active .sg-num {
+        opacity: 0.85;
+      }
+    </style>
+  </body>
+</html>

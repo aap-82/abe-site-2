@@ -1,0 +1,418 @@
+---
+/**
+ * Streamcard — the homepage "stream" card. Two layouts:
+ *
+ *   layout="plate" (default) — the deployed solid vertical plate. A Cream-1 or
+ *     Document Ink card: eyebrow + big maroon number, Display title, body with
+ *     bold RTO lead-ins, a CTA link, a dotted rule, and a credential footnote.
+ *
+ *   layout="canonical" — the DESIGN.md §5 "Streamcard (§02 canonical)": a
+ *     transparent three-column grid (14rem summary / 1fr body / 14rem state-nav)
+ *     with no perimeter border and no shadow. Each column carries an aligned 1px
+ *     dotted ink-3 top rule that marks the card boundary. The stream brand word
+ *     sits in Deep Burgundy; col 3 holds the per-state links (the streamcard
+ *     state-list, same grammar as the section-header browse-streams nav).
+ *
+ * Colour discipline:
+ *   - plate: the number is the only maroon; title max-contrast Ink/Cream.
+ *   - canonical: the brand word is Deep Burgundy (the per-card brand register,
+ *     DESIGN.md §2); number Ink-4; everything else ink palette; arrows Maroon.
+ *
+ * Locked decisions reflected here:
+ *   #1 — title comes from a prop; the card renders <h3>.
+ *   #3 — design-system tokens only; sharp corners; no shadow.
+ */
+type Variant = 'light' | 'dark';
+type Layout = 'plate' | 'canonical';
+
+interface StateLink {
+  /** State label, e.g. "NSW". */
+  name: string;
+  /** Per-state course page, e.g. "/owner-builder-nsw". */
+  href?: string;
+}
+
+interface Props {
+  /** Two-digit stream number, e.g. "01". */
+  num: string;
+  /** Short 2-3 word stream description (plate eyebrow / canonical category). */
+  eyebrow: string;
+  /** Stream title (plate) or brand word (canonical), e.g. "Owner Builder". */
+  title: string;
+  /** CTA label, e.g. "Browse Owner Builder by state". Rendered mono caps. */
+  ctaLabel: string;
+  /** Optional CTA href. When omitted the label renders as static (not a link). */
+  ctaHref?: string;
+  /** Mono caps credential footnote, e.g. "Approved by QBCC · CBOS TAS". */
+  footnote: string;
+  /** "plate" (default) solid card, or "canonical" 3-column row. */
+  layout?: Layout;
+  /** Plate tonal variant. Ignored when layout="canonical". Defaults to `light`. */
+  variant?: Variant;
+  /** Per-state links for the canonical layout's nav column. */
+  states?: StateLink[];
+}
+
+const {
+  num,
+  eyebrow,
+  title,
+  ctaLabel,
+  ctaHref,
+  footnote,
+  layout = 'plate',
+  variant = 'light',
+  states = [],
+} = Astro.props;
+---
+
+{
+  layout === 'canonical' ? (
+    <article class="streamcard streamcard--canonical">
+      <div class="streamcard__col streamcard__summary">
+        <span class="streamcard__num">{num}</span>
+        <h3 class="streamcard__brand">{title}</h3>
+        <span class="streamcard__eyebrow">{eyebrow}</span>
+      </div>
+
+      <div class="streamcard__col streamcard__main">
+        <div class="streamcard__body"><slot /></div>
+        <div class="streamcard__cta">
+          {ctaHref ? (
+            <a href={ctaHref} class="streamcard__cta-link">{ctaLabel}</a>
+          ) : (
+            <span class="streamcard__cta-link streamcard__cta-link--static">{ctaLabel}</span>
+          )}
+        </div>
+        <p class="streamcard__footnote">{footnote}</p>
+      </div>
+
+      <div class="streamcard__col streamcard__nav">
+        <span class="streamcard__nav-head">By state</span>
+        <ul class="streamcard__list">
+          {states.map((s, i) => (
+            <li class="streamcard__state-item">
+              {s.href ? (
+                <a href={s.href} class="streamcard__state">
+                  <span class="streamcard__state-num">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="streamcard__state-name">{s.name}</span>
+                  <span class="streamcard__state-arrow" aria-hidden="true">→</span>
+                </a>
+              ) : (
+                <span class="streamcard__state streamcard__state--static">
+                  <span class="streamcard__state-num">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="streamcard__state-name">{s.name}</span>
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  ) : (
+    <article class={`streamcard streamcard--plate streamcard--${variant}`}>
+      <header class="streamcard__head">
+        <span class="streamcard__eyebrow">{eyebrow}</span>
+        <span class="streamcard__num">{num}</span>
+      </header>
+      <h3 class="streamcard__title">{title}</h3>
+      <div class="streamcard__body"><slot /></div>
+      <div class="streamcard__cta">
+        {ctaHref ? (
+          <a href={ctaHref} class="streamcard__cta-link">{ctaLabel}</a>
+        ) : (
+          <span class="streamcard__cta-link streamcard__cta-link--static">{ctaLabel}</span>
+        )}
+      </div>
+      <p class="streamcard__footnote">{footnote}</p>
+    </article>
+  )
+}
+
+<style>
+  /* ============================================================
+     PLATE LAYOUT — solid vertical card (deployed design)
+     ============================================================ */
+  .streamcard--plate {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--spacing-xl);
+    background: var(--sc-bg);
+    color: var(--sc-body);
+  }
+
+  .streamcard--light {
+    --sc-bg: var(--color-bg);
+    --sc-title: var(--color-ink);
+    --sc-body: var(--color-ink-2);
+    --sc-strong: var(--color-ink);
+    --sc-label: var(--color-ink-3);
+    --sc-rule: var(--color-ink-3);
+    --sc-num: var(--color-accent);
+  }
+  .streamcard--dark {
+    --sc-bg: var(--color-ink);
+    --sc-title: var(--color-bg);
+    --sc-body: color-mix(in oklch, var(--color-bg) 82%, transparent);
+    --sc-strong: var(--color-bg);
+    --sc-label: color-mix(in oklch, var(--color-bg) 62%, transparent);
+    --sc-rule: color-mix(in oklch, var(--color-bg) 30%, transparent);
+    --sc-num: color-mix(in oklch, var(--color-accent) 70%, var(--color-bg));
+  }
+
+  .streamcard--plate .streamcard__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  .streamcard--plate .streamcard__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sc-label);
+    max-width: 16ch;
+  }
+  .streamcard--plate .streamcard__num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 3.5vw, 3rem);
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    color: var(--sc-num);
+    font-feature-settings: "lnum", "tnum";
+  }
+  .streamcard--plate .streamcard__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--sc-title);
+    margin: var(--spacing-lg) 0 0;
+  }
+  .streamcard--plate .streamcard__body {
+    flex: 1 1 auto;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--sc-body);
+    margin: var(--spacing-md) 0 0;
+    max-width: 40ch;
+  }
+  .streamcard--plate .streamcard__body :global(strong) {
+    font-weight: 700;
+    color: var(--sc-strong);
+  }
+  .streamcard--plate .streamcard__body :global(p) {
+    margin: 0;
+  }
+  .streamcard--plate .streamcard__cta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0 0;
+  }
+  .streamcard--plate .streamcard__cta-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sc-label);
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    max-width: 22ch;
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .streamcard--plate .streamcard__cta-link--static {
+    text-decoration: none;
+  }
+  .streamcard--plate a.streamcard__cta-link:hover {
+    color: var(--color-accent);
+  }
+  .streamcard--dark a.streamcard__cta-link:hover {
+    color: var(--sc-num);
+  }
+  .streamcard--plate .streamcard__footnote {
+    margin: var(--spacing-lg) 0 0;
+    padding-top: var(--spacing-md);
+    border-top: 1px dotted var(--sc-rule);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sc-label);
+  }
+
+  /* ============================================================
+     CANONICAL LAYOUT — transparent 3-column row (DESIGN.md §5)
+     ============================================================ */
+  .streamcard--canonical {
+    display: grid;
+    grid-template-columns: 14rem 1fr 14rem;
+    gap: var(--spacing-xl);
+    background: transparent;
+    scroll-margin-top: var(--spacing-xxl);
+  }
+  /* Aligned 1px dotted top rule across all three columns marks the boundary. */
+  .streamcard--canonical .streamcard__col {
+    border-top: 1px dotted var(--color-ink-3);
+    padding: var(--spacing-xl) 0;
+    min-width: 0;
+  }
+
+  .streamcard--canonical .streamcard__num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    color: var(--color-ink-4);
+    font-feature-settings: "lnum", "tnum";
+  }
+  .streamcard--canonical .streamcard__brand {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-accent-deep);
+    margin: var(--spacing-sm) 0 0;
+  }
+  .streamcard--canonical .streamcard__eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    margin: var(--spacing-sm) 0 0;
+  }
+
+  .streamcard--canonical .streamcard__body {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-ink-2);
+    max-width: 60ch;
+  }
+  .streamcard--canonical .streamcard__body :global(strong) {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .streamcard--canonical .streamcard__body :global(p) {
+    margin: 0;
+  }
+  .streamcard--canonical .streamcard__cta {
+    margin: var(--spacing-lg) 0 0;
+  }
+  .streamcard--canonical .streamcard__cta-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .streamcard--canonical .streamcard__cta-link--static {
+    text-decoration: none;
+  }
+  .streamcard--canonical a.streamcard__cta-link:hover {
+    color: var(--color-accent);
+  }
+  .streamcard--canonical .streamcard__footnote {
+    margin: var(--spacing-lg) 0 0;
+    padding-top: var(--spacing-md);
+    border-top: 1px dotted var(--color-ink-3);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    max-width: 60ch;
+  }
+
+  /* Col 3 state-list — same grammar as the section-header browse-streams nav. */
+  .streamcard--canonical .streamcard__nav-head {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .streamcard--canonical .streamcard__list {
+    list-style: none;
+    margin: var(--spacing-sm) 0 0;
+    padding: 0;
+  }
+  .streamcard--canonical .streamcard__state-item + .streamcard__state-item {
+    border-top: 1px dotted var(--color-rule);
+  }
+  .streamcard--canonical .streamcard__state {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    align-items: baseline;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .streamcard--canonical .streamcard__state-num {
+    color: var(--color-ink-3);
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .streamcard--canonical .streamcard__state-name {
+    color: var(--color-ink-3);
+    text-decoration: underline dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .streamcard--canonical .streamcard__state-arrow {
+    color: var(--color-accent);
+    transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .streamcard--canonical a.streamcard__state:hover .streamcard__state-num {
+    color: var(--color-ink);
+  }
+  .streamcard--canonical a.streamcard__state:hover .streamcard__state-name {
+    color: var(--color-accent);
+  }
+  .streamcard--canonical a.streamcard__state:hover .streamcard__state-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 880px) {
+    .streamcard--canonical {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .streamcard--canonical .streamcard__col {
+      padding: var(--spacing-lg) 0;
+    }
+  }
+</style>

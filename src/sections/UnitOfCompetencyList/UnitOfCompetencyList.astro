@@ -1,0 +1,154 @@
+---
+/**
+ * UnitOfCompetencyList — the nationally recognised units list.
+ *
+ * Analysis §3.5: the units of competency a course delivers. Each unit pairs
+ * a national unit code with its title, plus optional elements count and
+ * delivery mode. Renders as a hairline-separated list — one unit, one code,
+ * one row — so a five-unit Owner Builder course and a single-unit White
+ * Card course both read cleanly.
+ *
+ * An optional supersededNote carries the "older code versions are also
+ * accepted" line some regulators publish.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the component renders its own <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Unit {
+  /** National unit code, e.g. "CPCCWHS2001". */
+  code: string;
+  /** Unit title, e.g. "Apply WHS requirements, policies and procedures". */
+  title: string;
+  /** Optional number of elements in the unit. */
+  elements?: number;
+  /** Optional delivery mode, e.g. "Online", "Online (Zoom)". */
+  delivery?: string;
+}
+
+interface Props {
+  /** The section H2. */
+  heading: string;
+  /** The units the course delivers. */
+  units: Unit[];
+  /** Optional note about accepted superseded unit codes. */
+  supersededNote?: string;
+  /** Optional mono footnote, e.g. a verification source. */
+  caption?: string;
+  anchorId?: string;
+}
+
+const { heading, units, supersededNote, caption, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="uoc-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline uoc__heading">{heading}</h2>
+
+  <ul class="uoc__list">
+    {
+      units.map((u) => (
+        <li class="uoc__unit">
+          <span class="uoc__code">{u.code}</span>
+          <span class="uoc__detail">
+            <span class="uoc__title">{u.title}</span>
+            {
+              (u.elements != null || u.delivery) && (
+                <span class="uoc__meta">
+                  {u.elements != null && `${u.elements} elements`}
+                  {u.elements != null && u.delivery && '  ·  '}
+                  {u.delivery}
+                </span>
+              )
+            }
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+
+  {supersededNote && <p class="uoc__superseded">{supersededNote}</p>}
+  {caption && <p class="uoc__caption">{caption}</p>}
+</section>
+
+<style>
+  .uoc-section {
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .uoc__heading {
+    color: var(--color-ink);
+    margin: 0 0 var(--spacing-lg);
+  }
+
+  .uoc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+  .uoc__unit {
+    display: flex;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  /* National unit code — Geist Mono, fixed min-width so titles align. */
+  .uoc__code {
+    flex-shrink: 0;
+    min-width: 8.5rem;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-ink);
+  }
+
+  .uoc__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .uoc__title {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+  /* Elements / delivery meta — mono caps label register. */
+  .uoc__meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .uoc__superseded {
+    margin: var(--spacing-md) 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    max-width: 70ch;
+  }
+  .uoc__caption {
+    margin: var(--spacing-sm) 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-3);
+  }
+
+  @media (max-width: 560px) {
+    .uoc__unit {
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+  }
+</style>

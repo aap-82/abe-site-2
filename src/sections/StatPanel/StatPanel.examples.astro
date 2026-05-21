@@ -1,0 +1,68 @@
+---
+import StatPanel from './StatPanel.astro';
+---
+
+<div class="space-y-12">
+  <!-- Recreation of the deployed "Why choose ABE Education?" section -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Why-choose proof panel (four stats, sources footer)
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <StatPanel
+        num="03"
+        heading="Why choose ABE Education?"
+        intro="ABE combines RTO partnerships with direct state-regulator approvals, giving more verifiable authority than a single-RTO provider. Every claim links back to a .gov.au source you can check yourself."
+        stats={[
+          {
+            label: 'Students certified',
+            value: '31,000',
+            suffix: '+',
+            description: 'Across NSW · QLD · WA · TAS · ACT, since 2007.',
+          },
+          {
+            label: 'First-attempt pass',
+            value: '95',
+            suffix: '%',
+            description: 'Across all three course streams.',
+          },
+          {
+            label: 'Google rating',
+            value: '4.8',
+            suffix: '/5',
+            description: 'From 52 Google reviews. Verify on the Business Profile.',
+          },
+          {
+            label: 'RTO partners',
+            value: '2',
+            description: 'Blue Dog (RTO 31193) · AlertForce (RTO 91826).',
+          },
+        ]}
+        listedBy={[
+          { label: 'CBOS Tasmania', href: 'https://cbos.tas.gov.au' },
+          { label: 'Access Canberra', href: 'https://www.act.gov.au/access-canberra' },
+          { label: 'Consumer Protection WA', href: 'https://www.commerce.wa.gov.au/consumer-protection' },
+          { label: 'training.gov.au', href: 'https://training.gov.au' },
+        ]}
+        verified="2026-05-10"
+      />
+    </div>
+  </section>
+
+  <!-- Compact: three stats, no section number, no footer -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Compact (three stats, no footer)
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <StatPanel
+        heading="The numbers"
+        stats={[
+          { label: 'Students certified', value: '31,000', suffix: '+', description: 'Since 2007.' },
+          { label: 'First-attempt pass', value: '95', suffix: '%', description: 'Across all streams.' },
+          { label: 'Google rating', value: '4.8', suffix: '/5', description: 'From 52 reviews.' },
+        ]}
+      />
+    </div>
+  </section>
+</div>

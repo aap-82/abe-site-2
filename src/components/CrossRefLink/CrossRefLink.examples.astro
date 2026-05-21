@@ -1,0 +1,102 @@
+---
+import CrossRefLink from './CrossRefLink.astro';
+
+const hubToSpoke = [
+  { href: '/owner-builder-nsw', label: 'Browse the NSW Owner Builder course' },
+  { href: '/owner-builder-qld', label: 'Browse the QLD Owner Builder course' },
+  { href: '/owner-builder-wa', label: 'Browse the WA Owner Builder course' },
+];
+
+const spokeToHub = [
+  { href: '/owner-builder', label: 'View all Owner Builder states' },
+  { href: '/white-card', label: 'Find the White Card for your state' },
+  { href: '/cpd', label: 'Browse CPD courses' },
+];
+
+const externalRef = [
+  { href: '/experts/dominic-ogburn', label: 'About Dominic Ogburn' },
+  { href: '/insurance', label: 'Owner Builder insurance options' },
+];
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — hub to spoke -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Hub to spoke (cross-page navigation)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The Owner Builder hub linking down to each state spoke page. No arrow:
+      this is navigation to another page, not an in-page jump.
+    </p>
+    <div
+      class="mt-3"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      {
+        hubToSpoke.map((s) => (
+          <div class="px-6" style="border-bottom: 1px dotted var(--color-ink-3);">
+            <CrossRefLink href={s.href} label={s.label} />
+            <p class="t-label-footnote pb-3" style="color: var(--color-ink-3);">
+              <code>href="{s.href}"</code>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Variant 2 — spoke to hub -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Spoke to hub / cross-category
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Returning up the IA from a course-state page, or jumping sideways
+      between course streams.
+    </p>
+    <div
+      class="mt-3"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      {
+        spokeToHub.map((s) => (
+          <div class="px-6" style="border-bottom: 1px dotted var(--color-ink-3);">
+            <CrossRefLink href={s.href} label={s.label} />
+            <p class="t-label-footnote pb-3" style="color: var(--color-ink-3);">
+              <code>href="{s.href}"</code>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Variant 3 — expert profiles + utility pages -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Expert profiles + utility pages
+    </h3>
+    <div
+      class="mt-3"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      {
+        externalRef.map((s) => (
+          <div class="px-6" style="border-bottom: 1px dotted var(--color-ink-3);">
+            <CrossRefLink href={s.href} label={s.label} />
+            <p class="t-label-footnote pb-3" style="color: var(--color-ink-3);">
+              <code>href="{s.href}"</code>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</div>

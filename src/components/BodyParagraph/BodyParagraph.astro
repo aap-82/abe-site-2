@@ -1,0 +1,32 @@
+---
+/**
+ * BodyParagraph — the expanded explanation that follows AnswerCapsule.
+ *
+ * Migrated 19 May 2026 to the design-system register: dropped the "📖 Body"
+ * emoji + label entirely. The visual differentiation from AnswerCapsule is
+ * carried by typography alone — capsule uses Source Serif 4 prose
+ * (editorial-longform voice), body uses Public Sans body (argument voice),
+ * per DESIGN.md §3 Voice-Per-Face Rule.
+ *
+ * Locked decisions reflected here:
+ *   #1 — no heading slot.
+ *   #3 — Tailwind/design-system tokens only.
+ */
+
+interface Props {
+  /** The 60–120 word body explanation. */
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<p class="t-body body-paragraph">{text}</p>
+
+<style>
+  .body-paragraph {
+    color: var(--color-ink);
+    margin: var(--spacing-md) 0 0;
+    max-width: 70ch;
+  }
+</style>

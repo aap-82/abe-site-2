@@ -1,0 +1,131 @@
+---
+import Streamcard from './Streamcard.astro';
+---
+
+<div class="space-y-12">
+  <!-- Plate layout: the deployed three-up homepage grid -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Plate layout, three-up (dark middle card)
+    </h3>
+    <div class="streams-demo">
+      <Streamcard
+        num="01"
+        eyebrow="Owner-builder permits"
+        title="Owner Builder courses."
+        ctaLabel="Browse Owner Builder by state"
+        ctaHref="/owner-builder"
+        footnote="Approved by QBCC · Consumer Protection WA · CBOS TAS · Access Canberra"
+      >
+        Get the training you need to apply for an Owner Builder permit. ABE
+        delivers directly in <strong>QLD</strong>, <strong>WA</strong>,
+        <strong>TAS</strong>, and <strong>ACT</strong>. For <strong>NSW</strong>,
+        where the qualification must be issued by an RTO, ABE delivers in
+        partnership with <strong>AlertForce (RTO 91826)</strong>.
+      </Streamcard>
+
+      <Streamcard
+        variant="dark"
+        num="02"
+        eyebrow="Site entry card"
+        title="White Card construction induction."
+        ctaLabel="Find White Card for your state"
+        ctaHref="/white-card"
+        footnote="Nationally recognised · CPCWHS1001 · Five states"
+      >
+        The White Card (CPCWHS1001) is the entry ticket for any construction
+        site in Australia. ABE delivers online with
+        <strong>Blue Dog Training (RTO 31193)</strong> for QLD, WA, and TAS, and
+        <strong>AlertForce (RTO 91826)</strong> for ACT and NSW.
+      </Streamcard>
+
+      <Streamcard
+        num="03"
+        eyebrow="Licensed-pro CPD"
+        title="CPD for licensed practitioners."
+        ctaLabel="Browse CPD courses"
+        ctaHref="/cpd"
+        footnote="CBOS Tasmania · WA Real Estate"
+      >
+        Builders, plumbers, electricians, and real-estate agents in approved
+        jurisdictions can earn CPD points online. Our library is approved by
+        CBOS Tasmania and meets WA real-estate CPD requirements.
+      </Streamcard>
+    </div>
+  </section>
+
+  <!-- Canonical layout: the DESIGN.md §5 transparent 3-column row -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Canonical layout (DESIGN.md §5): 14rem summary / body / state-nav
+    </h3>
+    <div class="streams-canonical">
+      <Streamcard
+        layout="canonical"
+        num="01"
+        eyebrow="Permit pathway"
+        title="Owner Builder"
+        ctaLabel="Browse Owner Builder"
+        ctaHref="/owner-builder"
+        footnote="Source QBCC · CBOS TAS · Access Canberra · Verified 15 Apr 2026"
+        states={[
+          { name: 'NSW', href: '/owner-builder-nsw' },
+          { name: 'QLD', href: '/owner-builder-qld' },
+          { name: 'WA', href: '/owner-builder-wa' },
+          { name: 'TAS', href: '/owner-builder-tas' },
+          { name: 'ACT', href: '/owner-builder-act' },
+        ]}
+      >
+        Get the training you need to apply for an Owner Builder permit. ABE
+        delivers directly in <strong>QLD</strong>, <strong>WA</strong>,
+        <strong>TAS</strong>, and <strong>ACT</strong>, and in partnership with
+        <strong>AlertForce (RTO 91826)</strong> for <strong>NSW</strong>, where
+        the qualification must be issued by an RTO.
+      </Streamcard>
+
+      <Streamcard
+        layout="canonical"
+        num="02"
+        eyebrow="Site entry card"
+        title="White Card"
+        ctaLabel="Find White Card"
+        ctaHref="/white-card"
+        footnote="Source training.gov.au (CPCWHS1001) · Verified 15 Apr 2026"
+        states={[
+          { name: 'NSW', href: '/white-card-nsw' },
+          { name: 'QLD', href: '/white-card-qld' },
+          { name: 'WA', href: '/white-card-wa' },
+          { name: 'TAS', href: '/white-card-tas' },
+          { name: 'ACT', href: '/white-card-act' },
+        ]}
+      >
+        The White Card (CPCWHS1001) is the entry ticket for any construction
+        site in Australia. ABE delivers online with
+        <strong>Blue Dog Training (RTO 31193)</strong> and
+        <strong>AlertForce (RTO 91826)</strong>. Your Statement of Attainment is
+        issued by the RTO partner.
+      </Streamcard>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Plate cards sit on a deeper ground so the Cream-1 plates read as raised. */
+  .streams-demo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background: var(--color-bg-deep);
+  }
+  /* Canonical rows are transparent; stack them on the section ground. */
+  .streams-canonical {
+    margin-top: var(--spacing-sm);
+  }
+  @media (max-width: 800px) {
+    .streams-demo {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

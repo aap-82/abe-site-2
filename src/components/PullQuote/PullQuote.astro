@@ -1,0 +1,122 @@
+---
+/**
+ * PullQuote — the lifted statement / key-stat device.
+ *
+ * One component, two variants, for breaking a long run of body text with a
+ * single high-contrast focal moment:
+ *
+ *   variant="quote" (default) — a large statement set in Source Serif 4. Per the
+ *     Voice-Per-Face Rule, prose is the editorial-longform voice, so a pull-quote
+ *     in serif both reads correctly and contrasts the surrounding Public Sans body.
+ *     Optional mono caps eyebrow above and a mono caps cite below.
+ *
+ *   variant="stat" — a big Archivo 800 numeral over a mono caps label. The light-
+ *     ground sibling of a RegulatorBand tile, dropped inline in the reading flow.
+ *
+ * On-doctrine treatment:
+ *   - Both go max-contrast Ink (Contrast-First Rule — the statement IS the content;
+ *     never maroon, which is action-only; never coloured body text).
+ *   - Framed by 1px solid ink hairlines top and bottom (the Two-Ornament Rule's
+ *     1px ink frame, applied horizontally). No left/right colour stripe, no shadow,
+ *     sharp corners.
+ *
+ * Not a section: no heading prop, no anchor. Drop it inside a section's body flow.
+ */
+type Variant = 'quote' | 'stat';
+
+interface Props {
+  variant?: Variant;
+  /** Optional mono caps eyebrow above the statement, e.g. "KEY POINT". */
+  eyebrow?: string;
+  /** quote: the statement text. */
+  text?: string;
+  /** quote: optional attribution / source line (no em dashes). */
+  cite?: string;
+  /** stat: the big value, e.g. "2,400+", "$294". Keep short. */
+  value?: string;
+  /** stat: mono caps label under the value. */
+  label?: string;
+}
+
+const { variant = 'quote', eyebrow, text, cite, value, label } = Astro.props;
+---
+
+{
+  variant === 'stat' ? (
+    <div class="pq pq--stat">
+      {eyebrow && <span class="pq__eyebrow">{eyebrow}</span>}
+      <span class="pq__value">{value}</span>
+      {label && <span class="pq__label">{label}</span>}
+    </div>
+  ) : (
+    <figure class="pq pq--quote">
+      {eyebrow && <span class="pq__eyebrow">{eyebrow}</span>}
+      <blockquote class="pq__quote">{text}</blockquote>
+      {cite && <figcaption class="pq__cite">{cite}</figcaption>}
+    </figure>
+  )
+}
+
+<style>
+  .pq {
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-xl) 0;
+    border-top: 1px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .pq__eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  /* --- quote --- */
+  .pq__quote {
+    margin: 0;
+    font-family: var(--font-prose);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.3;
+    color: var(--color-ink);
+    max-width: 30ch;
+    font-feature-settings: "onum", "kern", "liga";
+  }
+  .pq__cite {
+    margin-top: var(--spacing-md);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  /* --- stat --- */
+  .pq__value {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    font-feature-settings: "lnum", "tnum";
+  }
+  .pq__label {
+    display: block;
+    margin-top: var(--spacing-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    max-width: 36ch;
+  }
+</style>

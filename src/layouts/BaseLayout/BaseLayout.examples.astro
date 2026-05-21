@@ -1,0 +1,74 @@
+---
+// BaseLayout can't be rendered live inside the styleguide [slug] page
+// (that would produce nested <html> documents). This static preview
+// describes the layout's shape, slots, and the meta tags it emits.
+---
+
+<div class="space-y-6">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Shape</h3>
+    <pre
+      class="mt-2"
+      style="background: var(--color-ink); color: var(--color-bg); padding: 1rem 1.25rem; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; white-space: pre-wrap;"
+    >
+{`<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="..." />
+    <title>{title}</title>
+    <meta name="description" content="{description}" />
+    <link rel="canonical" href="{canonical}" />
+    <meta property="og:title" content="{title}" />
+    <meta property="og:description" content="{description}" />
+    <meta property="og:url" content="{canonical}" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+    <slot name="schema" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>`}
+    </pre>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Slots
+    </h3>
+    <ul
+      class="mt-3 space-y-0"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <li
+        class="flex gap-3 px-5 py-3"
+        style="border-bottom: 1px solid var(--color-rule);"
+      >
+        <code class="t-label" style="color: var(--color-accent); min-width: 6rem;">schema</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">
+          Where the archetype layout injects its JSON-LD via
+          <code>set:html=&#123;JSON.stringify(graph)&#125;</code>.
+        </span>
+      </li>
+      <li class="flex gap-3 px-5 py-3">
+        <code class="t-label" style="color: var(--color-accent); min-width: 6rem;">(default)</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">
+          Page body. Archetype layouts compose sections here.
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Composition pattern
+    </h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      Archetype layouts wrap BaseLayout. A
+      <code>CoursePageLayout.astro</code> would receive the page frontmatter,
+      call <code>buildCourseGraph(frontmatter, faqs)</code>, and pass both the
+      schema JSON-LD and the composed sections through to BaseLayout's slots.
+    </p>
+  </section>
+</div>

@@ -1,0 +1,89 @@
+---
+import BreadcrumbBar from './BreadcrumbBar.astro';
+---
+
+<div class="space-y-8">
+  <!-- Variant 1 — plain breadcrumb trail -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Plain trail (hub page, no reviewer)
+    </h3>
+    <div
+      class="mt-2 px-6 py-2"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BreadcrumbBar
+        crumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Owner Builder Training' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — deeper trail -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Three-level trail (course state page, no reviewer)
+    </h3>
+    <div
+      class="mt-2 px-6 py-2"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BreadcrumbBar
+        crumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Owner Builder Training', href: '/owner-builder' },
+          { label: 'NSW Owner Builder' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — with reviewer line -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      With reviewer line (course state page, NSW Owner Builder)
+    </h3>
+    <div
+      class="mt-2 px-6 py-2"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BreadcrumbBar
+        crumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Owner Builder Training', href: '/owner-builder' },
+          { label: 'NSW Owner Builder' },
+        ]}
+        reviewer={{
+          name: 'Warwick Smith',
+          date: '2026-04-28',
+          profileSlug: 'warwick-smith',
+        }}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 4 — hub with reviewer line -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Hub with reviewer line (Owner Builder, Dominic Ogburn)
+    </h3>
+    <div
+      class="mt-2 px-6 py-2"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BreadcrumbBar
+        crumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Owner Builder Training' },
+        ]}
+        reviewer={{
+          name: 'Dominic Ogburn',
+          date: '2026-04-14',
+          profileSlug: 'dominic-ogburn',
+        }}
+      />
+    </div>
+  </section>
+</div>

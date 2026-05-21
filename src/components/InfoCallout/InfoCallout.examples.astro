@@ -1,0 +1,55 @@
+---
+import InfoCallout from './InfoCallout.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 (canonical): neutral aside -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Neutral aside (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A 1px blue information frame with an <code>information-deep</code> mono
+      caps label, no fill. Body stays Ink. For context, not for a verifiable
+      regulator claim.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <InfoCallout label="Good to know">
+        Your Unique Student Identifier (USI) follows you for life. Every
+        nationally recognised course you complete is recorded against it, so you
+        only ever need to create it once.
+      </InfoCallout>
+    </div>
+  </section>
+
+  <!-- Variant 2 (custom label): tip with an inline link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Custom label, tip with a link
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The <code>label</code> prop reframes the callout. The body slot carries an
+      inline link.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <InfoCallout label="Tip">
+        You can create your USI for free in a few minutes at
+        <a href="https://www.usi.gov.au" class="link-dotted" rel="external">
+          usi.gov.au</a>
+        before you enrol, which speeds up your application.
+      </InfoCallout>
+    </div>
+  </section>
+</div>

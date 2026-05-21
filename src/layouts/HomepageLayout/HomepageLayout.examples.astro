@@ -1,0 +1,57 @@
+---
+// HomepageLayout can't render live inside the styleguide [slug] page — it
+// wraps BaseLayout, which emits a full <html> document. This static preview
+// describes the layout's chrome, slot, and composition pattern.
+---
+
+<div class="space-y-6">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Chrome order</h3>
+    <pre
+      class="mt-2"
+      style="background: var(--color-ink); color: var(--color-bg); padding: 1rem 1.25rem; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; white-space: pre-wrap;"
+    >
+{`HomepageLayout
+└── BaseLayout
+    ├── slot "schema"  ← buildHomepageGraph(...) JSON-LD
+    └── div.home
+        ├── header.home__head
+        │   └── PageHeading
+        └── main.home__main
+            └── <slot />   ← content sections`}
+    </pre>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Props</h3>
+    <ul
+      class="mt-3 space-y-0"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <li class="flex gap-3 px-5 py-3" style="border-bottom: 1px solid var(--color-rule);">
+        <code class="t-label" style="color: var(--color-accent); min-width: 8rem;">title / description / canonical</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Head meta and schema identity.</span>
+      </li>
+      <li class="flex gap-3 px-5 py-3" style="border-bottom: 1px solid var(--color-rule);">
+        <code class="t-label" style="color: var(--color-accent); min-width: 8rem;">pageHeading / lastUpdated</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Drive the PageHeading H1 and freshness stamp.</span>
+      </li>
+      <li class="flex gap-3 px-5 py-3">
+        <code class="t-label" style="color: var(--color-accent); min-width: 8rem;">navItems</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Feed the buildHomepageGraph SiteNavigationElement nodes.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Composition pattern</h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      The homepage passes its frontmatter to HomepageLayout, which calls
+      <code>buildHomepageGraph</code> and renders the PageHeading. The page
+      then composes its sections — <code>AnswerCapsuleSection</code>,
+      <code>StateNavigator</code>, <code>RegulatorBand</code>,
+      <code>CEOQuoteBlock</code>, <code>InsuranceCrossSell</code>,
+      <code>FAQSection</code>, <code>FinalCTA</code> — into the default slot.
+    </p>
+  </section>
+</div>

@@ -1,0 +1,51 @@
+---
+/**
+ * SourceCitation — the right-aligned "SOURCE [value]" pointer.
+ *
+ *                              SOURCE QBCC
+ *                  SOURCE QBCC • RTO 31193
+ *
+ * Names the .gov.au / training.gov.au page(s) backing a claim. Right-aligned.
+ * 10px Geist Mono caps "SOURCE" label, 12px Public Sans value, Ink-3 —
+ * the same register as VerificationNote and VerificationFootnote.
+ *
+ * Source value is a slot; multiple sources are joined with a double-spaced
+ * • bullet inside the slot.
+ */
+---
+
+<p class="source-citation">
+  <span class="source-citation__label">Source</span>
+  <span class="source-citation__value">
+    <slot />
+  </span>
+</p>
+
+<style>
+  .source-citation {
+    margin: var(--spacing-sm) 0 0;
+    text-align: right;
+  }
+
+  /* Label — 10px Geist Mono caps, Ink-3. Matches VerificationNote /
+     VerificationFootnote so the verification family stays consistent. */
+  .source-citation__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    margin-right: 0.4em;
+  }
+
+  /* Value — 12px Public Sans regular, Ink-3. */
+  .source-citation__value {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-ink-3);
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+import PageHeading from './PageHeading.astro';
+
+const samples = [
+  {
+    label: 'Course state page — NSW Owner Builder',
+    heading: 'NSW Owner Builder Course — Online & Nationally Recognised',
+    lastUpdated: '2026-04-28',
+  },
+  {
+    label: 'Hub page — Owner Builder',
+    heading: 'Owner Builder Courses — Online, State-Approved, Australia-Wide',
+    lastUpdated: '2026-05-19',
+  },
+  {
+    label: 'Homepage',
+    heading: 'Online Construction Training Trusted Across Australia',
+    lastUpdated: '2026-05-10',
+  },
+];
+---
+
+<div class="space-y-6">
+  {
+    samples.map((s) => (
+      <section>
+        <h3 class="t-label" style="color: var(--color-ink-3);">
+          {s.label}
+        </h3>
+        <div
+          class="mt-2 px-6 py-2"
+          style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+        >
+          <PageHeading heading={s.heading} lastUpdated={s.lastUpdated} />
+        </div>
+      </section>
+    ))
+  }
+</div>

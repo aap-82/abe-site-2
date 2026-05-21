@@ -1,0 +1,42 @@
+---
+import CEOQuoteBlock from './CEOQuoteBlock.astro';
+---
+
+<div class="space-y-12">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Homepage CEO note with a profile link (canonical)
+    </h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;">
+      A short editorial quote, the Maroon named-person byline, and a dotted
+      link out to the CEO's expert profile.
+    </p>
+    <div class="mt-3 px-6 py-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <CEOQuoteBlock
+        heading="A note from our CEO"
+        quote="When we started ABE Education in 2007, the brief was simple: make compliance training work for the people who actually need it. Two decades on, every course we publish gets tested against the same question — can a busy professional finish this between appointments and walk out with the certificate they need?"
+        name="Dominic Ogburn"
+        role="CEO and Course Developer"
+        profileHref="/experts/dominic-ogburn"
+        profileLabel="Read Dominic's expert profile"
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Without a profile link
+    </h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;">
+      With no <code>profileHref</code>, the byline closes on the name and role.
+    </p>
+    <div class="mt-3 px-6 py-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <CEOQuoteBlock
+        heading="A note from our CEO"
+        quote="Every course we publish is built to be finished — by a real person, on a real schedule, with a certificate that a regulator will accept."
+        name="Dominic Ogburn"
+        role="CEO and Course Developer"
+      />
+    </div>
+  </section>
+</div>

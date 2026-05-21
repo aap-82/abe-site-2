@@ -1,0 +1,182 @@
+---
+/**
+ * CoursePageLayout — the course-state-page archetype layout.
+ *
+ * Used by every course-state page (Owner Builder NSW, White Card NSW, ...).
+ * Wraps BaseLayout, builds and injects the course JSON-LD graph, and renders
+ * the fixed course chrome.
+ *
+ * Fixed chrome, in order:
+ *   BreadcrumbBar (with reviewer line) → PageHeading → RTOAttributionLine
+ *   → <slot> (content sections) → ASQADisclosure footer
+ *
+ * RTO-partnered vs ABE-direct: when a `disclosure` context is supplied the
+ * page is RTO-partnered — the hero RTOAttributionLine and the footer-legal
+ * and copyright-bar ASQADisclosures render. Omit `disclosure` for a course
+ * ABE delivers directly.
+ *
+ * Locked decisions reflected here:
+ *   #4 — ASQA disclosure wording is verbatim, from ASQADisclosure / the
+ *        disclosures data; this layout only positions it.
+ *   #5 — schema is assembled by buildCourseGraph and injected into
+ *        BaseLayout's "schema" slot.
+ *   #6 — lastUpdated comes from frontmatter, passed to PageHeading.
+ */
+import BaseLayout from '@layouts/BaseLayout/BaseLayout.astro';
+import BreadcrumbBar from '@components/BreadcrumbBar/BreadcrumbBar.astro';
+import PageHeading from '@components/PageHeading/PageHeading.astro';
+import RTOAttributionLine from '@components/RTOAttributionLine/RTOAttributionLine.astro';
+import ASQADisclosure from '@components/ASQADisclosure/ASQADisclosure.astro';
+import { buildCourseGraph } from '@/lib/buildCourseGraph';
+import type { CourseGraphLink, CourseGraphFaq } from '@/lib/buildCourseGraph';
+import type { DisclosureContext } from '@data/disclosures/asqa-templates';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Reviewer {
+  name: string;
+  date: string;
+  profileSlug: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  /** Visible page H1. */
+  pageHeading: string;
+  /** ISO date YYYY-MM-DD from frontmatter (decision #6). */
+  lastUpdated: string;
+  /** Breadcrumb trail, Home first, this page last. */
+  breadcrumbs: Crumb[];
+  /** Optional compliance reviewer for the BreadcrumbBar reviewer line. */
+  reviewer?: Reviewer;
+  /** Course name for the schema Course node. */
+  courseName: string;
+  /** The training provider — the RTO that delivers, or ABE if direct. */
+  provider: CourseGraphLink;
+  /** FAQ entries — become the schema FAQPage. */
+  faqs?: CourseGraphFaq[];
+  /** Optional aggregate rating for the schema Course node. */
+  aggregateRating?: { ratingValue: number; reviewCount: number };
+  /**
+   * RTO disclosure context. When supplied the page is RTO-partnered: the
+   * hero RTOAttributionLine and the footer ASQADisclosures render.
+   */
+  disclosure?: DisclosureContext;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  noIndex,
+  pageHeading,
+  lastUpdated,
+  breadcrumbs,
+  reviewer,
+  courseName,
+  provider,
+  faqs,
+  aggregateRating,
+  disclosure,
+} = Astro.props;
+
+const schema = buildCourseGraph({
+  url: canonical,
+  courseName,
+  description,
+  provider,
+  breadcrumbs: breadcrumbs.map((c) => ({ name: c.label, url: c.href ?? canonical })),
+  faqs,
+  aggregateRating,
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  noIndex={noIndex}
+>
+  <script
+    type="application/ld+json"
+    slot="schema"
+    set:html={schema}
+    is:inline
+  />
+
+  <div class="course">
+    <header class="course__head">
+      <BreadcrumbBar crumbs={breadcrumbs} reviewer={reviewer} />
+      <PageHeading heading={pageHeading} lastUpdated={lastUpdated} />
+      {
+        disclosure && (
+          <RTOAttributionLine
+            rto={disclosure.rto}
+            rtoCode={`RTO ${disclosure.rtoCode}`}
+            enrolPartner={disclosure.enrolPartner}
+          />
+        )
+      }
+    </header>
+
+    <main class="course__main">
+      <slot />
+    </main>
+
+    {
+      disclosure && (
+        <footer class="course__footer">
+          <ASQADisclosure variant="footer-legal" context={disclosure} />
+          <ASQADisclosure variant="copyright-bar" context={disclosure} />
+        </footer>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .course {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-xxxxl);
+  }
+
+  .course__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .course__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxxl);
+    margin-top: var(--spacing-xxxl);
+  }
+
+  .course__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xxxl);
+  }
+
+  @media (max-width: 720px) {
+    .course {
+      padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xxxl);
+    }
+    .course__main {
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xxl);
+    }
+  }
+</style>

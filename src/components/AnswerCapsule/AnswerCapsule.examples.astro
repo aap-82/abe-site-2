@@ -1,0 +1,73 @@
+---
+import AnswerCapsule from './AnswerCapsule.astro';
+
+const homepageAnswer =
+  "ABE Education is an Australian online training provider specialising in construction-industry courses. We work with registered training organisations to deliver nationally recognised qualifications, and we hold direct approval from state regulators for Owner Builder and CPD courses across Queensland, Western Australia, Tasmania, and the ACT.";
+
+const courseStateAnswer =
+  "The NSW Owner Builder Course is the approved education you must complete before applying for an Owner Builder Permit when residential building work on your home is valued at $20,000 or more. It covers the five nationally recognised units of competency set by Building Commission NSW. You finish online and receive a Statement of Attainment.";
+
+const howItWorksAnswer =
+  "Enrol online through ABE Education, complete five units of competency at your own pace, then sit the assessment. AlertForce verifies your work and issues your Statement of Attainment. You then take that certificate to Service NSW with your White Card and supporting documents to apply for your Owner Builder Permit.";
+
+const noEyebrowAnswer =
+  "A standalone capsule with the eyebrow suppressed entirely. Reads as a quiet editorial pull-out rather than a section opener.";
+
+function wordCount(s: string) {
+  return s.trim().split(/\s+/).length;
+}
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — default eyebrow (OVERVIEW) -->
+  <section>
+    <header class="mb-2 flex items-baseline justify-between">
+      <h3 class="t-label" style="color: var(--color-ink-3);">
+        Default — eyebrow="Overview"
+      </h3>
+      <span class="t-label-footnote" style="color: var(--color-ink-3);">
+        {wordCount(homepageAnswer)} words · in target range (40–60)
+      </span>
+    </header>
+    <AnswerCapsule text={homepageAnswer} />
+  </section>
+
+  <!-- Variant 2 — custom eyebrow -->
+  <section>
+    <header class="mb-2 flex items-baseline justify-between">
+      <h3 class="t-label" style="color: var(--color-ink-3);">
+        Custom eyebrow="How it works"
+      </h3>
+      <span class="t-label-footnote" style="color: var(--color-ink-3);">
+        {wordCount(howItWorksAnswer)} words · in target range
+      </span>
+    </header>
+    <AnswerCapsule eyebrow="How it works" text={howItWorksAnswer} />
+  </section>
+
+  <!-- Variant 3 — course-state opener -->
+  <section>
+    <header class="mb-2 flex items-baseline justify-between">
+      <h3 class="t-label" style="color: var(--color-ink-3);">
+        Course-state page (NSW Owner Builder, Section 1)
+      </h3>
+      <span class="t-label-footnote" style="color: var(--color-ink-3);">
+        {wordCount(courseStateAnswer)} words · in target range
+      </span>
+    </header>
+    <AnswerCapsule text={courseStateAnswer} />
+  </section>
+
+  <!-- Variant 4 — eyebrow suppressed -->
+  <section>
+    <header class="mb-2 flex items-baseline justify-between">
+      <h3 class="t-label" style="color: var(--color-ink-3);">
+        Eyebrow suppressed — <code>eyebrow=&#123;null&#125;</code>
+      </h3>
+      <span class="t-label-footnote" style="color: var(--color-ink-3);">
+        {wordCount(noEyebrowAnswer)} words
+      </span>
+    </header>
+    <AnswerCapsule eyebrow={null} text={noEyebrowAnswer} />
+  </section>
+</div>

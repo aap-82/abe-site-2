@@ -1,0 +1,65 @@
+---
+import UnitOfCompetencyList from './UnitOfCompetencyList.astro';
+---
+
+<div class="space-y-12">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Five-unit course with a superseded-codes note (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The five NSW Owner Builder units, with the regulator's note that prior
+      code versions are also accepted.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <UnitOfCompetencyList
+        heading="What will you learn?"
+        units={[
+          { code: 'CPCCWHS2001', title: 'Apply WHS requirements, policies and procedures in the construction industry' },
+          { code: 'CPCCOM2001', title: 'Read and interpret plans and specifications' },
+          { code: 'CPCCCM1011', title: 'Undertake basic estimation and costing' },
+          { code: 'CPCCOM1013', title: 'Plan and organise work' },
+          { code: 'CPCCOM1014', title: 'Conduct workplace communication' },
+        ]}
+        supersededNote="Older versions (CPCCOHS2001A, CPCCCM2001A, CPCCCM1011A, CPCCCM1013A, CPCCCM1014A) are also accepted if you completed them previously."
+        caption="Units verified against Building Commission NSW on 28 April 2026."
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Single-unit course with elements and delivery
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A one-unit White Card course — the optional <code>elements</code> and
+      <code>delivery</code> fields render as a mono caps meta line.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <UnitOfCompetencyList
+        heading="Unit of competency"
+        units={[
+          {
+            code: 'CPCWHS1001',
+            title: 'Prepare to work safely in the construction industry',
+            elements: 4,
+            delivery: 'Online (Zoom)',
+          },
+        ]}
+        caption="Unit details verified against training.gov.au in April 2026."
+      />
+    </div>
+  </section>
+</div>

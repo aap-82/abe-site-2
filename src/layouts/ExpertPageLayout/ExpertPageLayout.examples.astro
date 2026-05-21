@@ -1,0 +1,64 @@
+---
+// ExpertPageLayout can't render live inside the styleguide [slug] page — it
+// wraps BaseLayout, which emits a full <html> document. This static preview
+// describes the layout's chrome, slot, and composition pattern.
+---
+
+<div class="space-y-6">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Chrome order</h3>
+    <pre
+      class="mt-2"
+      style="background: var(--color-ink); color: var(--color-bg); padding: 1rem 1.25rem; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; white-space: pre-wrap;"
+    >
+{`ExpertPageLayout
+└── BaseLayout
+    ├── slot "schema"  ← buildPersonGraph(...) JSON-LD
+    └── div.expert
+        ├── header.expert__head
+        │   ├── BreadcrumbBar
+        │   └── div.expert__identity
+        │       ├── img.expert__headshot   (optional)
+        │       └── div.expert__namelock
+        │           ├── p.expert__role     (mono caps eyebrow)
+        │           └── PageHeading        (H1 + LastUpdatedDate)
+        └── main.expert__main
+            ├── section  About — bio <slot />
+            ├── section  Credentials list
+            ├── section  Pages reviewed     (optional)
+            └── p.expert__linkedin          (optional)`}
+    </pre>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Pure-data archetype</h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      Expert pages carry no bespoke composition. The <code>experts/[slug]</code>
+      route reads a <code>pages-expert</code> content entry and passes the
+      frontmatter straight in; the markdown body (the bio prose) flows into the
+      default <code>&lt;slot /&gt;</code>. Add an expert by adding a content
+      entry — no new route file.
+    </p>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">Props</h3>
+    <ul
+      class="mt-3 space-y-0"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <li class="flex gap-3 px-5 py-3" style="border-bottom: 1px solid var(--color-rule);">
+        <code class="t-label" style="color: var(--color-accent); min-width: 9rem;">title / description / canonical</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Head meta and schema identity.</span>
+      </li>
+      <li class="flex gap-3 px-5 py-3" style="border-bottom: 1px solid var(--color-rule);">
+        <code class="t-label" style="color: var(--color-accent); min-width: 9rem;">name / role / credentials</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Feed buildPersonGraph (Person, jobTitle, knowsAbout).</span>
+      </li>
+      <li class="flex gap-3 px-5 py-3">
+        <code class="t-label" style="color: var(--color-accent); min-width: 9rem;">headshot / linkedin / pagesReviewed</code>
+        <span class="t-body" style="color: var(--color-ink-2); font-size: 14px;">Optional. Portrait, sameAs link, and cross-references.</span>
+      </li>
+    </ul>
+  </section>
+</div>

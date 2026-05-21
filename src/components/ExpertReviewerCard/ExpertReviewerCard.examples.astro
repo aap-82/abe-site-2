@@ -1,0 +1,60 @@
+---
+import ExpertReviewerCard from './ExpertReviewerCard.astro';
+
+const bio =
+  'Licensed NSW builder (Licence 369417C), NSW Fair Trading Minister’s award recipient, and Standards Australia committee member with 40+ years on Australian construction sites. As CEO of ABE Education he has overseen the training of 31,000+ students.';
+---
+
+<div class="space-y-10">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Blockquote variant — hub course developer (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Avatar above the content in a heavier 1px ink frame. The hub uses this
+      for its course-developer note, closed by a review note.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ExpertReviewerCard
+        variant="blockquote"
+        name="Dominic Ogburn"
+        profileHref="/experts/dominic-ogburn"
+        role="Course Developer, ABE Education"
+        specialties={['Construction', 'Building Codes', 'Consumer Advocacy', 'Waterproofing']}
+        bio={bio}
+        reviewNote="Reviewed this hub on 14 April 2026. State spoke pages are independently reviewed — see each state page for the named reviewer."
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Card variant — course-state reviewer
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Avatar beside a compact content column. Renders without an avatar or a
+      profile link if those props are omitted.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ExpertReviewerCard
+        name="Warwick Smith"
+        role="Compliance Reviewer, ABE Education"
+        specialties={['WHS', 'RTO Standards', 'Construction Induction']}
+        bio="Construction compliance specialist who reviews course content against current state legislation, building codes, and the Standards for Registered Training Organisations."
+        reviewNote="Reviewed the NSW White Card course on 28 April 2026."
+      />
+    </div>
+  </section>
+</div>

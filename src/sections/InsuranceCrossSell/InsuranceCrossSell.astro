@@ -1,0 +1,160 @@
+---
+/**
+ * InsuranceCrossSell — the "insurance for the work you're certified to do"
+ * homepage section.
+ *
+ * Analysis §2.2 / §3.4: a cross-sell from the homepage to the insurance
+ * satellite pages. An intro line, a grid of cover-by-trade cards (each a
+ * link to its satellite page), and a verbatim AFSL disclosure rider.
+ *
+ * The AFSL disclosure is financial-services compliance wording. Like the
+ * ASQA templates it must be supplied VERBATIM and never paraphrased — it is
+ * a prop, not generated copy.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the component renders its own <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Cover {
+  /** Cover name, e.g. "Owner-Builder construction insurance". */
+  title: string;
+  /** One-line description of what the cover includes. */
+  description: string;
+  /** Link to the insurance satellite page. */
+  href: string;
+}
+
+interface Props {
+  /** The section H2. */
+  heading: string;
+  /** Intro line under the heading. */
+  intro: string;
+  /** The cover-by-trade cards. */
+  covers: Cover[];
+  /** Verbatim AFSL disclosure rider. Must not be paraphrased. */
+  afslDisclosure: string;
+  anchorId?: string;
+}
+
+const { heading, intro, covers, afslDisclosure, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="ics-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline ics__heading">{heading}</h2>
+  <p class="ics__intro">{intro}</p>
+
+  <ul class="ics__grid">
+    {
+      covers.map((c) => (
+        <li>
+          <a class="ics__card" href={c.href}>
+            <span class="ics__title">{c.title}</span>
+            <span class="ics__desc">{c.description}</span>
+            <span class="ics__go">
+              View cover
+              <span class="ics__arrow" aria-hidden="true">→</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="ics__afsl">{afslDisclosure}</p>
+</section>
+
+<style>
+  .ics-section {
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .ics__heading {
+    color: var(--color-ink);
+    margin: 0;
+  }
+  .ics__intro {
+    margin: var(--spacing-md) 0 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 70ch;
+  }
+
+  /* Cover cards — 1px hairline grid, each card a single link. */
+  .ics__grid {
+    list-style: none;
+    margin: var(--spacing-lg) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1px;
+    background: var(--color-rule);
+    border: 1px solid var(--color-rule);
+  }
+  .ics__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-lg);
+    background: var(--color-bg);
+    text-decoration: none;
+    height: 100%;
+  }
+  .ics__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.0625rem;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+  }
+  .ics__desc {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    flex: 1 1 auto;
+  }
+  .ics__go {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-top: var(--spacing-xs);
+  }
+  .ics__arrow {
+    display: inline-block;
+    margin-left: 0.4em;
+    transition: transform 180ms ease;
+  }
+  .ics__card:hover {
+    background: var(--color-bg-alt);
+  }
+  .ics__card:hover .ics__go {
+    color: var(--color-accent-deep);
+  }
+  .ics__card:hover .ics__arrow {
+    transform: translateX(3px);
+  }
+  .ics__card:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: -3px;
+  }
+
+  /* AFSL disclosure — verbatim financial-services rider, quiet, Rule above. */
+  .ics__afsl {
+    margin: var(--spacing-lg) 0 0;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-ink-3);
+    max-width: 80ch;
+  }
+</style>

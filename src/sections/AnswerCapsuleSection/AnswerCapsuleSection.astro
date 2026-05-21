@@ -1,0 +1,86 @@
+---
+/**
+ * AnswerCapsuleSection — the canonical content-section pattern.
+ *
+ * The pattern repeated ~29 times across the four reference pages:
+ *   H2 question
+ *   📌 Answer  (AnswerCapsule)
+ *   📖 Body    (BodyParagraph)
+ *   [extra content via slot — e.g. VerificationNote, SourceCitation]
+ *   [optional closing ↕️ MicroCTA to the next section]
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop, never a slot. Component renders <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading); anchorId prop overrides.
+ */
+import { slugify } from '@/lib/slugify';
+import AnswerCapsule from '@components/AnswerCapsule/AnswerCapsule.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+import MicroCTA from '@components/MicroCTA/MicroCTA.astro';
+
+interface Props {
+  /** The H2 question text. */
+  heading: string;
+  /**
+   * Eyebrow for the AnswerCapsule (Regulator Blue mono caps above the prose).
+   * Forwarded to AnswerCapsule. Defaults to "Overview"; pass `null` to suppress.
+   */
+  eyebrow?: string | null;
+  /** 40–60 word answer (AnswerCapsule body). */
+  answer: string;
+  /** 60–120 word body (BodyParagraph). */
+  body: string;
+  /** Override the auto-slugified id (preserve existing URL anchor). */
+  anchorId?: string;
+  /** Heading of the next section, for the closing MicroCTA. Slugified to build the href. */
+  nextSectionHeading?: string;
+  /** Visible label of the closing MicroCTA. */
+  nextSectionLabel?: string;
+}
+
+const {
+  heading,
+  eyebrow = 'Overview',
+  answer,
+  body,
+  anchorId,
+  nextSectionHeading,
+  nextSectionLabel,
+} = Astro.props;
+
+const id = anchorId ?? slugify(heading);
+const hasMicroCTA = nextSectionHeading && nextSectionLabel;
+---
+
+<section id={id} class="acs">
+  <h2 class="t-headline acs__heading">{heading}</h2>
+
+  <AnswerCapsule text={answer} eyebrow={eyebrow} />
+  <BodyParagraph text={body} />
+
+  <!-- Slot for additional content: VerificationNote, SourceCitation, extra paragraphs. -->
+  <slot />
+
+  {
+    hasMicroCTA && (
+      <MicroCTA targetHeading={nextSectionHeading} label={nextSectionLabel!} />
+    )
+  }
+</section>
+
+<style>
+  .acs {
+    padding: var(--spacing-xxl) 0;
+    scroll-margin-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-rule);
+  }
+  .acs:first-child {
+    border-top: 0;
+  }
+  .acs__heading {
+    color: var(--color-ink);
+    text-transform: uppercase;
+    margin: 0 0 var(--spacing-lg);
+    max-width: 38ch;
+  }
+</style>

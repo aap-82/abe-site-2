@@ -1,0 +1,500 @@
+---
+/**
+ * SAMPLE PAGE — White Card Online NSW.
+ *
+ * A demonstration of the "break the wall of text" techniques applied to a real
+ * course-state content brief, composed from the locked component library:
+ *   1. Section Card Meta Block — sticky 14rem meta column on every prose section.
+ *   2. Face switch — AnswerCapsule (serif) answer, BodyParagraph (sans) detail.
+ *   3. Structured elements — NumberedSteps grammar, ComparisonTable, FAQ accordion,
+ *      BulletedFeatureList, RegulatorBand stats, PullQuote key-stat.
+ *   4. Two ornaments as rhythm — 1px ink frame (action panel) + dotted rules (steps).
+ *   5. Asymmetry — right-aligned VerificationNote / SourceCitation margin notes.
+ *   6. Whitespace + measure — generous section spacing, prose capped ~70ch.
+ *   7. One colour surface — a single RegulatorBand (Stripe Singleton Rule).
+ *
+ * Self-contained (no CoursePageLayout / content collection exists yet). Copy is
+ * cleaned to brand: no emojis, no em dashes, Australian English.
+ */
+import '@/styles/global.css';
+import MetaSection from '../../sample/MetaSection.astro';
+import BreadcrumbBar from '@components/BreadcrumbBar/BreadcrumbBar.astro';
+import PageHeading from '@components/PageHeading/PageHeading.astro';
+import AnswerCapsule from '@components/AnswerCapsule/AnswerCapsule.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+import BulletedFeatureList from '@components/BulletedFeatureList/BulletedFeatureList.astro';
+import CTAButton from '@components/CTAButton/CTAButton.astro';
+import WarningCallout from '@components/WarningCallout/WarningCallout.astro';
+import InfoCallout from '@components/InfoCallout/InfoCallout.astro';
+import LegalCallout from '@components/LegalCallout/LegalCallout.astro';
+import VerificationNote from '@components/VerificationNote/VerificationNote.astro';
+import VerificationFootnote from '@components/VerificationFootnote/VerificationFootnote.astro';
+import SourceCitation from '@components/SourceCitation/SourceCitation.astro';
+import PullQuote from '@components/PullQuote/PullQuote.astro';
+import RegulatorBand from '@sections/RegulatorBand/RegulatorBand.astro';
+import ComparisonTable from '@sections/ComparisonTable/ComparisonTable.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+
+const safework = 'https://www.safework.nsw.gov.au/licences-and-registrations/white-cards';
+const tgaUnit = 'https://training.gov.au/Training/Details/CPCWHS1001';
+const tgaRto = 'https://training.gov.au/Organisation/Details/45708/summary';
+
+const steps = [
+  {
+    n: '01',
+    title: 'Book today',
+    text: 'Choose a session from the calendar and book online (Afterpay available). Before the session, set up a Zoom-capable computer with camera, microphone, and speaker, your own PPE, your USI, and 100 points of ID.',
+  },
+  {
+    n: '02',
+    title: 'Attend your training',
+    text: 'Join the live session on time. Your trainer covers the full CPCWHS1001 content over up to 7 hours, including theory, a PPE practical on camera, and assessments. You receive your SafeWork NSW Statement of Training by email, valid for 60 days and accepted on site immediately.',
+  },
+  {
+    n: '03',
+    title: 'Wait for your card',
+    text: 'SafeWork NSW produces and posts your physical White Card. Most online students receive it within two weeks. You also receive your Statement of Attainment confirming CPCWHS1001.',
+  },
+];
+
+const faqs = [
+  {
+    question: 'Are online White Card courses legitimate in NSW?',
+    answer:
+      'Yes. Upskill Institute (RTO 45708) is approved by SafeWork NSW under approval number RTO800520. The online course covers CPCWHS1001 to the same standard as classroom delivery, and the Statement of Training and White Card issued are identical.',
+  },
+  {
+    question: 'Can I get a White Card online in Sydney?',
+    answer:
+      'Yes. The online course is available to anyone physically located within NSW at the time of training. You can complete it from home, your workplace, or anywhere in Sydney with stable internet and a Zoom-capable computer.',
+  },
+  {
+    question: 'How long does the online White Card course take?',
+    answer:
+      'The session runs for up to 7 hours, including theory, practical demonstrations, assessments, and scheduled breaks. It is trainer-led via Zoom, not self-paced, so you must attend for the full duration to be assessed.',
+  },
+  {
+    question: 'How quickly do I receive my White Card after the online course?',
+    answer:
+      'You receive your SafeWork NSW Statement of Training by email on the day, so you can start work immediately. SafeWork NSW then posts your physical White Card, which typically arrives within two weeks. The Statement of Training stays valid for 60 days.',
+  },
+  {
+    question: 'What PPE do I need for the online course?',
+    answer:
+      'You must supply your own hi-vis vest or shirt, hard hat, ear plugs, and safety glasses, used in the practical assessment where you demonstrate correct fitting on camera. All four items are available at Bunnings for under $20.',
+  },
+  {
+    question: 'What jobs can I get with a White Card?',
+    answer:
+      'A White Card is required for anyone working on or regularly entering a construction site in Australia, including carpenters, electricians, plumbers, painters, labourers, scaffolders, demolition workers, concreters, roofers, civil construction workers, site supervisors, and many delivery drivers.',
+  },
+  {
+    question: 'Who delivers the online White Card course?',
+    answer:
+      'Upskill Institute Pty Ltd (RTO 45708) delivers the course live via Zoom under SafeWork NSW approval number RTO800520. A qualified trainer leads every session, and your registration can be verified at training.gov.au.',
+  },
+  {
+    question: 'Can I use my phone or tablet for the online course?',
+    answer:
+      'No. You must use a computer with a working camera, microphone, and speaker. The trainer must be able to see and hear you throughout the session and during practical assessments. Install Zoom and test it before your session.',
+  },
+  {
+    question: 'What makes an online White Card course invalid in NSW?',
+    answer:
+      'Common reasons: no live trainer (pre-recorded modules only), no PPE practical assessment, a provider not approved by SafeWork NSW, no USI collected, or a price too low to include the $28 SafeWork NSW card fee.',
+  },
+];
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>White Card Online NSW (sample) · ABE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&display=swap"
+    />
+  </head>
+  <body style="background: var(--color-bg);">
+    <main class="page">
+      <BreadcrumbBar
+        crumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Courses', href: '/courses' },
+          { label: 'White Card Online NSW' },
+        ]}
+        reviewer={{ name: 'Warwick Smith', date: '2026-04-15', profileSlug: 'warwick-smith' }}
+      />
+
+      <PageHeading
+        heading="White Card Online NSW: Train From Home, Start Work Today"
+        lastUpdated="2026-04-01"
+      />
+
+      <div class="lead">
+        <AnswerCapsule
+          eyebrow="In short"
+          text="Upskill Institute delivers the White Card course (CPCWHS1001) 100% online via Zoom for NSW workers. The trainer-led session runs up to 7 hours and costs $129 (down from $149), including the $28 SafeWork NSW card fee. You finish with a same-day Statement of Training, and your physical card arrives in about two weeks."
+        />
+      </div>
+
+      <!-- Action panel: the 1px ink frame lifts the one action without a shadow (technique 4) -->
+      <div class="action-panel">
+        <div class="action-panel__facts">
+          <p class="t-label" style="color: var(--color-ink-3);">
+            Sessions Monday to Friday · Online via Zoom · Afterpay available
+          </p>
+          <p class="action-panel__price">
+            $129 <span class="t-body" style="color: var(--color-ink-2);">inc. SafeWork NSW card fee (was $149)</span>
+          </p>
+        </div>
+        <CTAButton variant="v3" href="#book" label="Book your session" />
+      </div>
+
+      <!-- One colour surface for the whole page (technique 7, Stripe Singleton) -->
+      <RegulatorBand
+        heading="Upskill Institute credentials at a glance"
+        brand="Upskill Institute"
+        brandTag="Approved White Card training, NSW"
+        stats={[
+          { value: 'RTO800520', label: 'SafeWork NSW approval' },
+          { value: 'RTO 45708', label: 'Nationally recognised' },
+          { value: '4.9', label: '2,820+ Google reviews' },
+          { value: '$129', label: 'All-inclusive, save $20' },
+          { value: '100%', label: 'Online via Zoom' },
+        ]}
+      />
+
+      <MetaSection num="01" eyebrow="Overview" heading="What is a White Card, and can I get one online in NSW?">
+        <AnswerCapsule
+          text="Yes. You can complete the White Card course (CPCWHS1001) online in NSW through Upskill Institute. It is delivered live via Zoom by a qualified trainer and carries the same SafeWork NSW approval as the classroom course, so it is fully legitimate and meets every SafeWork NSW requirement."
+        />
+        <BodyParagraph
+          text="The White Card, officially a General Construction Induction Card, is mandatory for anyone who works on or regularly accesses a construction site in Australia. In NSW it is a legal requirement under the Work Health and Safety Act 2011. Upskill Institute (RTO 45708) holds SafeWork NSW approval number RTO800520, which covers both classroom and online delivery. Your Statement of Attainment and White Card carry the same national recognition either way."
+        />
+        <WarningCallout label="Important">
+          You must be physically located within NSW at the time of online
+          training. The course cannot be completed if you are interstate on the
+          day.
+        </WarningCallout>
+        <p class="subhead t-label">Who should choose the online course</p>
+        <BulletedFeatureList
+          items={[
+            { text: 'Prefers to train from home or a location of their choosing' },
+            { text: 'Cannot easily travel to the Arncliffe classroom' },
+            { text: 'Works shifts and needs flexible session times' },
+            { text: 'Has reliable internet and a Zoom-capable computer' },
+          ]}
+        />
+        <SourceCitation>
+          <a class="link-dotted" href={safework} rel="external">SafeWork NSW, White Card requirements</a>
+        </SourceCitation>
+      </MetaSection>
+
+      <MetaSection num="02" eyebrow="Process" heading="How does the online course work?">
+        <AnswerCapsule
+          text="Booking is a three-step process: book a session, attend the live Zoom training to receive your same-day certificate, then wait for your physical White Card to arrive by post within about two weeks."
+        />
+        <!-- NumberedSteps grammar inline: big mono numbers + dotted rules (technique 3) -->
+        <ol class="steps">
+          {steps.map((s) => (
+            <li class="steps__item">
+              <span class="steps__num">{s.n}</span>
+              <div class="steps__content">
+                <h3 class="steps__title">{s.title}</h3>
+                <p class="t-body steps__text">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </MetaSection>
+
+      <MetaSection num="03" eyebrow="Curriculum" heading="What will you learn?">
+        <AnswerCapsule
+          text="The online training covers the same four elements of CPCWHS1001 Prepare to Work Safely in the Construction Industry as the classroom course. You learn to identify hazards, apply WHS legislation, use PPE correctly, and respond to site emergencies."
+        />
+        <BodyParagraph
+          text="This is not a self-paced course. A live trainer leads every session via Zoom, covering the content construction workers meet in real NSW workplaces. There is no difference in the unit awarded between online and classroom delivery."
+        />
+        <BulletedFeatureList
+          items={[
+            { text: 'Hazards, risks, and control measures' },
+            { text: 'Duty of care and WHS legislative requirements' },
+            { text: 'Safety signs, symbols, and emergency response' },
+            { text: 'The hierarchy of construction hazard controls' },
+            { text: 'Correct selection and fitting of common PPE' },
+          ]}
+        />
+        <VerificationNote lastVerified="2026-04-01">
+          <a class="link-dotted" href={tgaUnit} rel="external">training.gov.au (CPCWHS1001)</a>
+        </VerificationNote>
+      </MetaSection>
+
+      <MetaSection num="04" eyebrow="Requirements" heading="Online White Card requirements for NSW">
+        <AnswerCapsule
+          text="To complete this course you must be at least 14, physically in NSW on the day, hold 100 points of SafeWork NSW ID and a valid USI, have a Zoom-capable computer and your own PPE, and be able to complete assessments in English. SafeWork NSW does not permit RPL for this card."
+        />
+        <BulletedFeatureList
+          items={[
+            { title: 'Age', text: 'at least 14 years' },
+            { title: 'Location', text: 'physically in NSW on the day of training' },
+            { title: 'ID', text: 'original documents totalling 100+ points per the SafeWork NSW table' },
+            { title: 'USI', text: 'free to create at usi.gov.au' },
+            { title: 'Computer', text: 'camera, microphone, and speaker; Zoom installed; stable internet (not a phone or tablet)' },
+            { title: 'PPE', text: 'your own hi-vis, hard hat, ear plugs, and safety glasses' },
+          ]}
+        />
+        <InfoCallout label="Good to know">
+          Create your USI free at
+          <a class="link-dotted" href="https://www.usi.gov.au" rel="external">usi.gov.au</a>
+          before you enrol. It follows you for life, and every nationally
+          recognised course you complete is recorded against it.
+        </InfoCallout>
+        <LegalCallout>
+          No refund of course fees is paid for failure to complete the course
+          once it has commenced. SafeWork NSW does not allow the White Card to be
+          issued through Recognition of Prior Learning. For full refund,
+          cancellation, and rescheduling terms, see the
+          <a class="link-dotted" href="https://upskillinstitute.com.au/docs/Upskill-Institute-Learner-Handbook.pdf" rel="external">Upskill Institute Student Handbook</a>.
+        </LegalCallout>
+      </MetaSection>
+
+      <!-- Exhibit: dense comparison goes full width (technique 3) -->
+      <ComparisonTable
+        heading="Online or classroom?"
+        answer="Both formats carry the same SafeWork NSW approval and award the same nationally recognised unit. The difference is delivery and price."
+        rowHeader="Attribute"
+        columns={['Online (Zoom)', 'Classroom (Arncliffe)']}
+        rows={[
+          { label: 'Price', cells: ['$129', '$99'] },
+          { label: 'Delivery', cells: ['Live via Zoom, up to 7 hours', 'In person, up to 7 hours'] },
+          { label: 'Certificate', cells: ['Same-day Statement of Training', 'Same-day Statement of Training'] },
+          { label: 'Card fee', cells: ['Included ($28)', 'Included'] },
+          { label: 'Best for', cells: ['Anywhere in NSW, shift workers', 'Hands-on learners near Arncliffe'] },
+        ]}
+        caption="Same approval (RTO800520) and unit (CPCWHS1001) either way. Confirm current pricing at booking."
+      />
+
+      <MetaSection num="05" eyebrow="Buyer beware" heading="Not all online White Card courses are valid">
+        <AnswerCapsule
+          text="Some online White Card courses sold in NSW do not meet SafeWork NSW requirements and will not result in a valid card. The usual reasons: the provider is not approved, or the course uses self-paced videos instead of a live trainer. A card from a non-approved provider has no standing on a NSW site."
+        />
+        <p class="subhead t-label">Red flags to watch for</p>
+        <BulletedFeatureList
+          items={[
+            { title: 'No live trainer', text: 'pre-recorded videos or click-through modules do not meet SafeWork NSW delivery rules' },
+            { title: 'No PPE practical', text: 'CPCWHS1001 requires you to demonstrate PPE on camera' },
+            { title: 'No approval number', text: 'every approved NSW provider holds a SafeWork NSW number beginning with RTO' },
+            { title: 'No USI collected', text: 'approved RTOs must collect your USI' },
+            { title: 'Price below $50', text: 'the card fee alone is $28, so a lower price cannot be covering it' },
+          ]}
+        />
+        <p class="subhead t-label">How to verify before you book</p>
+        <BulletedFeatureList
+          style="ticked"
+          items={[
+            { text: 'Search the RTO number at training.gov.au and confirm CPCWHS1001 is current' },
+            { text: 'Confirm the SafeWork NSW approval number (Upskill is RTO800520)' },
+          ]}
+        />
+        <SourceCitation>
+          <a class="link-dotted" href={safework} rel="external">SafeWork NSW, approved providers</a>
+        </SourceCitation>
+      </MetaSection>
+
+      <MetaSection num="06" eyebrow="Why Upskill" heading="Why choose Upskill Institute?">
+        <BodyParagraph
+          text="Upskill Institute has trained construction and traffic-control workers across NSW, with a strong review record and a price match guarantee. Its induction training reflects real NSW worksite environments, not generic national content."
+        />
+        <PullQuote
+          variant="stat"
+          eyebrow="Track record"
+          value="2,500+"
+          label="students trained across NSW"
+        />
+        <BulletedFeatureList
+          style="ticked"
+          items={[
+            { text: 'SafeWork NSW approved provider, approval RTO800520' },
+            { text: 'Registered Training Organisation, RTO 45708' },
+            { text: '4.9 average across 2,820+ Google reviews' },
+            { text: '$129 all-inclusive, card fee included, no hidden costs' },
+            { text: 'Same-day Statement of Training, start work the day you finish' },
+            { text: 'Live trainer on every session, never pre-recorded' },
+          ]}
+        />
+        <div class="cta-row" id="book">
+          <CTAButton variant="v3" href="#book" label="Book your online White Card" />
+        </div>
+      </MetaSection>
+
+      <!-- Exhibit: the FAQ accordion collapses the wall of repeated Q&A (technique 3) -->
+      <section class="exhibit">
+        <header class="exhibit__head">
+          <div class="exhibit__eyebrow t-title">Questions</div>
+          <h2 class="exhibit__h2 t-headline">Frequently asked questions</h2>
+        </header>
+        <FAQSection heading="Frequently asked questions about online White Card training" items={faqs} />
+      </section>
+
+      <MetaSection num="07" eyebrow="Accuracy" heading="How is this page reviewed?" anchorId="page-review">
+        <AnswerCapsule
+          text="This page is reviewed by Warwick Smith for ABE Education against current government sources: training.gov.au, SafeWork NSW, and the Upskill Institute Student Handbook, to confirm every fact, figure, and regulatory reference is current."
+        />
+        <BodyParagraph
+          text="ABE Education is the enrolment partner for this course, not the training provider. Upskill Institute (RTO 45708) is solely responsible for the design, delivery, and assessment of CPCWHS1001. ABE's responsibility is the accuracy of the information on this page: price, fee composition, regulator references, RTO details, and SafeWork NSW approval status."
+        />
+        <p class="subhead t-label">What Warwick verifies on each review</p>
+        <BulletedFeatureList
+          items={[
+            { text: 'CPCWHS1001 unit details against training.gov.au' },
+            { text: 'Upskill Institute RTO 45708 registration and scope' },
+            { text: 'SafeWork NSW approval status (RTO800520)' },
+            { text: 'Course fee, card fee, and any sale pricing against the product page' },
+            { text: 'Refund and rescheduling terms against the current Student Handbook' },
+          ]}
+        />
+        <VerificationFootnote lastVerified="2026-04-15">
+          <a class="link-dotted" href={tgaRto} rel="external">training.gov.au</a>
+          <span aria-hidden="true">  •  </span>
+          <a class="link-dotted" href={safework} rel="external">SafeWork NSW</a>
+          <span aria-hidden="true">  •  </span>
+          Upskill Student Handbook
+        </VerificationFootnote>
+        <InfoCallout label="Note">
+          Course content (CPCWHS1001 delivery, assessment design, and trainer
+          qualifications) is reviewed by Upskill Institute. For training queries,
+          contact Upskill Institute directly.
+        </InfoCallout>
+      </MetaSection>
+    </main>
+
+    <style>
+      .page {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 0 var(--spacing-xl) var(--spacing-xxxxl);
+      }
+
+      .lead {
+        margin-top: var(--spacing-lg);
+      }
+
+      /* Action panel — single 1px ink frame, no shadow, sharp corners. */
+      .action-panel {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-lg);
+        margin-top: var(--spacing-xl);
+        padding: var(--spacing-lg) var(--spacing-xl);
+        border: 1px solid var(--color-ink);
+      }
+      .action-panel__facts {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+      .action-panel__price {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: clamp(1.5rem, 2.4vw, 2rem);
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: var(--color-ink);
+        margin: 0;
+      }
+      .action-panel__price span {
+        font-size: 0.8rem;
+        font-weight: 400;
+      }
+
+      /* RegulatorBand sits between the action panel and the first section. */
+      :global(.band-section) {
+        margin-top: var(--spacing-xl);
+      }
+
+      /* Mono caps subhead inside a section body. */
+      .subhead {
+        color: var(--color-ink-3);
+        margin: var(--spacing-lg) 0 0;
+      }
+
+      /* Inline NumberedSteps grammar (mirrors NumberedStepsSection). */
+      .steps {
+        list-style: none;
+        padding: 0;
+        margin: var(--spacing-lg) 0 0;
+      }
+      .steps__item {
+        display: grid;
+        grid-template-columns: 3.5rem 1fr;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg) 0;
+        border-top: 1px dotted var(--color-ink-3);
+      }
+      .steps__item:last-child {
+        border-bottom: 1px dotted var(--color-ink-3);
+      }
+      .steps__num {
+        font-family: var(--font-mono);
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--color-ink-4);
+        font-feature-settings: "lnum", "tnum";
+      }
+      .steps__content {
+        min-width: 0;
+      }
+      .steps__title {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+        color: var(--color-ink);
+        margin: 0 0 var(--spacing-xs);
+      }
+      .steps__text {
+        color: var(--color-ink);
+        margin: 0;
+        max-width: 65ch;
+      }
+
+      .cta-row {
+        margin-top: var(--spacing-lg);
+      }
+
+      /* Full-width exhibit (FAQ) header, echoing the meta eyebrow + H2. */
+      .exhibit {
+        padding: var(--spacing-xxxl) 0 0;
+        border-top: 1px solid var(--color-rule);
+      }
+      .exhibit__eyebrow {
+        color: var(--color-accent);
+      }
+      .exhibit__h2 {
+        color: var(--color-ink);
+        text-transform: uppercase;
+        margin: var(--spacing-xs) 0 0;
+      }
+
+      @media (max-width: 880px) {
+        .page {
+          padding: 0 var(--spacing-md) var(--spacing-xxxl);
+        }
+        .steps__item {
+          grid-template-columns: 2.5rem 1fr;
+          gap: var(--spacing-md);
+        }
+      }
+    </style>
+  </body>
+</html>

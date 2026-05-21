@@ -1,0 +1,58 @@
+---
+import HeroTrustBar from './HeroTrustBar.astro';
+---
+
+<div class="space-y-10">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Owner Builder hub trust bar (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The five regulators recognising the Owner Builder courses, bullet-separated
+      under a mono caps lead-in, framed by a 1px Rule line top and bottom.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <HeroTrustBar
+        heading="Course recognition"
+        credentials={[
+          { regulator: 'QBCC', state: 'QLD' },
+          { regulator: 'LGIRS', state: 'WA' },
+          { regulator: 'CBOS', state: 'TAS' },
+          { regulator: 'Access Canberra', state: 'ACT' },
+          { regulator: 'NSW Fair Trading', state: 'NSW' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Custom label, fewer credentials
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The <code>label</code> prop reframes the lead-in.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <HeroTrustBar
+        heading="Course recognition"
+        label="Approved by"
+        credentials={[
+          { regulator: 'QBCC', state: 'QLD' },
+          { regulator: 'CBOS Tasmania', state: 'TAS' },
+        ]}
+      />
+    </div>
+  </section>
+</div>

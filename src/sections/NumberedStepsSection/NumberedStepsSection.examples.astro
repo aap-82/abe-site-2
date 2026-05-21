@@ -1,0 +1,93 @@
+---
+import NumberedStepsSection from './NumberedStepsSection.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — 3-step course process (NSW Owner Builder Section 2) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      3-step course process (NSW Owner Builder, "How does the course work?")
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <NumberedStepsSection
+        heading="How does the course work?"
+        answer="Enrol online through ABE Education, complete five units of competency at your own pace, then sit the assessment. AlertForce verifies your work and issues your Statement of Attainment. You then take that certificate to Service NSW with your White Card and supporting documents to apply for your Owner Builder Permit."
+        steps={[
+          {
+            title: 'Enrol online',
+            text: "Sign up through ABE Education, set your password, and you have straight access to the course. You need a Unique Student Identifier (USI) to enrol; this is a legal requirement for all nationally recognised training. If you don't have one, you can create it free at usi.gov.au.",
+          },
+          {
+            title: 'Work through the five units',
+            text: 'The course is fully online and self-paced. Read the learner materials, watch the supporting videos, and complete each unit in the order presented. You can pause and pick up where you left off; your progress is saved.',
+          },
+          {
+            title: 'Sit the assessment',
+            text: "Each unit has a written assessment you complete inside the platform. Once you have passed all five, AlertForce reviews your work and issues your Statement of Attainment. The certificate is emailed to you and recorded against your USI.",
+          },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — 5-step hub process (Owner Builder hub) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      5-step hub process (Owner Builder hub, "How to become an owner builder")
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <NumberedStepsSection
+        heading="What are the steps to become an owner builder?"
+        answer="The process is broadly the same in every state: confirm you are eligible, get your White Card, complete an approved Owner Builder course, apply for the permit with your state regulator, and arrange any insurance your state requires before work starts."
+        steps={[
+          {
+            title: "Check you're eligible",
+            text: 'You must own or co-own the land you are building on, and the work must be for your own occupation, not for resale or investment. Most states limit how often you can take the owner-builder pathway (commonly once every five or six years on the same property).',
+          },
+          {
+            title: 'Get your White Card',
+            text: 'Every state requires a current General Construction Induction Card (the White Card) before you set foot on a residential site as an owner builder.',
+          },
+          {
+            title: 'Complete the approved course',
+            text: 'Enrol with ABE Education for the state where you are building. Work through the units at your own pace and pass the assessments. You receive a Certificate of Completion (or, for NSW, a Statement of Attainment from AlertForce).',
+          },
+          {
+            title: 'Lodge your permit application',
+            text: 'Submit your course certificate, White Card, and supporting documents to the state regulator. Permit fees range from around $135 (NSW) to $294 (QLD), depending on the state and project value.',
+          },
+          {
+            title: 'Arrange insurance and start',
+            text: 'Some states require Home Warranty or Home Indemnity insurance before construction starts (WA is the most prescriptive).',
+          },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — minimal (3 steps, no intro) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Minimal (3 steps, no intro)
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <NumberedStepsSection
+        heading="Book your training in three steps"
+        steps={[
+          { title: 'Book today', text: 'Select a session date from the course calendar and complete your booking online. Afterpay is available.' },
+          { title: 'Attend your training', text: 'Join your session at the scheduled time. The trainer guides the group through the full content over a 7-hour live session.' },
+          { title: 'Wait for your card', text: 'SafeWork NSW produces and posts your physical White Card. Most online students receive it within two weeks of course completion.' },
+        ]}
+      />
+    </div>
+  </section>
+</div>

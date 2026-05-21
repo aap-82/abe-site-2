@@ -1,0 +1,71 @@
+---
+/**
+ * InfoCallout — the neutral informational note.
+ *
+ * The information member of the callout family: neutral context or a helpful
+ * aside that is not a caution, a failure, a success, or a verifiable regulator
+ * claim. Same structure as the other callouts, in the blue `information` token.
+ *
+ * Register note (Two-Accent Rule, DESIGN.md §2): the `information` token is
+ * identical to Regulator Blue, because information and verification share one
+ * register. Use InfoCallout for neutral asides; keep verifiable regulator
+ * claims in the verification family (VerificationNote, TrustBadgeGrid, chips).
+ *
+ * Design-system notes:
+ *   - A 1px blue border with an `information-deep` mono caps label, on a
+ *     transparent background. Body stays Ink; the colour frames and labels,
+ *     it never colours body copy.
+ *   - A full 1px frame, never a left/right colour stripe. Flat, sharp corners,
+ *     no fill.
+ */
+interface Props {
+  /** Mono caps label naming the callout. Rendered uppercase by CSS. */
+  label?: string;
+}
+
+const { label = 'Info' } = Astro.props;
+---
+
+<aside class="info-callout">
+  <p class="info-callout__label">{label}</p>
+  <div class="info-callout__body"><slot /></div>
+</aside>
+
+<style>
+  /* The neutral informational callout: a 1px blue frame in the information
+     colour (identical to Regulator Blue). A full frame, never a stripe; no fill. */
+  .info-callout {
+    border: 1px solid var(--color-information);
+    background: transparent;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .info-callout__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-information-deep);
+  }
+
+  .info-callout__body {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-ink);
+    max-width: 70ch;
+  }
+
+  /* Reset margins if the author passes paragraph elements into the slot. */
+  .info-callout__body :global(p) {
+    margin: 0;
+  }
+  .info-callout__body :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+</style>

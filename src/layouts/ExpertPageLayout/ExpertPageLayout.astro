@@ -1,0 +1,296 @@
+---
+/**
+ * ExpertPageLayout — the expert-profile archetype layout.
+ *
+ * Used by every /experts/<slug> page. Wraps BaseLayout, builds and injects
+ * the Person JSON-LD graph via buildPersonGraph, and renders the fixed
+ * expert chrome. Expert pages are pure data: the route reads a pages-expert
+ * content entry and passes its frontmatter straight in, with the markdown
+ * body (the bio prose) flowing into the default <slot>.
+ *
+ * Fixed chrome, in order:
+ *   BreadcrumbBar -> identity (headshot + role eyebrow + PageHeading)
+ *   -> bio <slot> -> credentials list -> pages-reviewed list -> LinkedIn
+ *
+ * Locked decisions reflected here:
+ *   #5 -- schema is assembled by buildPersonGraph and injected into
+ *         BaseLayout's "schema" slot. No hand-written JSON-LD in pages.
+ *   #6 -- lastUpdated comes from frontmatter, passed straight to PageHeading.
+ */
+import BaseLayout from '@layouts/BaseLayout/BaseLayout.astro';
+import BreadcrumbBar from '@components/BreadcrumbBar/BreadcrumbBar.astro';
+import PageHeading from '@components/PageHeading/PageHeading.astro';
+import { buildPersonGraph } from '@/lib/buildPersonGraph';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface ReviewedPage {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** <title> and og:title. */
+  title: string;
+  /** Meta description and the schema description. */
+  description: string;
+  /** Canonical URL — also the schema page id. */
+  canonical: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  /** ISO date YYYY-MM-DD from frontmatter (decision #6). */
+  lastUpdated: string;
+  /** The expert's full name — the page H1. */
+  name: string;
+  /** Role line, e.g. "Compliance Reviewer, ABE Education". */
+  role: string;
+  /** Verified credentials. Never invented. */
+  credentials: string[];
+  /** Optional public LinkedIn URL. */
+  linkedin?: string;
+  /** Optional square headshot URL. */
+  headshot?: string;
+  /** Optional ABE pages this expert has reviewed or developed. */
+  pagesReviewed?: ReviewedPage[];
+  /** Breadcrumb trail, Home first, this page last. */
+  breadcrumbs: Crumb[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  noIndex,
+  lastUpdated,
+  name,
+  role,
+  credentials,
+  linkedin,
+  headshot,
+  pagesReviewed,
+  breadcrumbs,
+} = Astro.props;
+
+const schema = buildPersonGraph({
+  url: canonical,
+  name,
+  jobTitle: role,
+  description,
+  credentials,
+  breadcrumbs: breadcrumbs.map((c) => ({ name: c.label, url: c.href ?? canonical })),
+  sameAs: linkedin ? [linkedin] : undefined,
+  image: headshot,
+});
+
+const firstName = name.split(' ')[0];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  noIndex={noIndex}
+>
+  <script
+    type="application/ld+json"
+    slot="schema"
+    set:html={schema}
+    is:inline
+  />
+
+  <div class="expert">
+    <header class="expert__head">
+      <BreadcrumbBar crumbs={breadcrumbs} />
+      <div class="expert__identity">
+        {
+          headshot && (
+            <img
+              class="expert__headshot"
+              src={headshot}
+              alt={`Portrait of ${name}, ${role}`}
+              width={160}
+              height={160}
+              loading="lazy"
+            />
+          )
+        }
+        <div class="expert__namelock">
+          <p class="expert__role">{role}</p>
+          <PageHeading heading={name} lastUpdated={lastUpdated} />
+        </div>
+      </div>
+    </header>
+
+    <main class="expert__main">
+      <section class="expert__section">
+        <h2 class="t-headline expert__h2">About {firstName}</h2>
+        <div class="expert__bio">
+          <slot />
+        </div>
+      </section>
+
+      <section class="expert__section">
+        <h2 class="t-headline expert__h2">Credentials</h2>
+        <ul class="expert__creds">
+          {credentials.map((c) => <li class="expert__cred">{c}</li>)}
+        </ul>
+      </section>
+
+      {
+        pagesReviewed && pagesReviewed.length > 0 && (
+          <section class="expert__section">
+            <h2 class="t-headline expert__h2">Pages reviewed at ABE Education</h2>
+            <ul class="expert__reviewed">
+              {pagesReviewed.map((p) => (
+                <li class="expert__reviewed-item">
+                  <a href={p.href} class="link-dotted">
+                    {p.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        linkedin && (
+          <p class="expert__linkedin">
+            <a href={linkedin} class="link-dotted" rel="external">
+              {name} on LinkedIn
+            </a>
+          </p>
+        )
+      }
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .expert {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-xxxxl);
+  }
+
+  .expert__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  /* Identity row — square headshot beside the name block. */
+  .expert__identity {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: flex-start;
+  }
+
+  /* Square portrait — 1px solid ink frame, sharp corners (Two-Ornament Rule). */
+  .expert__headshot {
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border: 1px solid var(--color-ink);
+    display: block;
+  }
+
+  .expert__namelock {
+    min-width: 0;
+  }
+
+  /* Role — mono caps label voice, Ink-3 (Voice-Per-Face Rule). */
+  .expert__role {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .expert__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxxl);
+    margin-top: var(--spacing-xxxl);
+  }
+
+  .expert__section {
+    border-top: 1px solid var(--color-rule);
+    padding-top: var(--spacing-xl);
+  }
+
+  .expert__h2 {
+    margin: 0 0 var(--spacing-lg);
+  }
+
+  /* Bio prose — body voice, generous measure. */
+  .expert__bio :global(p) {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    max-width: 68ch;
+    margin: 0 0 var(--spacing-md);
+  }
+  .expert__bio :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Credentials — dotted-hairline-separated list, no fills. */
+  .expert__creds {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .expert__cred {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-ink);
+    padding: var(--spacing-md) 0;
+    border-top: 1px dotted var(--color-ink-3);
+  }
+  .expert__cred:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .expert__reviewed {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .expert__reviewed-item {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: var(--spacing-sm) 0;
+  }
+
+  .expert__linkedin {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1rem;
+  }
+
+  @media (max-width: 560px) {
+    .expert {
+      padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xxxl);
+    }
+    .expert__identity {
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+    .expert__main {
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xxl);
+    }
+  }
+</style>

@@ -1,0 +1,294 @@
+---
+/**
+ * /white-card-nsw — the NSW White Card course-state page (RTO-partnered).
+ *
+ * Validation-pass rebuild from library components, two-file architecture:
+ * SEO meta in src/content/pages-course-state/white-card-nsw.md, composition
+ * here. RTO-partnered (Upskill Institute), so the `disclosure` context
+ * drives the hero RTOAttributionLine and the footer ASQA disclosures.
+ *
+ * Zero missing-component gaps. Findings for the gap report:
+ *   - The ASQADisclosure footer-legal template's third paragraph is shaped
+ *     for a permit ("administered by ... applications submitted through"),
+ *     which reads awkwardly for a White Card. A card-model variant is needed.
+ *   - PricingTable has no answer/body intro slot, so the cost summary renders
+ *     as a preceding BodyParagraph.
+ *   - The analysis-doc InvalidProviderWarning proved composable from
+ *     AnswerCapsuleSection + BulletedFeatureList + NumberedStepsSection.
+ */
+import { getEntry } from 'astro:content';
+import CoursePageLayout from '@layouts/CoursePageLayout/CoursePageLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import UnitOfCompetencyList from '@sections/UnitOfCompetencyList/UnitOfCompetencyList.astro';
+import PricingTable from '@sections/PricingTable/PricingTable.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import FinalCTA from '@sections/FinalCTA/FinalCTA.astro';
+import AboveFoldCTABox from '@components/AboveFoldCTABox/AboveFoldCTABox.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+import BulletedFeatureList from '@components/BulletedFeatureList/BulletedFeatureList.astro';
+import SourceCitation from '@components/SourceCitation/SourceCitation.astro';
+import WarningCallout from '@components/WarningCallout/WarningCallout.astro';
+import LegalCallout from '@components/LegalCallout/LegalCallout.astro';
+import InfoCallout from '@components/InfoCallout/InfoCallout.astro';
+import ExpertReviewerCard from '@components/ExpertReviewerCard/ExpertReviewerCard.astro';
+import CrossRefLink from '@components/CrossRefLink/CrossRefLink.astro';
+import VerificationNote from '@components/VerificationNote/VerificationNote.astro';
+import type { DisclosureContext } from '@data/disclosures/asqa-templates';
+
+const entry = await getEntry('pages-course-state', 'white-card-nsw');
+if (!entry) throw new Error('Missing content entry: pages-course-state/white-card-nsw');
+const meta = entry.data;
+
+const disclosure: DisclosureContext = {
+  enrolPartner: 'ABE Education',
+  enrolPartnerLegal: 'ABE Education Pty Ltd',
+  enrolPartnerAbn: '64 125 455 272',
+  rto: 'Upskill Institute',
+  rtoLegal: 'Upskill Institute Pty Ltd',
+  rtoCode: '45708',
+  courseName: 'NSW White Card Course',
+  courseShort: 'NSW White Card',
+  unitCodes: ['CPCWHS1001'],
+  permitName: 'White Cards',
+  permitRegulator: 'SafeWork NSW',
+  permitAct: 'Work Health and Safety Act 2011',
+  permitApplicationBody: 'SafeWork NSW',
+  termsHref: '/terms',
+};
+
+const whoShouldChoose = [
+  { text: 'Prefers to train from home or a location of their choosing' },
+  { text: 'Cannot easily travel to a classroom session' },
+  { text: 'Works shifts and needs flexible session times' },
+  { text: 'Has reliable internet and a computer with Zoom capability' },
+];
+
+const courseSteps = [
+  { title: 'Book today', text: `Select a session date from the course calendar and complete your booking online. Afterpay is available. Before your session, make sure you have a Zoom-capable computer, your USI, your own PPE, and 100 points of original ID.` },
+  { title: 'Attend your training', text: `Join your session at the scheduled time. Your trainer guides the group through the full CPCWHS1001 content over up to 7 hours of trainer-led delivery, theory and practical assessments, and breaks. On completion you receive your SafeWork NSW Statement of Training by email, valid for 60 days and accepted on NSW construction sites immediately.` },
+  { title: 'Wait for your White Card', text: `SafeWork NSW produces and posts your physical White Card. Most online students receive it within two weeks of course completion. You also receive your Statement of Attainment by email, confirming CPCWHS1001 has been awarded by Upskill Institute (RTO 45708).` },
+];
+
+const learnList = [
+  { text: 'What a hazard, a risk, and a control measure are' },
+  { text: 'What duty of care means on a construction site' },
+  { text: 'How to assess and respond to emergencies, and who to report incidents to' },
+  { text: 'The safety signs and symbols used on site' },
+  { text: 'The hierarchy of construction hazard controls' },
+  { text: 'Correct selection and fitting of common PPE' },
+];
+
+const requirements = [
+  { text: 'Minimum age: 14 years' },
+  { text: 'Location: physically in NSW on the day of training' },
+  { text: 'ID: original documents totalling 100+ points per the SafeWork NSW ID table' },
+  { text: 'USI: free to create at usi.gov.au' },
+  { text: 'Computer: camera, microphone, and speaker; Zoom installed; stable internet' },
+  { text: 'PPE: hi-vis vest or shirt, hard hat, ear plugs, safety glasses (your own)' },
+  { text: 'English: ability to complete all assessments without assistance' },
+];
+
+const pricingRows = [
+  { item: 'White Card Online (CPCWHS1001) via Zoom', cost: '$101', rrp: '$149' },
+  { item: 'SafeWork NSW card processing fee', cost: '$28 (included)' },
+];
+
+const redFlags = [
+  { title: 'No live trainer', text: `SafeWork NSW requires a qualified trainer present and visible throughout online delivery. A course made entirely of pre-recorded videos will not result in a valid NSW White Card.` },
+  { title: 'No PPE practical assessment', text: `CPCWHS1001 requires you to demonstrate correct selection, donning, and removal of PPE. If a course does not ask you to show your PPE on camera, the assessment is incomplete.` },
+  { title: 'Provider not listed by SafeWork NSW', text: `Every approved NSW provider holds a SafeWork NSW approval number beginning with RTO. If a provider cannot show you one, they are not approved.` },
+  { title: 'No USI collected', text: `Approved RTOs are required to collect your Unique Student Identifier. If a course does not ask for your USI, this is a compliance failure.` },
+  { title: 'Price that seems too low', text: `The SafeWork NSW card fee alone is $28. Any course priced below $50 cannot be covering that fee.` },
+];
+
+const verifySteps = [
+  { title: 'Search their RTO number at training.gov.au', text: `Confirm CPCWHS1001 is listed as a current, active offering under their registration.` },
+  { title: 'Confirm their SafeWork NSW approval number', text: `Upskill Institute's approval number is RTO800520. You can verify this directly with SafeWork NSW.` },
+];
+
+const trustSignals = [
+  { text: 'SafeWork NSW Approved Provider, Approval No. RTO800520' },
+  { text: 'Registered Training Organisation, RTO 45708, verified at training.gov.au' },
+  { text: '4.9 out of 5 average across 2,820+ Google reviews' },
+  { text: '$129 all-inclusive, SafeWork NSW card fee included, no hidden costs' },
+  { text: 'Same-day Statement of Training, start work the day you finish' },
+  { text: 'Live trainer on every session, not pre-recorded videos' },
+  { text: 'Sessions run Monday to Friday, with Afterpay and a price match guarantee' },
+];
+
+const verifyList = [
+  { text: 'CPCWHS1001 unit details against training.gov.au' },
+  { text: 'Upskill Institute RTO 45708 registration and scope against the training.gov.au RTO listing' },
+  { text: 'SafeWork NSW approval status (RTO800520) against safework.nsw.gov.au' },
+  { text: 'Course fee, the $28 SafeWork NSW card fee, and any sale pricing against the Upskill Institute product page' },
+  { text: 'Refund, rescheduling, and cancellation references against the current Upskill Institute Student Handbook' },
+];
+
+const faqs = [
+  { question: 'Are online White Card courses legitimate in NSW?', answer: `Yes. Upskill Institute's online White Card course is fully legitimate. Upskill Institute (RTO 45708) is approved by SafeWork NSW under Approval Number RTO800520. The course covers CPCWHS1001 to the same standard as classroom delivery, and the Statement of Training and White Card issued are identical to those issued after the in-person course.` },
+  { question: 'Can I get a White Card online in Sydney?', answer: `Yes. The online course is available to anyone physically located within NSW at the time of training. You can complete it from home, your workplace, or anywhere in Sydney with a stable internet connection and a Zoom-capable computer. If you are interstate on the day, you cannot proceed with the session.` },
+  { question: 'Am I suitable for the online White Card course?', answer: `This course suits anyone who needs legal access to a NSW construction site: first-time workers, apprentices, labourers, tradespeople, supervisors, and anyone entering the construction industry in NSW. It is also a practical choice for shift workers and anyone who cannot easily travel to a classroom.` },
+  { question: 'How long does the online White Card course take?', answer: `The online session runs for up to 7 hours, including theory content, practical demonstrations, assessments, and scheduled breaks. The session is trainer-led via Zoom and is not self-paced. You must attend and participate for the full duration to be assessed.` },
+  { question: 'How quickly do I receive my White Card after the online course?', answer: `You receive your SafeWork NSW Statement of Training by email on the day of your course, allowing you to start work on a construction site immediately. SafeWork NSW then produces and posts your physical White Card, which online students typically receive within two weeks. The Statement of Training remains valid for 60 days.` },
+  { question: 'What PPE do I need for the online course?', answer: `You must supply your own PPE: a hi-vis vest or shirt, a hard hat, ear plugs, and safety glasses. These are required for the practical assessment, where you demonstrate correct donning and removal on camera. All four items are available at most hardware stores for a small total cost.` },
+  { question: 'What jobs can I get with a White Card?', answer: `A White Card is required for anyone who works on, or regularly enters, a construction site in Australia, including carpenters, electricians, plumbers, painters, labourers, scaffolders, concreters, roofers, civil construction workers, and site supervisors. If your job involves stepping onto an active construction site in NSW, you need a White Card before you start.` },
+  { question: 'Who delivers the online White Card course?', answer: `Upskill Institute Pty Ltd (RTO 45708) delivers the course live via Zoom under SafeWork NSW Approval Number RTO800520. A qualified Upskill Institute trainer leads every session. Your Statement of Attainment is issued by Upskill Institute and your White Card is issued by SafeWork NSW.` },
+  { question: 'Can I use my phone or tablet for the online White Card course?', answer: `No. You must use a computer with a working camera, microphone, and speaker. Phones and tablets are not accepted. The trainer must be able to see and hear you throughout the session and during practical assessments. Install Zoom on your computer and test it before your session date.` },
+];
+---
+
+<CoursePageLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  pageHeading="White Card Online NSW - Train from Home, Start Work Today"
+  breadcrumbs={[
+    { label: 'Home', href: '/' },
+    { label: 'White Card Training', href: '/white-card' },
+    { label: 'NSW White Card' },
+  ]}
+  reviewer={{ name: 'Warwick Smith', date: '2026-04-28', profileSlug: 'warwick-smith' }}
+  courseName="NSW White Card Course"
+  provider={{ name: 'Upskill Institute', url: 'https://training.gov.au/Organisation/Details/45708/summary' }}
+  faqs={faqs}
+  disclosure={disclosure}
+>
+  <AboveFoldCTABox
+    facts={['Sessions run Monday to Friday', 'Online via Zoom, train from anywhere in NSW']}
+    price="$129"
+    priceNote="was $149 (save $20), SafeWork NSW card fee included. Afterpay available."
+    ctaLabel="Book your session"
+    ctaHref="/white-card-nsw/book"
+    reassurance="Most students are on site within 24 hours of finishing."
+  />
+
+  <AnswerCapsuleSection
+    heading="What is a White Card and can I get one online in NSW?"
+    answer="Yes. You can complete the White Card course (CPCWHS1001) online in NSW through Upskill Institute. The online course is delivered live via Zoom by a qualified trainer and carries the same SafeWork NSW approval as the classroom course. It is fully legitimate and meets all SafeWork NSW requirements."
+    body="The White Card, officially a General Construction Induction Card, is mandatory for anyone who works on, or regularly accesses, a construction site in Australia. In NSW it is a legal requirement under the Work Health and Safety Act 2011. SafeWork NSW approves training providers to deliver the induction training both in person and online. Upskill Institute (RTO 45708) holds SafeWork NSW Approval Number RTO800520, which covers classroom and online delivery of CPCWHS1001."
+  >
+    <WarningCallout>
+      You must be physically located within NSW at the time of online
+      training. The course cannot be completed if you are interstate on the day.
+    </WarningCallout>
+    <BulletedFeatureList items={whoShouldChoose} />
+    <SourceCitation>
+      <a href="https://www.safework.nsw.gov.au/licences-and-registrations/white-cards" class="link-dotted" rel="external">SafeWork NSW</a>
+    </SourceCitation>
+    <VerificationNote lastVerified="2026-04-28">SafeWork NSW</VerificationNote>
+  </AnswerCapsuleSection>
+
+  <NumberedStepsSection
+    heading="How does the online White Card course work?"
+    answer="Booking your White Card online training is a 3-step process. Book a session, attend the live Zoom training to receive your same-day certificate, then wait for your physical White Card to arrive in the mail within approximately two weeks."
+    steps={courseSteps}
+  />
+
+  <CrossRefLink href="/white-card" label="Browse White Card training in every Australian state" />
+
+  <AnswerCapsuleSection
+    heading="What will you learn in the online White Card course?"
+    answer="The online White Card training covers the same four elements of competency as the classroom course, CPCWHS1001 Prepare to Work Safely in the Construction Industry. You learn to identify hazards, apply WHS legislation, use PPE correctly, and respond to construction site emergencies."
+    body="This is not a self-paced course. A live Upskill Institute trainer leads every session via Zoom, covering the same content construction workers encounter in real NSW workplaces. There is no difference in the unit awarded between online and classroom delivery."
+  >
+    <BulletedFeatureList items={learnList} />
+  </AnswerCapsuleSection>
+
+  <UnitOfCompetencyList
+    heading="Which unit of competency will you complete?"
+    units={[{ code: 'CPCWHS1001', title: 'Prepare to Work Safely in the Construction Industry', elements: 4, delivery: 'Online (Zoom)' }]}
+    caption="Unit code and element count verified against training.gov.au on 28 April 2026."
+  />
+
+  <AnswerCapsuleSection
+    heading="What do you need for the online White Card course in NSW?"
+    answer="To complete this course you must be at least 14 years old, physically located in NSW on the day, have 100 points of SafeWork NSW ID, a valid USI, a Zoom-capable computer, your own PPE, and be able to complete assessments in English. SafeWork NSW does not permit RPL for this card."
+    body="This course has specific ID requirements. Please familiarise yourself with them before attending; incorrect or insufficient ID means you cannot complete the course on the day, and the full course fee is payable to reschedule. The online course also has technical requirements the classroom course does not: your computer must have a working camera, microphone, and speaker, and a phone or tablet is not sufficient."
+  >
+    <BulletedFeatureList items={requirements} />
+    <LegalCallout>
+      No refund of course fees is paid for failure to complete the course once
+      it has commenced. If you are not successful in all assessments, you will
+      need to rebook at the advertised cost less the SafeWork NSW card fee. For
+      full refund, cancellation, and rescheduling terms, see the
+      <a href="https://upskillinstitute.com.au/docs/Upskill-Institute-Learner-Handbook.pdf" class="link-dotted" rel="external">Student Handbook</a>.
+    </LegalCallout>
+    <BodyParagraph text="Recognition of Prior Learning: SafeWork NSW does not allow the General Construction Induction Card to be issued via RPL." />
+    <VerificationNote lastVerified="2026-04-28">SafeWork NSW</VerificationNote>
+  </AnswerCapsuleSection>
+
+  <CrossRefLink href="/owner-builder-nsw" label="Planning to build in NSW? See the NSW Owner Builder course" />
+
+  <BodyParagraph text="The White Card online course costs $129 (reduced from $149, save $20), and this includes the $28 SafeWork NSW card fee. There are no additional fees to pay. Afterpay is available, and Upskill Institute offers a price match guarantee." />
+  <PricingTable
+    heading="How much does the online White Card course cost?"
+    rows={pricingRows}
+    total={{ item: 'You pay', cost: '$129' }}
+    caption="The White Card classroom alternative is available for $99. Course fees are set by Upskill Institute and are subject to change."
+  />
+  <LegalCallout>
+    The $28 SafeWork NSW fee covers the production and postage of your physical
+    White Card and is collected on behalf of SafeWork NSW. Course fees are set
+    by Upskill Institute and are subject to change. Confirm pricing at the time
+    of booking.
+  </LegalCallout>
+  <VerificationNote lastVerified="2026-04-28">SafeWork NSW · Upskill Institute</VerificationNote>
+
+  <FAQSection heading="White Card training online FAQs" items={faqs} />
+
+  <AnswerCapsuleSection
+    heading="Are all online White Card courses in NSW valid?"
+    answer="Some online White Card courses sold in NSW do not meet SafeWork NSW requirements and will not result in a valid White Card. The most common reasons are that the provider is not approved by SafeWork NSW, or the course uses self-paced video modules instead of live trainer-led delivery. A White Card from a non-approved provider has no legal standing on a NSW construction site."
+    body="SafeWork NSW maintains strict requirements for how CPCWHS1001 must be delivered in NSW, and not every website selling an online White Card course meets those standards. Before booking with any provider, there are a few red flags worth checking."
+  >
+    <BulletedFeatureList items={redFlags} />
+  </AnswerCapsuleSection>
+
+  <NumberedStepsSection
+    heading="How to verify a White Card provider before you book"
+    answer="Two checks confirm whether a provider can issue a valid NSW White Card: their RTO registration on the national register, and their SafeWork NSW approval number."
+    steps={verifySteps}
+  />
+
+  <WhyChooseList
+    heading="Why choose Upskill Institute for your online White Card?"
+    answer="Upskill Institute has trained over 2,500 students in construction and traffic control across NSW. With more than 2,820 Google reviews and a price match guarantee, it is one of NSW's most trusted providers of White Card training online."
+    items={trustSignals}
+    style="ticked"
+  />
+  <BodyParagraph text="Upskill Institute trains workers for major NSW construction and civil contractors, including Lendlease, Sydney Civil, Nassif Civil, and APM. Its construction induction training reflects real NSW worksite environments, not generic national content." />
+
+  <CrossRefLink href="/owner-builder" label="Compare Owner Builder permit courses by state" />
+
+  <FinalCTA
+    heading="Book your online White Card course and be on site within 24 hours"
+    body="Sessions run Monday to Friday. Complete the live Zoom training and receive your Statement of Training the same day."
+    primaryLabel="Book your White Card session"
+    primaryHref="/white-card-nsw/book"
+  />
+
+  <AnswerCapsuleSection
+    heading="How is this page reviewed for accuracy?"
+    anchorId="page-review"
+    answer="This page is reviewed by Warwick Smith on behalf of ABE Education against current government sources, training.gov.au, SafeWork NSW, and the Upskill Institute Student Handbook, to confirm that every fact, figure, and regulatory reference is current."
+    body="ABE Education is the enrolment partner for this course, not the training provider. Upskill Institute (RTO 45708) is solely responsible for the design, delivery, and assessment of the CPCWHS1001 course content. ABE's review responsibility is the accuracy of the information presented on this page, including the price, fee composition, regulatory body references, RTO details, and SafeWork NSW approval status."
+  >
+    <BulletedFeatureList items={verifyList} />
+    <ExpertReviewerCard
+      name="Warwick Smith"
+      profileHref="/experts/warwick-smith"
+      role="Compliance Reviewer, ABE Education"
+      specialties={['27+ Years in VET', 'Compliance and Operations', 'CDRG']}
+      bio="Senior Consultant, Compliance and Operations at Corporate Development Resource Group, with over 27 years across the Australian vocational education and training sector. Former CEO of Training Aid Australia and the Australian Institute of Compliance Professionals. Specialist areas include construction, compliance, and operational design."
+      reviewNote="Reviewed this page on 28 April 2026."
+    />
+    <InfoCallout label="Note">
+      Course content, including CPCWHS1001 unit delivery, assessment design, and
+      trainer qualifications, is reviewed by Upskill Institute. For
+      training-related queries, contact Upskill Institute directly.
+    </InfoCallout>
+  </AnswerCapsuleSection>
+</CoursePageLayout>

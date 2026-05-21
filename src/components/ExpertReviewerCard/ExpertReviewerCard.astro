@@ -1,0 +1,205 @@
+---
+/**
+ * ExpertReviewerCard — the named-expert credential block.
+ *
+ * Analysis §2.3 / §3.4: the course developer / compliance reviewer card.
+ * Same data, two layouts via the `variant` prop:
+ *
+ *   card       — avatar beside a compact content column. The course-state
+ *                reviewer card register.
+ *   blockquote — avatar above an editorial content column in a heavier
+ *                ink frame. The hub uses this for its course-developer note.
+ *
+ * Two-Accent Rule: the person's name is Document Maroon — DESIGN.md assigns
+ * maroon to named-person reviewer bylines. Everything else stays ink.
+ * Sharp corners always, so the avatar is a square image, never a circle.
+ *
+ * Never invent credentials — the bio and specialties must come from a
+ * verified record; this component only renders what it is given.
+ */
+
+interface Props {
+  /** The expert's full name. */
+  name: string;
+  /** Role line, e.g. "Course Developer, ABE Education". */
+  role: string;
+  /** Bio paragraph — verified credentials only. */
+  bio: string;
+  /** Layout variant. */
+  variant?: 'card' | 'blockquote';
+  /** Optional link to the expert's profile page. */
+  profileHref?: string;
+  /** Optional square portrait URL. */
+  avatar?: string;
+  /** Optional specialty tags, joined with a bullet. */
+  specialties?: string[];
+  /** Optional review note, e.g. "Reviewed this hub on 14 April 2026." */
+  reviewNote?: string;
+}
+
+const {
+  name,
+  role,
+  bio,
+  variant = 'card',
+  profileHref,
+  avatar,
+  specialties,
+  reviewNote,
+} = Astro.props;
+
+const Wrapper = variant === 'blockquote' ? 'blockquote' : 'article';
+const avatarSize = variant === 'blockquote' ? 64 : 56;
+---
+
+<Wrapper class:list={['erc', `erc--${variant}`]}>
+  {
+    avatar && (
+      <img
+        class="erc__avatar"
+        src={avatar}
+        alt={`Portrait of ${name}, ${role}`}
+        width={avatarSize}
+        height={avatarSize}
+        loading="lazy"
+      />
+    )
+  }
+
+  <div class="erc__body">
+    <p class="erc__name-line">
+      {
+        profileHref ? (
+          <a class="erc__name" href={profileHref}>{name}</a>
+        ) : (
+          <span class="erc__name">{name}</span>
+        )
+      }
+      <span class="erc__role">{role}</span>
+    </p>
+
+    {
+      specialties && specialties.length > 0 && (
+        <p class="erc__specialties">{specialties.join('  ·  ')}</p>
+      )
+    }
+
+    <p class="erc__bio">{bio}</p>
+
+    {reviewNote && <p class="erc__note">{reviewNote}</p>}
+  </div>
+</Wrapper>
+
+<style>
+  .erc {
+    margin: 0;
+    border: 1px solid var(--color-rule);
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+  }
+
+  /* Card — avatar beside the content column. */
+  .erc--card {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+  }
+
+  /* Blockquote — avatar above the content, heavier 1px ink frame. */
+  .erc--blockquote {
+    border-color: var(--color-ink);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  /* Square portrait — sharp corners, never a circle. */
+  .erc__avatar {
+    flex-shrink: 0;
+    display: block;
+    object-fit: cover;
+    border: 1px solid var(--color-rule);
+  }
+  .erc--card .erc__avatar {
+    width: 56px;
+    height: 56px;
+  }
+  .erc--blockquote .erc__avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .erc__body {
+    min-width: 0;
+  }
+
+  .erc__name-line {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5em;
+  }
+
+  /* Named person — Document Maroon (DESIGN.md byline rule). */
+  .erc__name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.0625rem;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  a.erc__name {
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+  }
+  a.erc__name:hover {
+    color: var(--color-accent-deep);
+  }
+
+  .erc__role {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-ink-2);
+  }
+
+  /* Specialty tags — mono caps label register, Ink-3. */
+  .erc__specialties {
+    margin: var(--spacing-xs) 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .erc__bio {
+    margin: var(--spacing-sm) 0 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 68ch;
+  }
+
+  /* Review note — the verification register, 1px Rule line above. */
+  .erc__note {
+    margin: var(--spacing-md) 0 0;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-ink-3);
+  }
+
+  @media (max-width: 560px) {
+    .erc--card {
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+/**
+ * ErrorCallout — the blocking / critical notice.
+ *
+ * The error member of the callout family: a blocking problem the reader must
+ * act on, e.g. "enrolments for this intake are closed", "this course is not
+ * currently available in your state". Same structure as WarningCallout, in the
+ * semantic `error` colour.
+ *
+ * Design-system notes:
+ *   - Uses the semantic `error` colour (DESIGN.md §2 Semantic status colours):
+ *     a 1px red border with an `error-deep` mono caps label, on a transparent
+ *     background. Body stays Ink; semantic colours frame and label, never
+ *     colour body copy.
+ *   - Error red shares Document Maroon's hue neighbourhood but sits lighter and
+ *     more saturated. The mono caps label and the framed-callout form (not a
+ *     button) keep it from being read as a maroon CTA. Never place an error
+ *     signal and a maroon action where the two must be told apart with no other
+ *     cue (DESIGN.md §2).
+ *   - A left-border colour stripe is still forbidden: a full 1px frame, never a
+ *     stripe. Flat, sharp corners.
+ */
+interface Props {
+  /** Mono caps label naming the callout. Rendered uppercase by CSS. */
+  label?: string;
+}
+
+const { label = 'Critical' } = Astro.props;
+---
+
+<aside class="error-callout">
+  <p class="error-callout__label">{label}</p>
+  <div class="error-callout__body"><slot /></div>
+</aside>
+
+<style>
+  /* The blocking callout: a 1px red frame in the semantic error colour.
+     A full frame, never a colour stripe; no fill. */
+  .error-callout {
+    border: 1px solid var(--color-error);
+    background: transparent;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .error-callout__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-error-deep);
+  }
+
+  .error-callout__body {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-ink);
+    max-width: 70ch;
+  }
+
+  /* Reset margins if the author passes paragraph elements into the slot. */
+  .error-callout__body :global(p) {
+    margin: 0;
+  }
+  .error-callout__body :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+</style>

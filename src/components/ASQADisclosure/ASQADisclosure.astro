@@ -1,0 +1,159 @@
+---
+/**
+ * ASQADisclosure — the verbatim ASQA / RTO disclosure block.
+ *
+ * One component, three variants (locked decision #4) — the longer ASQA
+ * disclosures an RTO-partnered course-state page must carry:
+ *
+ *   near-cta       — location 2: the disclosure that sits near every CTA.
+ *   footer-legal   — location 3: the "About this course" footer block.
+ *   copyright-bar  — location 4: the 3-line structured copyright bar.
+ *
+ * The wording is NEVER written or paraphrased here. It comes verbatim from
+ * src/data/disclosures/asqa-templates.ts; this component only chooses a
+ * variant and renders it. The short hero attribution (location 1) is the
+ * separate RTOAttributionLine component.
+ */
+import {
+  asqaNearCta,
+  asqaFooterLegal,
+  asqaCopyrightBar,
+} from '@data/disclosures/asqa-templates';
+import type { DisclosureContext } from '@data/disclosures/asqa-templates';
+
+interface Props {
+  /** Which approved disclosure to render. */
+  variant: 'near-cta' | 'footer-legal' | 'copyright-bar';
+  /** The page facts interpolated into the verbatim template. */
+  context: DisclosureContext;
+}
+
+const { variant, context } = Astro.props;
+
+const nearCtaText = variant === 'near-cta' ? asqaNearCta(context) : null;
+const footerLegal = variant === 'footer-legal' ? asqaFooterLegal(context) : null;
+const copyrightLines =
+  variant === 'copyright-bar' ? asqaCopyrightBar(context) : null;
+
+/** Split a paragraph around the Terms & Conditions phrase for linkification. */
+const TERMS = 'Terms & Conditions';
+function splitTerms(p: string): { before: string; after: string } | null {
+  const i = p.indexOf(TERMS);
+  return i === -1 ? null : { before: p.slice(0, i), after: p.slice(i + TERMS.length) };
+}
+
+/** Split a copyright line into its label and value at the first ": ". */
+function splitLine(line: string): { label: string; value: string } {
+  const i = line.indexOf(': ');
+  return i === -1
+    ? { label: '', value: line }
+    : { label: line.slice(0, i), value: line.slice(i + 2) };
+}
+---
+
+{nearCtaText && <p class="asqa asqa--near-cta">{nearCtaText}</p>}
+
+{
+  footerLegal && (
+    <section class="asqa asqa--footer" aria-label={footerLegal.heading}>
+      <p class="asqa__heading">{footerLegal.heading}</p>
+      {
+        footerLegal.paragraphs.map((p) => {
+          const parts = splitTerms(p);
+          return parts ? (
+            <p class="asqa__para">
+              {parts.before}
+              <a class="link-dotted" href={context.termsHref}>{TERMS}</a>
+              {parts.after}
+            </p>
+          ) : (
+            <p class="asqa__para">{p}</p>
+          );
+        })
+      }
+    </section>
+  )
+}
+
+{
+  copyrightLines && (
+    <ul class="asqa asqa--copyright">
+      {
+        copyrightLines.map((line) => {
+          const { label, value } = splitLine(line);
+          return (
+            <li class="asqa__copyline">
+              {label && <span class="asqa__copylabel">{label}</span>}
+              <span class="asqa__copyvalue">{value}</span>
+            </li>
+          );
+        })
+      }
+    </ul>
+  )
+}
+
+<style>
+  .asqa {
+    margin: 0;
+  }
+
+  /* near-cta — a quiet disclosure paragraph, 1px Rule line above. */
+  .asqa--near-cta {
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-ink-3);
+    max-width: 80ch;
+  }
+
+  /* footer-legal — the "About this course" block. */
+  .asqa--footer {
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-rule);
+  }
+  .asqa__heading {
+    margin: 0 0 var(--spacing-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .asqa__para {
+    margin: 0 0 var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-ink-2);
+    max-width: 80ch;
+  }
+  .asqa__para:last-child {
+    margin-bottom: 0;
+  }
+
+  /* copyright-bar — the 3-line structured format. */
+  .asqa--copyright {
+    list-style: none;
+    margin: 0;
+    padding: var(--spacing-sm) 0 0;
+    border-top: 1px solid var(--color-rule);
+  }
+  .asqa__copyline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+    color: var(--color-ink-3);
+  }
+  .asqa__copylabel {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-2);
+    margin-right: 0.5em;
+  }
+</style>

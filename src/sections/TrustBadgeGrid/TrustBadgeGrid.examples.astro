@@ -1,0 +1,125 @@
+---
+import TrustBadgeGrid from './TrustBadgeGrid.astro';
+---
+
+<div class="space-y-12">
+  <!-- Variant 1 (canonical): course-state trust grid with freshness stamp -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Course-state trust grid (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Five credential badges with a shared <code>Last verified</code> stamp.
+      Verifiable claims link to a <code>.gov.au</code> or
+      <code>training.gov.au</code> page; non-verifiable facts render plain.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <TrustBadgeGrid
+        heading="Accreditation and credentials"
+        lastVerified="2026-04-30"
+        badges={[
+          {
+            label: 'Approved provider',
+            value: 'SafeWork NSW, RTO800520',
+            href: 'https://www.safework.nsw.gov.au/licences-and-registrations/white-cards',
+          },
+          {
+            label: 'Nationally recognised',
+            value: 'RTO 45708 on training.gov.au',
+            href: 'https://training.gov.au/Organisation/Details/45708/summary',
+          },
+          { label: 'Student rating', value: '4.9 / 5 from 2,820+ Google reviews' },
+          { label: 'Course fee', value: '$129 (SafeWork card fee included)' },
+          { label: 'Delivery mode', value: '100% online via Zoom' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 (hub): state-regulator badges, every badge a .gov.au link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Hub state-regulator grid (every badge verifiable)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The Owner Builder hub grid: one badge per state, each linking to the
+      regulator that approves the course in that jurisdiction.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <TrustBadgeGrid
+        heading="State regulators recognising the Owner Builder course"
+        lastVerified="2026-04-14"
+        badges={[
+          {
+            label: 'New South Wales',
+            value: 'NSW Fair Trading',
+            href: 'https://www.nsw.gov.au/housing-and-construction',
+          },
+          {
+            label: 'Queensland',
+            value: 'QBCC',
+            href: 'https://www.qbcc.qld.gov.au/home-owner-hub/owner-build',
+          },
+          {
+            label: 'Western Australia',
+            value: 'Consumer Protection WA',
+            href: 'https://www.commerce.wa.gov.au/consumer-protection',
+          },
+          {
+            label: 'Tasmania',
+            value: 'CBOS Tasmania',
+            href: 'https://cbos.tas.gov.au',
+          },
+          {
+            label: 'ACT',
+            value: 'Access Canberra',
+            href: 'https://www.act.gov.au/access-canberra',
+          },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 (minimal): three badges, no freshness stamp -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Minimal grid, no freshness stamp
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Three badges and no <code>lastVerified</code>, so the freshness stamp is
+      omitted when the date prop is not supplied.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <TrustBadgeGrid
+        heading="Course credentials"
+        badges={[
+          {
+            label: 'Nationally recognised',
+            value: 'RTO 91826 on training.gov.au',
+            href: 'https://training.gov.au/Organisation/Details/91826',
+          },
+          { label: 'Issued on completion', value: 'Statement of Attainment' },
+          { label: 'Delivery mode', value: 'Online and self-paced' },
+        ]}
+      />
+    </div>
+  </section>
+</div>

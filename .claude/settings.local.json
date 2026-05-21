@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4322/styleguide/regulator-band)",
+      "Bash(curl -s http://localhost:4322/styleguide/regulator-band)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4322/styleguide/conventions)",
+      "Bash(curl -s http://localhost:4322/styleguide/conventions)",
+      "PowerShell($conns = Get-NetTCPConnection -LocalPort 4322 -State Listen -ErrorAction SilentlyContinue; if \\($conns\\) { $conns | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }; \"killed listener on 4322\" } else { \"no listener on 4322\" })",
+      "Bash(curl -s http://localhost:4322/styleguide/pull-quote)",
+      "WebFetch(domain:abe-education.andrey-p-personal.workers.dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4322/styleguide/streamcard)",
+      "Bash(curl -s http://localhost:4322/styleguide/streamcard)",
+      "Bash(curl -s http://localhost:4322/styleguide)"
+    ]
+  }
+}

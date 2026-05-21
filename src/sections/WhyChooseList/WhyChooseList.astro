@@ -1,0 +1,71 @@
+---
+/**
+ * WhyChooseList — H2 + optional intro + bulleted feature list.
+ *
+ * The "Why choose ABE" / "Why students choose this course" pattern.
+ * Composes:
+ *   H2 question
+ *   [optional AnswerCapsule + BodyParagraph intro]
+ *   BulletedFeatureList (4–6 items, bullet or ticked style)
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+import AnswerCapsule from '@components/AnswerCapsule/AnswerCapsule.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+import BulletedFeatureList from '@components/BulletedFeatureList/BulletedFeatureList.astro';
+
+interface Item {
+  title?: string;
+  text: string;
+}
+
+interface Props {
+  heading: string;
+  /** Optional intro capsule (40–60 words). */
+  answer?: string;
+  /** Optional intro body (60–120 words). Renders only if `answer` is also set. */
+  body?: string;
+  items: Item[];
+  /** `bullet` (default) or `ticked` for verified-claim lists. */
+  style?: 'bullet' | 'ticked';
+  anchorId?: string;
+}
+
+const {
+  heading,
+  answer,
+  body,
+  items,
+  style = 'bullet',
+  anchorId,
+} = Astro.props;
+
+const id = anchorId ?? slugify(heading);
+const hasIntro = Boolean(answer);
+---
+
+<section id={id} class="wcl">
+  <h2 class="t-headline wcl__heading">{heading}</h2>
+
+  {hasIntro && <AnswerCapsule text={answer!} />}
+  {hasIntro && body && <BodyParagraph text={body} />}
+
+  <BulletedFeatureList items={items} style={style} />
+</section>
+
+<style>
+  .wcl {
+    padding: var(--spacing-xxl) 0;
+    scroll-margin-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-rule);
+  }
+  .wcl__heading {
+    color: var(--color-ink);
+    text-transform: uppercase;
+    margin: 0 0 var(--spacing-lg);
+    max-width: 38ch;
+  }
+</style>

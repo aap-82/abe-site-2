@@ -1,0 +1,269 @@
+---
+import StyleguideLayout from '@/layouts/StyleguideLayout.astro';
+import {
+  discoverComponents,
+  getDescription,
+  type DiscoveredComponent,
+} from '@/lib/styleguide';
+
+// Eager globs — at build time, all spec and example files are bundled in.
+// We look up the right one by path for each discovered component.
+const specModules = import.meta.glob<{
+  Content: any;
+  frontmatter?: Record<string, unknown>;
+}>('/src/{components,sections,layouts}/*/*.md', { eager: true });
+
+const exampleModules = import.meta.glob<{ default: any }>(
+  '/src/{components,sections,layouts}/*/*.examples.astro',
+  { eager: true },
+);
+
+export async function getStaticPaths() {
+  const components = discoverComponents();
+  return components.map((component) => ({
+    params: { slug: component.slug },
+    props: { component },
+  }));
+}
+
+interface Props {
+  component: DiscoveredComponent;
+}
+
+const { component } = Astro.props;
+const specModule = specModules[component.specPath];
+const exampleModule = exampleModules[component.examplesPath];
+
+const SpecContent = specModule?.Content;
+const ExamplesComponent = exampleModule?.default;
+
+const description = getDescription(component.specPath);
+
+// Usage metadata — derived from the discovered paths.
+const astroPath = component.examplesPath.replace('.examples.astro', '.astro');
+const importLine = `import ${component.name} from '@${component.group}/${component.name}/${component.name}.astro';`;
+const groupSingular = {
+  layouts: 'layout',
+  sections: 'section',
+  components: 'component',
+}[component.group];
+
+const filePaths = [
+  { label: 'Component', path: astroPath.replace(/^\//, '') },
+  { label: 'Spec', path: component.specPath.replace(/^\//, '') },
+  { label: 'Examples', path: component.examplesPath.replace(/^\//, '') },
+];
+---
+
+<StyleguideLayout title={component.name} activeSlug={component.slug}>
+  <header class="pb-6" style="border-bottom: 1px solid var(--color-rule);">
+    <p class="t-label" style="color: var(--color-ink-3);">{groupSingular}</p>
+    <h1 class="t-headline mt-2" style="color: var(--color-ink);">
+      {component.name}
+    </h1>
+    {
+      description && (
+        <p
+          class="t-body mt-3"
+          style="color: var(--color-ink-2); max-width: 75ch;"
+        >
+          {description}
+        </p>
+      )
+    }
+  </header>
+
+  <!-- Usage -->
+  <section class="mt-8">
+    <h2 class="t-label" style="color: var(--color-ink-3);">Usage</h2>
+    <pre class="sg-code mt-3">{importLine}</pre>
+    <dl class="sg-paths mt-3">
+      {
+        filePaths.map((f) => (
+          <div class="sg-path">
+            <dt>{f.label}</dt>
+            <dd>{f.path}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Live examples -->
+  <section class="mt-8">
+    <h2 class="t-label" style="color: var(--color-ink-3);">Examples</h2>
+    <div class="sg-panel mt-3">
+      {
+        ExamplesComponent ? (
+          <ExamplesComponent />
+        ) : (
+          <p
+            class="t-body"
+            style="color: var(--color-ink-3); font-style: italic;"
+          >
+            No {component.name}.examples.astro file found.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Spec markdown -->
+  <section class="mt-8">
+    <h2 class="t-label" style="color: var(--color-ink-3);">Spec</h2>
+    <article class="sg-panel sg-prose mt-3">
+      {
+        SpecContent ? (
+          <SpecContent />
+        ) : (
+          <p
+            class="t-body"
+            style="color: var(--color-ink-3); font-style: italic;"
+          >
+            No {component.name}.md spec file found.
+          </p>
+        )
+      }
+    </article>
+  </section>
+
+  <style>
+    /* Import snippet — Mono on a Document Ink plate (the dark-plate pattern). */
+    .sg-code {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      color: var(--color-bg);
+      background: var(--color-ink);
+      padding: var(--spacing-md) var(--spacing-lg);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* File paths — a flat 1px-framed list, dotted hairlines between rows. */
+    .sg-paths {
+      margin: 0;
+      border: 1px solid var(--color-rule);
+      background: var(--color-bg);
+    }
+    .sg-path {
+      display: flex;
+      gap: var(--spacing-md);
+      padding: 8px var(--spacing-md);
+      border-top: 1px dotted var(--color-rule);
+    }
+    .sg-path:first-child {
+      border-top: none;
+    }
+    .sg-path dt {
+      flex-shrink: 0;
+      width: 6rem;
+      align-self: center;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-ink-3);
+    }
+    .sg-path dd {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-ink-2);
+      word-break: break-all;
+    }
+
+    /* Panel — flat, 1px frame, sharp corners. Houses examples and the spec. */
+    .sg-panel {
+      border: 1px solid var(--color-rule);
+      background: var(--color-bg);
+      padding: var(--spacing-lg);
+    }
+
+    /* Spec prose — readable rendered markdown, brand faces and ink palette. */
+    .sg-prose :global(h1) {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--color-ink);
+      margin: 0 0 var(--spacing-sm);
+    }
+    .sg-prose :global(h2) {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--color-ink);
+      margin: var(--spacing-lg) 0 var(--spacing-xs);
+    }
+    .sg-prose :global(h3) {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-ink-3);
+      margin: var(--spacing-lg) 0 var(--spacing-xs);
+    }
+    .sg-prose :global(p),
+    .sg-prose :global(li) {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--color-ink-2);
+    }
+    .sg-prose :global(p) {
+      margin: 0 0 var(--spacing-sm);
+    }
+    .sg-prose :global(ul),
+    .sg-prose :global(ol) {
+      margin: 0 0 var(--spacing-sm);
+      padding-left: var(--spacing-lg);
+    }
+    .sg-prose :global(li) {
+      margin: 0 0 4px;
+    }
+    .sg-prose :global(code) {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--color-bg-deep);
+      padding: 1px 4px;
+    }
+    .sg-prose :global(strong) {
+      color: var(--color-ink);
+      font-weight: 600;
+    }
+    .sg-prose :global(a) {
+      color: var(--color-ink-3);
+      text-decoration: underline dotted;
+      text-underline-offset: 3px;
+    }
+    .sg-prose :global(a:hover) {
+      color: var(--color-accent);
+    }
+    .sg-prose :global(table) {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 var(--spacing-sm);
+      font-family: var(--font-body);
+      font-size: 13px;
+    }
+    .sg-prose :global(th),
+    .sg-prose :global(td) {
+      text-align: left;
+      padding: 6px var(--spacing-xs);
+      border-bottom: 1px solid var(--color-rule);
+      color: var(--color-ink-2);
+    }
+    .sg-prose :global(th) {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-ink-3);
+    }
+    .sg-prose :global(:first-child) {
+      margin-top: 0;
+    }
+  </style>
+</StyleguideLayout>

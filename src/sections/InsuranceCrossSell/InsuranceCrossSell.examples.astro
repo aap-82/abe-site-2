@@ -1,0 +1,28 @@
+---
+import InsuranceCrossSell from './InsuranceCrossSell.astro';
+---
+
+<div class="space-y-12">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Homepage insurance cross-sell (canonical)
+    </h3>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;">
+      Four cover-by-trade cards linking to the insurance satellite pages,
+      closed by the verbatim AFSL disclosure rider.
+    </p>
+    <div class="mt-3 px-6 py-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <InsuranceCrossSell
+        heading="Insurance for the work you're certified to do"
+        intro="Getting certified is one part of being on a job site; having the right cover is the other. ABE works with InsuranceTek to help students explore insurance matched to the work they are trained for."
+        covers={[
+          { title: 'Owner-Builder construction insurance', description: 'Public liability and contract works for owner-builder projects.', href: '/insurance/owner-builder' },
+          { title: 'Builder cover', description: 'Public liability, contract works, and tools cover for licensed builders.', href: '/insurance/builders' },
+          { title: 'Tradie cover', description: 'Public liability and tools-of-trade cover for sub-contractors and sole traders.', href: '/insurance/tradie' },
+          { title: 'Real-estate cover', description: 'Professional indemnity for agents and property managers.', href: '/insurance/real-estate' },
+        ]}
+        afslDisclosure="Insurance is provided through InsuranceTek (ABN 61 690 267 988), Authorised Representative of Ausure Pty Ltd (AFSL 238433). ABE Education does not provide financial advice. Consider the relevant Product Disclosure Statement and your own circumstances before making any decision."
+      />
+    </div>
+  </section>
+</div>

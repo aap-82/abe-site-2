@@ -1,0 +1,93 @@
+---
+/**
+ * CEOQuoteBlock — the "A note from our CEO" section.
+ *
+ * Analysis §2.2: the homepage section that carries a short editorial quote
+ * from the named CEO, attributed with a link to their expert profile for
+ * E-E-A-T. Composes PullQuote for the quote itself (the editorial Source
+ * Serif register, 1px hairline frame) and adds a named-person byline.
+ *
+ * Two-Accent Rule: the CEO's name is Document Maroon — DESIGN.md assigns
+ * maroon to named-person bylines. The quote stays max-contrast Ink.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the component renders its own <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+import PullQuote from '@components/PullQuote/PullQuote.astro';
+
+interface Props {
+  /** The section H2, e.g. "A note from our CEO". */
+  heading: string;
+  /** The quote text. */
+  quote: string;
+  /** The CEO's name. */
+  name: string;
+  /** Role line, e.g. "CEO and Course Developer". */
+  role: string;
+  /** Optional link to the CEO's expert profile page. */
+  profileHref?: string;
+  /** Optional label for the profile link. */
+  profileLabel?: string;
+  anchorId?: string;
+}
+
+const { heading, quote, name, role, profileHref, profileLabel, anchorId } =
+  Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="ceo-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline ceo__heading">{heading}</h2>
+
+  <PullQuote variant="quote" text={quote} />
+
+  <p class="ceo__byline">
+    <span class="ceo__name">{name}</span>
+    <span class="ceo__role">{role}</span>
+    {
+      profileHref && (
+        <a class="ceo__profile link-dotted" href={profileHref}>
+          {profileLabel ?? `Read ${name}'s profile`}
+        </a>
+      )
+    }
+  </p>
+</section>
+
+<style>
+  .ceo-section {
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .ceo__heading {
+    color: var(--color-ink);
+    margin: 0 0 var(--spacing-lg);
+  }
+
+  .ceo__byline {
+    margin: var(--spacing-md) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6em;
+  }
+
+  /* Named person — Document Maroon (DESIGN.md byline rule). */
+  .ceo__name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: -0.015em;
+    color: var(--color-accent);
+  }
+  .ceo__role {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-ink-2);
+  }
+  .ceo__profile {
+    font-family: var(--font-body);
+    font-size: 14px;
+  }
+</style>

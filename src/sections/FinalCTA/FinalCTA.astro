@@ -1,0 +1,104 @@
+---
+/**
+ * FinalCTA — the closing call-to-action section.
+ *
+ * Analysis §2.4: the "Section 7 — Final CTA" that closes every hub, course,
+ * and homepage. An outcome-focused heading, a short body line, a primary
+ * CTAButton, and an optional softer secondary link.
+ *
+ * The primary action is a v3 (filled) CTAButton — FinalCTA is an action-led
+ * surface where the button IS the focal point, the case the Volume Ladder
+ * Rule (DESIGN.md §2) reserves v3 for. The secondary action is a quiet
+ * link-dotted link, not a second button, so the hierarchy stays clear.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the component renders its own <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+import CTAButton from '@components/CTAButton/CTAButton.astro';
+
+interface Props {
+  /** The section H2 — outcome-focused, not a generic "Enrol now". */
+  heading: string;
+  /** A short supporting line under the heading. */
+  body: string;
+  /** Primary CTA label. */
+  primaryLabel: string;
+  /** Primary CTA href. */
+  primaryHref: string;
+  /** Optional secondary action label. */
+  secondaryLabel?: string;
+  /** Optional secondary action href. Required if secondaryLabel is set. */
+  secondaryHref?: string;
+  /** Optional trailing note after the secondary link. */
+  secondaryNote?: string;
+  anchorId?: string;
+}
+
+const {
+  heading,
+  body,
+  primaryLabel,
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
+  secondaryNote,
+  anchorId,
+} = Astro.props;
+const id = anchorId ?? slugify(heading);
+const hasSecondary = Boolean(secondaryLabel && secondaryHref);
+---
+
+<section id={id} class="fcta-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline fcta__heading">{heading}</h2>
+  <p class="fcta__body">{body}</p>
+
+  <div class="fcta__actions">
+    <CTAButton href={primaryHref} label={primaryLabel} variant="v3" />
+
+    {
+      hasSecondary && (
+        <p class="fcta__secondary">
+          <a class="link-dotted" href={secondaryHref}>{secondaryLabel}</a>
+          {secondaryNote && <span class="fcta__note">{secondaryNote}</span>}
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .fcta-section {
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .fcta__heading {
+    color: var(--color-ink);
+    margin: 0;
+  }
+  .fcta__body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 65ch;
+    margin: var(--spacing-md) 0 0;
+  }
+  .fcta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+  }
+  .fcta__secondary {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink-3);
+  }
+  .fcta__note {
+    margin-left: 0.4em;
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+/**
+ * /white-card — the White Card national hub.
+ *
+ * Page architecture (validation-pass decision, 21 May 2026):
+ *   - SEO metadata lives in the content collection at
+ *     src/content/pages-hub/white-card.md, Zod-validated by the pages-hub
+ *     schema. That is the single queryable, length-enforced source of truth
+ *     for title / description / canonical / lastUpdated.
+ *   - This route reads that entry via getEntry() and composes the page from
+ *     library sections. Section content lives here, beside the composition.
+ *
+ * Authority model: ABE offers White Card in five states through RTO partners
+ * — Blue Dog Training (RTO 31193) for QLD/WA/TAS, AlertForce (RTO 91826) for
+ * the ACT, and Upskill Institute (RTO 45708) for NSW. Hub pages carry no
+ * ASQA disclosure (that lives on the course-state spokes).
+ */
+import { getEntry } from 'astro:content';
+import { slugify } from '@/lib/slugify';
+import HubLayout from '@layouts/HubLayout/HubLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import StateNavigator from '@sections/StateNavigator/StateNavigator.astro';
+import ScopeLimitNote from '@sections/ScopeLimitNote/ScopeLimitNote.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import FinalCTA from '@sections/FinalCTA/FinalCTA.astro';
+import ExpertReviewerCard from '@components/ExpertReviewerCard/ExpertReviewerCard.astro';
+
+// SEO meta — Zod-validated content-collection entry.
+const entry = await getEntry('pages-hub', 'white-card');
+if (!entry) throw new Error('Missing content entry: pages-hub/white-card');
+const meta = entry.data;
+
+const stateNavHeading = 'Choose your state to find the right White Card course';
+const stateNavId = slugify(stateNavHeading);
+
+const states = [
+  { name: 'New South Wales', regulator: 'SafeWork NSW', href: '/white-card-nsw', detail: `Delivered online via Zoom by Upskill Institute (RTO 45708), an approved SafeWork NSW provider.` },
+  { name: 'Queensland', regulator: 'WHSQ', href: '/white-card-qld', detail: `Delivered by Blue Dog Training (RTO 31193); the card is issued as a General Construction Induction card.` },
+  { name: 'Western Australia', regulator: 'WorkSafe WA', href: '/white-card-wa', detail: `Delivered by Blue Dog Training (RTO 31193) for construction work in Western Australia.` },
+  { name: 'Tasmania', regulator: 'WorkSafe Tasmania', href: '/white-card-tas', detail: `Delivered by Blue Dog Training (RTO 31193) for Tasmanian construction sites.` },
+  { name: 'Australian Capital Territory', regulator: 'WorkSafe ACT', href: '/white-card-act', detail: `Delivered by AlertForce (RTO 91826) for ACT construction work.` },
+];
+
+const whyItems = [
+  { title: 'Delivered by registered training organisations', text: `Blue Dog Training (RTO 31193) and AlertForce (RTO 91826) for the territory courses, and Upskill Institute (RTO 45708) in New South Wales` },
+  { title: 'Nationally recognised unit', text: `every course delivers CPCWHS1001, the same unit of competency listed on training.gov.au, whichever state you train in` },
+  { title: 'Live trainer-led delivery', text: `sessions are run by a qualified trainer, not pre-recorded video, as the work health and safety regulators require` },
+  { title: 'State-matched content', text: `your course reflects the work health and safety regulator that recognises your card, not generic national copy` },
+  { title: 'Online from anywhere in your state', text: `complete the course from home or work on a computer with a camera and microphone` },
+  { title: 'Australian enrolment support', text: `phone and email support during business hours for booking and pre-course questions` },
+];
+
+const steps = [
+  { title: 'Choose your state', text: `Select the White Card course for the state or territory where you will be working. The card is recognised nationally once issued, but you enrol through the provider approved for that state.` },
+  { title: 'Book your session', text: `Choose a session date and complete your booking online. Before the session, make sure you have a computer with a camera and microphone, your Unique Student Identifier, and any identification the provider asks for.` },
+  { title: 'Complete the training', text: `Attend the live, trainer-led session and complete the theory and practical assessments for CPCWHS1001. The session is not self-paced; you must attend for the full duration.` },
+  { title: 'Receive your Statement of Attainment', text: `On completion, the registered training organisation issues your Statement of Attainment for CPCWHS1001, usually by email on the day.` },
+  { title: 'Receive your White Card', text: `The work health and safety regulator produces your physical General Construction Induction card and posts it to you. Your Statement of Attainment lets you start work while the card is in the mail.` },
+];
+
+const faqs = [
+  { question: 'What is a White Card?', answer: `A White Card, officially called the General Construction Induction card, is the safety credential you must hold to work on a construction site in Australia. You earn it by completing the nationally recognised unit CPCWHS1001, Prepare to Work Safely in the Construction Industry, with an approved training provider.` },
+  { question: 'Is a White Card recognised in every state?', answer: `The White Card is a nationally recognised credential, so a card issued in one state is generally accepted in the others. Some states have rules about re-recognition if you have been out of the construction industry for an extended period, so check with the work health and safety regulator if your card is old or you have had a long break.` },
+  { question: 'Can I get my White Card online?', answer: `Yes. Each state work health and safety regulator allows online White Card training when it is delivered live by a qualified trainer. ABE Education partners with registered training organisations to deliver the course online by video session in New South Wales, Queensland, Western Australia, Tasmania, and the ACT.` },
+  { question: 'How long does the White Card course take?', answer: `A White Card course is usually completed in a single day. The live session runs for several hours and covers the theory and practical assessments for CPCWHS1001, including breaks. The exact length varies a little by provider and state.` },
+  { question: 'Who delivers ABE Education White Card courses?', answer: `ABE Education is the enrolment partner, not the training provider. The courses are delivered by registered training organisations: Blue Dog Training (RTO 31193) in Queensland, Western Australia, and Tasmania; AlertForce (RTO 91826) in the ACT; and Upskill Institute (RTO 45708) in New South Wales. Your Statement of Attainment is issued by the RTO.` },
+  { question: 'How much does a White Card course cost?', answer: `White Card course fees are set by each registered training organisation and vary by state. Fees generally include the work health and safety regulator card fee. Check the course page for your state for current pricing, as fees are subject to change.` },
+];
+---
+
+<HubLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  pageHeading="White Card Training Online, State-Approved Across Australia"
+  breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'White Card Training' }]}
+  credentials={[
+    { regulator: 'SafeWork NSW', state: 'NSW' },
+    { regulator: 'WHSQ', state: 'QLD' },
+    { regulator: 'WorkSafe WA', state: 'WA' },
+    { regulator: 'WorkSafe Tasmania', state: 'TAS' },
+    { regulator: 'WorkSafe ACT', state: 'ACT' },
+  ]}
+  stateItems={[
+    { name: 'NSW White Card Course', url: '/white-card-nsw' },
+    { name: 'QLD White Card Course', url: '/white-card-qld' },
+    { name: 'WA White Card Course', url: '/white-card-wa' },
+    { name: 'TAS White Card Course', url: '/white-card-tas' },
+    { name: 'ACT White Card Course', url: '/white-card-act' },
+  ]}
+  faqs={faqs}
+>
+  <AnswerCapsuleSection
+    heading="What is a White Card and who needs one?"
+    answer="A White Card, officially the General Construction Induction card, is the mandatory safety credential for anyone who works on or regularly enters a construction site in Australia. It is issued after you complete the nationally recognised unit CPCWHS1001 with an approved training provider."
+    body="If your work takes you onto a residential or commercial construction site, you need a White Card before you start. That covers tradespeople, apprentices, labourers, supervisors, and many delivery and site office roles. The unit of competency is the same across the country, CPCWHS1001 Prepare to Work Safely in the Construction Industry, but each state and territory has its own work health and safety regulator and its own approved providers. ABE Education partners with registered training organisations to deliver White Card training online in five states."
+    nextSectionHeading={stateNavHeading}
+    nextSectionLabel="See state-by-state options"
+  />
+
+  <StateNavigator heading={stateNavHeading} states={states} />
+
+  <ScopeLimitNote>
+    ABE's White Card partners deliver online training for New South Wales,
+    Queensland, Western Australia, Tasmania, and the ACT. A White Card is also
+    required in Victoria, South Australia, and the Northern Territory, but ABE
+    does not currently offer training in those states. Contact the relevant
+    state work health and safety regulator for an approved provider.
+  </ScopeLimitNote>
+
+  <WhyChooseList
+    heading="Why choose ABE for White Card training?"
+    answer="Every ABE White Card course is delivered by a registered training organisation, not by ABE directly, so your Statement of Attainment comes from an RTO on the national register. Training is live and trainer-led, the course content is matched to your state's regulator, and enrolment is handled by an Australian support team."
+    items={whyItems}
+    style="ticked"
+  />
+
+  <NumberedStepsSection
+    heading="What are the steps to get your White Card?"
+    answer="Getting your White Card online follows the same path in every state: choose the course for the state where you will work, book a session, complete the live trainer-led training, and receive your Statement of Attainment and then your physical card."
+    steps={steps}
+  />
+
+  <FAQSection heading="White Card course FAQs" items={faqs} />
+
+  <FinalCTA
+    heading="Find the White Card course for your state and book today"
+    body="Choose your state above to see course detail, the registered training organisation that delivers it, and current pricing."
+    primaryLabel="See White Card courses by state"
+    primaryHref={`#${stateNavId}`}
+    secondaryLabel="Talk to our enrolments team"
+    secondaryHref="/contact"
+    secondaryNote="phone or email during business hours."
+  />
+
+  <AnswerCapsuleSection
+    heading="How is White Card course information reviewed?"
+    answer="White Card course pages on this site are independently reviewed for accuracy by a named compliance reviewer. The review checks that provider names, RTO numbers, regulator references, and fee information reflect current government and RTO sources."
+    body="ABE Education is the enrolment partner for White Card training; the registered training organisations design, deliver, and assess the courses. ABE's review responsibility is the accuracy of the information published on these pages. Each state course page also lists the reviewer for that page."
+  >
+    <ExpertReviewerCard
+      variant="blockquote"
+      name="Warwick Smith"
+      profileHref="/experts/warwick-smith"
+      role="Compliance Reviewer, ABE Education"
+      specialties={['27+ Years in VET', 'Compliance and Operations', 'CDRG']}
+      bio="Senior Consultant, Compliance and Operations at Corporate Development Resource Group, with over 27 years across the Australian vocational education and training sector. Former CEO of Training Aid Australia and the Australian Institute of Compliance Professionals. Specialist areas include construction, compliance, and operational design."
+      reviewNote="Reviewed this hub on 22 May 2026. State course pages are independently reviewed; see each state page for the named reviewer."
+    />
+  </AnswerCapsuleSection>
+</HubLayout>

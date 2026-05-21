@@ -1,0 +1,83 @@
+---
+import StateNavigator from './StateNavigator.astro';
+
+const states = [
+  {
+    name: 'New South Wales',
+    regulator: 'NSW Fair Trading',
+    href: '/owner-builder-nsw',
+    detail: 'Delivered by AlertForce (RTO 91826); five nationally recognised units.',
+  },
+  {
+    name: 'Queensland',
+    regulator: 'QBCC',
+    href: '/owner-builder-qld',
+    detail: 'Required for residential work valued over $11,000.',
+  },
+  {
+    name: 'Western Australia',
+    regulator: 'Consumer Protection WA',
+    href: '/owner-builder-wa',
+    detail: 'Meets the Building Services Board education requirement.',
+  },
+  {
+    name: 'Tasmania',
+    regulator: 'CBOS Tasmania',
+    href: '/owner-builder-tas',
+    detail: 'Required for owner-builder work valued over $5,000.',
+  },
+  {
+    name: 'Australian Capital Territory',
+    regulator: 'Access Canberra',
+    href: '/owner-builder-act',
+    detail: 'Meets Section 32 owner-builder eligibility.',
+  },
+];
+---
+
+<div class="space-y-12">
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Grid variant (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A responsive 1px-hairline grid of state cards. Each card is a single
+      link to the spoke page; the maroon arrow translates on hover.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StateNavigator
+        heading="Choose your state to find the right Owner Builder course"
+        states={states}
+      />
+    </div>
+  </section>
+
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Table variant
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A dense State / Regulator / Course row table, in the ComparisonTable
+      grammar. Scrolls horizontally on small screens.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StateNavigator
+        heading="Owner Builder courses by state"
+        variant="table"
+        states={states}
+      />
+    </div>
+  </section>
+</div>

@@ -1,0 +1,87 @@
+---
+import FAQSection from './FAQSection.astro';
+
+/*
+ * Source: live deployment at
+ * https://abe-education.andrey-p-personal.workers.dev/
+ * (homepage §07, "Frequently asked questions").
+ *
+ * Both variants below mirror the live questions verbatim. Live answer text
+ * is preserved as-is — it contains em dashes that predate the DESIGN.md §6
+ * no-em-dash rule. Cleaning those out is a content task for the live copy,
+ * not the component.
+ */
+
+const homepageFAQs = [
+  {
+    question: 'Is ABE Education a registered training organisation (RTO)?',
+    answer:
+      "No, and we don't claim to be. ABE partners with RTOs to deliver White Card training across all states and the NSW Owner Builder qualification, since NSW requires Owner Builder training to be issued by a registered training organisation. For Owner Builder in QLD, WA, TAS, and ACT — and for all CPD courses — ABE holds direct state-regulator approval and delivers the training itself.",
+  },
+  {
+    question: 'Are ABE Education courses nationally recognised?',
+    answer:
+      'White Card courses and the NSW Owner Builder qualification are nationally recognised — both are delivered by RTO partners and lead to Statements of Attainment for nationally accredited units of competency. Owner Builder courses in QLD, WA, TAS, and ACT, plus all CPD courses, are not ASQA-accredited; they are approved by individual state regulators (CBOS Tasmania, Access Canberra, Consumer Protection WA, QBCC Queensland) and accepted only in the state that approves them.',
+  },
+  {
+    question: 'Where can I take an ABE Education course?',
+    answer:
+      'All ABE courses are 100% online. White Card is offered in NSW, QLD, WA, TAS, and ACT. Owner Builder is offered in NSW, QLD, WA, TAS, and ACT. CPD is offered to building, plumbing, and electrical practitioners in Tasmania, and to real-estate agents in WA.',
+  },
+  {
+    question: 'How quickly can I get certified?',
+    answer:
+      'Most White Card students finish the same day. Owner Builder courses are longer and typically take a few days to a week, depending on the state. Once you pass, your certificate is issued by the relevant authority — Blue Dog Training, AlertForce, or the state regulator — usually within 1–2 business days.',
+  },
+  {
+    question: "How do I verify ABE's accreditation?",
+    answer:
+      "Every accreditation claim on our site links to a .gov.au or training.gov.au page you can check yourself. White Card RTOs are listed on training.gov.au under RTO 31193 (Blue Dog Training) and RTO 91826 (AlertForce). Owner Builder and CPD approvals are listed on each state regulator's website.",
+  },
+];
+
+const shortFAQs = homepageFAQs.slice(0, 3);
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — all 5 deployed homepage FAQs -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Live homepage FAQs — all 5 questions verbatim
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Lifted from the §07 block on the deployed homepage. Click any question
+      to expand the answer; the Maroon chevron rotates 180°. Multi-open by
+      default.
+    </p>
+    <div class="mt-3">
+      <FAQSection items={homepageFAQs} heading="Frequently asked questions" />
+    </div>
+  </section>
+
+  <!-- Variant 2 — subset (3 of the 5) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Subset — first 3 deployed questions
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Same source, fewer items, with an author-rendered H2 sitting outside
+      the component.
+    </p>
+    <div class="mt-3">
+      <h2
+        class="t-headline"
+        style="color: var(--color-ink); margin: 0 0 var(--spacing-md);"
+      >
+        Frequently asked questions
+      </h2>
+      <FAQSection items={shortFAQs} heading="Frequently asked questions" />
+    </div>
+  </section>
+</div>

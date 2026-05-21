@@ -1,0 +1,90 @@
+---
+/**
+ * BulletedFeatureList — the "What you get" / "Verified trust signals" pattern.
+ *
+ * Two visual modes via the `style` prop:
+ *   - `bullet` (default): quiet ink-3 disc, structural register
+ *   - `ticked`: maroon ✓ on the left, for "verified" / "do" lists
+ *
+ * Each item is `{ title?, text }`. When `title` is present it renders bold
+ * as a lead-in, then the text follows after a colon. No em dashes
+ * (DESIGN.md §6 forbids them in body copy).
+ *
+ * Locked decisions reflected here:
+ *   #3 — design-system tokens only; no hard-coded colours.
+ */
+
+interface Item {
+  /** Optional bold lead-in (e.g. "Verifiable authority"). */
+  title?: string;
+  /** The body of the bullet. */
+  text: string;
+}
+
+interface Props {
+  items: Item[];
+  /** `bullet` (default) for structural lists, `ticked` for verified-claim lists. */
+  style?: 'bullet' | 'ticked';
+}
+
+const { items, style = 'bullet' } = Astro.props;
+---
+
+<ul class={`bulleted-feature-list bulleted-feature-list--${style}`}>
+  {
+    items.map((item) => (
+      <li class="bulleted-feature-list__item t-body">
+        {style === 'ticked' && (
+          <span class="tick" aria-hidden="true">
+            ✓
+          </span>
+        )}
+        {item.title && (
+          <>
+            <strong>{item.title}:</strong>{' '}
+          </>
+        )}
+        {item.text}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .bulleted-feature-list {
+    margin: var(--spacing-md) 0;
+    padding: 0;
+    list-style: none;
+    max-width: 70ch;
+  }
+
+  .bulleted-feature-list__item {
+    position: relative;
+    padding-left: 1.5rem;
+    margin: var(--spacing-xs) 0;
+    color: var(--color-ink);
+    line-height: 1.55;
+  }
+
+  /* Default bullet — quiet ink-3 disc */
+  .bulleted-feature-list--bullet .bulleted-feature-list__item::before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: var(--color-ink-3);
+    font-weight: 600;
+  }
+
+  /* Ticked — maroon ✓ */
+  .bulleted-feature-list--ticked .bulleted-feature-list__item .tick {
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .bulleted-feature-list__item strong {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+</style>

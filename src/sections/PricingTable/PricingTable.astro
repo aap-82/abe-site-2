@@ -1,0 +1,164 @@
+---
+/**
+ * PricingTable — the itemised course-cost table.
+ *
+ * Analysis §3.5: item / cost rows, with an optional struck-through RRP, an
+ * optional cost link (for fees a regulator publishes centrally), and an
+ * optional emphasised total row.
+ *
+ * Document-grade table grammar, shared with ComparisonTable: Geist Mono caps
+ * headers with a 1px solid ink underline, Public Sans cells, 1px Rule
+ * hairlines between rows, no zebra fills, sharp corners. Scrolls horizontally
+ * on small screens rather than reflowing.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the component renders its own <h2>.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+interface PriceRow {
+  /** What is being priced, e.g. "ABE Education course fee". */
+  item: string;
+  /** The cost, e.g. "$180", "Included", "Set by the regulator". */
+  cost: string;
+  /** Optional struck-through original price shown before the cost. */
+  rrp?: string;
+  /** Optional link on the cost — for fees published on a regulator page. */
+  costHref?: string;
+}
+
+interface Props {
+  /** The section H2. */
+  heading: string;
+  /** The itemised rows. */
+  rows: PriceRow[];
+  /** Optional emphasised total row, e.g. { item: "You pay", cost: "$129" }. */
+  total?: { item: string; cost: string };
+  /** Optional mono footnote below the table. */
+  caption?: string;
+  anchorId?: string;
+}
+
+const { heading, rows, total, caption, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="ptable-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline ptable__heading">{heading}</h2>
+
+  <div class="ptable__scroll">
+    <table class="ptable">
+      <thead>
+        <tr>
+          <th scope="col">Item</th>
+          <th scope="col">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr>
+              <th scope="row" class="ptable__item">{r.item}</th>
+              <td class="ptable__cost">
+                {r.rrp && <span class="ptable__rrp">{r.rrp}</span>}
+                {
+                  r.costHref ? (
+                    <a class="link-dotted" href={r.costHref}>{r.cost}</a>
+                  ) : (
+                    r.cost
+                  )
+                }
+              </td>
+            </tr>
+          ))
+        }
+        {
+          total && (
+            <tr class="ptable__total">
+              <th scope="row" class="ptable__item">{total.item}</th>
+              <td class="ptable__cost">{total.cost}</td>
+            </tr>
+          )
+        }
+      </tbody>
+    </table>
+  </div>
+
+  {caption && <p class="ptable__caption">{caption}</p>}
+</section>
+
+<style>
+  .ptable-section {
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .ptable__heading {
+    color: var(--color-ink);
+    margin: 0 0 var(--spacing-lg);
+  }
+
+  .ptable__scroll {
+    overflow-x: auto;
+  }
+  .ptable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .ptable thead th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .ptable__item {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-ink);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+  }
+  .ptable__cost {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--color-ink);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  /* Struck-through recommended price, sitting before the live cost. */
+  .ptable__rrp {
+    text-decoration: line-through;
+    color: var(--color-ink-3);
+    margin-right: 0.5em;
+  }
+
+  /* Emphasised total — heavier 1px ink rule above, bold both cells. */
+  .ptable__total .ptable__item,
+  .ptable__total .ptable__cost {
+    border-top: 1px solid var(--color-ink);
+    border-bottom: 0;
+    font-weight: 700;
+    padding-top: var(--spacing-sm);
+  }
+
+  .ptable__caption {
+    margin: var(--spacing-md) 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-3);
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+/**
+ * LegalCallout — the fine-print legal note.
+ *
+ * Analysis §3.1: the "⚖️ Legal:" block — fee disclaimers, refund terms,
+ * and other small print that sits inside a content section (most often a
+ * pricing section). The quietest member of the callout family.
+ *
+ * Design-system notes:
+ *   - The "⚖️" emoji from the content drafts is dropped — the system owns
+ *     no icon set (Two-Ornament Rule, DESIGN.md §4). The mono caps LEGAL
+ *     label names the callout instead.
+ *   - Callout family prominence ladder: LegalCallout (1px rule frame, no
+ *     fill) → ScopeLimitNote (rule frame + tonal fill) → WarningCallout
+ *     (1px amber frame, semantic warning colour).
+ *   - Body is a slot so the fine print can carry inline link-dotted links
+ *     (student handbooks, refund-policy pages).
+ */
+interface Props {
+  /** Mono caps label naming the callout. Rendered uppercase by CSS. */
+  label?: string;
+}
+
+const { label = 'Legal' } = Astro.props;
+---
+
+<aside class="legal-callout">
+  <p class="legal-callout__label">{label}</p>
+  <div class="legal-callout__body"><slot /></div>
+</aside>
+
+<style>
+  /* Fine print — the lightest callout: a 1px rule frame, no fill,
+     small Ink-2 body. */
+  .legal-callout {
+    border: 1px solid var(--color-rule);
+    background: transparent;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .legal-callout__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .legal-callout__body {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 70ch;
+  }
+
+  /* Reset margins if the author passes paragraph elements into the slot. */
+  .legal-callout__body :global(p) {
+    margin: 0;
+  }
+  .legal-callout__body :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+</style>

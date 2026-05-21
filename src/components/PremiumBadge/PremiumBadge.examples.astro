@@ -1,0 +1,56 @@
+---
+import PremiumBadge from './PremiumBadge.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1: default, slot content -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Default (slot content)
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <PremiumBadge>Premium</PremiumBadge>
+      <span class="ml-3"><PremiumBadge>Featured</PremiumBadge></span>
+      <span class="ml-3"><PremiumBadge label="Bundle" /></span>
+    </div>
+  </section>
+
+  <!-- Variant 2: inline next to a heading -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Inline next to a title
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <p class="t-headline" style="color: var(--color-ink);">
+        Owner Builder course
+        <span class="align-middle"><PremiumBadge>Premium</PremiumBadge></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Variant 3: inline in a list item -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Inline in a list item
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ul class="t-body" style="color: var(--color-ink);">
+        <li>White Card course</li>
+        <li>
+          Owner Builder + CPD bundle
+          <span class="align-middle"><PremiumBadge>Premium</PremiumBadge></span>
+        </li>
+        <li>CPD refresher</li>
+      </ul>
+    </div>
+  </section>
+</div>

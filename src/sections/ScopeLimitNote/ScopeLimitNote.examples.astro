@@ -1,0 +1,58 @@
+---
+import ScopeLimitNote from './ScopeLimitNote.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 (canonical): state scope-limit with an external authority link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      State scope-limit with authority link (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The default <code>Note</code> label. A 1px rule frame, no fill.
+      The body slot links out to the regulator ABE defers to.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ScopeLimitNote>
+        Not in this list = not currently offered. ABE does not deliver Owner
+        Builder training in Victoria, South Australia, or the Northern
+        Territory. Victoria's permit is handled by the
+        <a
+          href="https://www.vba.vic.gov.au/owner-builders"
+          class="link-dotted"
+          rel="external"
+        >
+          Victorian Building Authority</a>, and South Australia does not
+        currently require a formal course.
+      </ScopeLimitNote>
+    </div>
+  </section>
+
+  <!-- Variant 2: short form, no link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Short form, no link
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The homepage variant: a single plain sentence, no outbound link.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ScopeLimitNote>
+        Not in this list = not currently offered. ABE does not deliver courses
+        in Victoria, South Australia, or the Northern Territory at this time.
+      </ScopeLimitNote>
+    </div>
+  </section>
+</div>

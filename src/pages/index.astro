@@ -1,0 +1,193 @@
+---
+/**
+ * / — the ABE Education homepage.
+ *
+ * Validation-pass rebuild from library components, following the two-file
+ * page architecture: SEO meta in src/content/pages-homepage/index.md,
+ * composition here.
+ *
+ * Two gaps surfaced and flagged inline with placeholders:
+ *   - Section 2 "What courses do we offer" needs a Streamcard component.
+ *   - Section 3 "Find your course by state" needs a multi-link StateNavigator
+ *     variant (several course links per state).
+ */
+import { getEntry } from 'astro:content';
+import { slugify } from '@/lib/slugify';
+import HomepageLayout from '@layouts/HomepageLayout/HomepageLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import ScopeLimitNote from '@sections/ScopeLimitNote/ScopeLimitNote.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import RegulatorBand from '@sections/RegulatorBand/RegulatorBand.astro';
+import HeroTrustBar from '@sections/HeroTrustBar/HeroTrustBar.astro';
+import CEOQuoteBlock from '@sections/CEOQuoteBlock/CEOQuoteBlock.astro';
+import InsuranceCrossSell from '@sections/InsuranceCrossSell/InsuranceCrossSell.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import FinalCTA from '@sections/FinalCTA/FinalCTA.astro';
+
+const entry = await getEntry('pages-homepage', 'index');
+if (!entry) throw new Error('Missing content entry: pages-homepage/index');
+const meta = entry.data;
+
+const navItems = [
+  { name: 'White Card courses', url: '/white-card' },
+  { name: 'Owner Builder courses', url: '/owner-builder' },
+  { name: 'CPD courses', url: '/cpd' },
+];
+
+const whyItems = [
+  { title: 'Verifiable authority', text: `every claim links back to a .gov.au source you can check yourself` },
+  { title: 'Named experts', text: `courses are reviewed by industry-credentialled people, not anonymous training teams` },
+  { title: '100% online', text: `start in minutes, complete on your schedule, on any device` },
+  { title: 'Australian support', text: `phone and email support during business hours` },
+  { title: 'State-specific content', text: `courses written for the regulator that issues your certificate, not generic copy` },
+];
+
+const steps = [
+  { title: 'Pick your course', text: `Choose by course type or by state. Each landing page lists the regulator, the certificate you will receive, and the price.` },
+  { title: 'Enrol and learn online', text: `Pay online, log in, and start. Our courses run in any modern browser: phone, tablet, or computer. You can pause and resume any time.` },
+  { title: 'Get certified', text: `Pass the assessment and your certificate is issued by the appropriate authority: Blue Dog Training, AlertForce, or directly by the relevant state regulator.` },
+];
+
+const trustStats = [
+  { value: '4.8 / 5', label: '52 Google reviews' },
+  { value: '95%', label: 'First-attempt pass rate' },
+  { value: '31,000+', label: 'Students certified' },
+  { value: 'Since 2007', label: 'Australian provider' },
+];
+
+const faqs = [
+  { question: 'Is ABE Education a registered training organisation (RTO)?', answer: `No, and we don't claim to be. ABE partners with RTOs to deliver White Card training across all states and the NSW Owner Builder qualification, since NSW requires Owner Builder training to be issued by a registered training organisation. For Owner Builder in QLD, WA, TAS, and ACT, and for all CPD courses, ABE holds direct state-regulator approval and delivers the training itself.` },
+  { question: 'Are ABE Education courses nationally recognised?', answer: `White Card courses and the NSW Owner Builder qualification are nationally recognised; both are delivered by RTO partners and lead to Statements of Attainment for nationally accredited units of competency. Owner Builder courses in QLD, WA, TAS, and ACT, plus all CPD courses, are not ASQA-accredited; they are approved by individual state regulators and accepted only in the state that approves them.` },
+  { question: 'Where can I take an ABE Education course?', answer: `All ABE courses are 100% online. White Card is offered in NSW, QLD, WA, TAS, and ACT. Owner Builder is offered in NSW, QLD, WA, TAS, and ACT. CPD is offered to building, plumbing, and electrical practitioners in Tasmania, and to real-estate agents in WA.` },
+  { question: 'How quickly can I get certified?', answer: `Most White Card students finish the same day. Owner Builder courses are longer and typically take a few days to a week, depending on the state. Once you pass, your certificate is issued by the relevant authority, usually within 1 to 2 business days.` },
+  { question: `How do I verify ABE's accreditation?`, answer: `Every accreditation claim on our site links to a .gov.au or training.gov.au page you can check yourself. White Card RTOs are listed on training.gov.au under RTO 31193 (Blue Dog Training) and RTO 91826 (AlertForce). Owner Builder and CPD approvals are listed on each state regulator's website.` },
+];
+---
+
+<HomepageLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  pageHeading="Online Construction Training Trusted Across Australia"
+  navItems={navItems}
+>
+  <AnswerCapsuleSection
+    heading="Who is ABE Education?"
+    answer="ABE Education is an Australian online training provider specialising in construction-industry courses. We work with registered training organisations to deliver nationally recognised qualifications, and we hold direct approval from state regulators for Owner Builder and CPD courses across Queensland, Western Australia, Tasmania, and the ACT."
+    body="Every course is built and reviewed by industry-credentialled experts, then delivered online so you can complete it from a phone, tablet, or laptop. You will never sit in a classroom, drive across the state, or take a day off work to get certified. More than 31,000 students have used ABE Education to meet a regulator's training requirement, first time, on time."
+  />
+
+  <aside class="vgap">
+    <p class="vgap__label">Placeholder — missing component</p>
+    <p class="vgap__body">
+      Section 2, "What courses do we offer", composes three stream cards
+      (Owner Builder, White Card, CPD) — each a heading, a body paragraph,
+      and a cross-reference link to its hub. No Streamcard component exists in
+      the library yet; build a Streamcard section to fill this slot.
+    </p>
+  </aside>
+
+  <AnswerCapsuleSection
+    heading="Find your course by state"
+    answer="ABE Education courses are offered across five Australian states and territories: New South Wales, Queensland, Western Australia, Tasmania, and the Australian Capital Territory. Each course is matched to the regulator that approves it in your state, so the certificate you receive is the one your state's permit, licence, or compliance authority will accept."
+    body="Choose your state to see every ABE course available there, from White Card and Owner Builder through to the CPD streams. Each link goes to the course page for that jurisdiction, where the regulator, certificate, and price are listed in full."
+  />
+
+  <aside class="vgap">
+    <p class="vgap__label">Placeholder — component variant missing</p>
+    <p class="vgap__body">
+      The state navigator here lists five states, each with several course
+      links (NSW has White Card NSW and Owner Builder NSW; Tasmania has five).
+      StateNavigator currently supports a single link per state — a
+      multi-link variant is needed before this block can be composed.
+    </p>
+  </aside>
+
+  <ScopeLimitNote>
+    Not in this list = not currently offered. ABE does not deliver courses in
+    Victoria, South Australia, or the Northern Territory at this time.
+  </ScopeLimitNote>
+
+  <WhyChooseList
+    heading="Why choose ABE Education?"
+    answer="ABE Education combines RTO partnerships with direct state-regulator approvals, giving you more verifiable authority than a single-RTO provider. Every course is built and reviewed by named subject-matter experts, delivered fully online, and backed by a support team based in Australia."
+    items={whyItems}
+    style="ticked"
+  />
+
+  <NumberedStepsSection
+    heading="How does ABE Education work?"
+    answer="Choose your state and course, complete the online enrolment, and start learning straight away. Most courses are self-paced, finished in a single sitting or split across a few days. When you finish, your certificate is issued by the relevant authority, usually within 1 to 2 business days."
+    steps={steps}
+  />
+
+  <RegulatorBand heading="ABE Education trust signals" stats={trustStats} />
+
+  <HeroTrustBar
+    heading="Government provider listings"
+    label="Listed as an approved provider by"
+    credentials={[
+      { regulator: 'CBOS Tasmania', state: 'TAS' },
+      { regulator: 'Access Canberra', state: 'ACT' },
+      { regulator: 'Consumer Protection WA', state: 'WA' },
+    ]}
+  />
+
+  <CEOQuoteBlock
+    heading="A note from our CEO"
+    quote="When we started ABE Education in 2007, the brief was simple: make compliance training work for the people who actually need it. Builders, tradies, owner-builders, agents, people whose day starts on a job site or in a client's home, not in a classroom. Two decades on, every course we publish gets tested against the same question: can a busy professional finish this between appointments and walk out with the certificate they need? If the answer is no, we keep working until it is."
+    name="Dominic Ogburn"
+    role="CEO and Course Developer"
+    profileHref="/experts/dominic-ogburn"
+    profileLabel="Read Dominic's expert profile"
+  />
+
+  <InsuranceCrossSell
+    heading="Insurance for the work you're certified to do"
+    intro="Getting certified is one part of being on a job site; having the right cover is the other. ABE works with InsuranceTek (an Authorised Representative of Ausure Pty Ltd, Australian Financial Services Licence 238433) to help students explore tailored insurance options matched to the work they are trained for."
+    covers={[
+      { title: 'Owner-Builder construction insurance', description: 'Public liability and contract works for owner-builder projects.', href: '/insurance/owner-builder' },
+      { title: 'Builder cover', description: 'Public liability, contract works, and tools cover for licensed builders.', href: '/insurance/builders' },
+      { title: 'Tradie cover', description: 'Public liability and tools-of-trade cover for sub-contractors and sole traders.', href: '/insurance/tradie' },
+      { title: 'Real-estate cover', description: 'Professional indemnity for agents and property managers.', href: '/insurance/real-estate' },
+    ]}
+    afslDisclosure="Insurance is provided through InsuranceTek (ABN 61 690 267 988), Authorised Representative of Ausure Pty Ltd (AFSL 238433). ABE Education does not provide financial advice. Consider the relevant Product Disclosure Statement and your own circumstances before making any decision."
+  />
+
+  <FAQSection heading="Frequently asked questions" items={faqs} />
+
+  <FinalCTA
+    heading="Get the certificate your state regulator accepts, start today"
+    body="Browse every ABE course by type or by state. Each course page lists the regulator, the certificate, and the price up front."
+    primaryLabel="Browse all courses"
+    primaryHref="/courses"
+  />
+</HomepageLayout>
+
+<style>
+  /* Validation-pass placeholder — a flagged gap, not final page content. */
+  .vgap {
+    border: 1px dashed var(--color-ink-4);
+    background: var(--color-bg-alt);
+    padding: var(--spacing-lg);
+  }
+  .vgap__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-warning-deep);
+  }
+  .vgap__body {
+    margin: var(--spacing-xs) 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 70ch;
+  }
+</style>

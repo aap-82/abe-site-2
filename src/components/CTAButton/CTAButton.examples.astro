@@ -1,0 +1,90 @@
+---
+import CTAButton from './CTAButton.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant v2 — production default -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      v2 — Structural framing (production default)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      1px ink frame, transparent background, ink label, Maroon arrow. Hover
+      flips frame + label to Maroon. The button on every production
+      streamcard.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <CTAButton href="/white-card" label="Browse White Card" />
+    </div>
+  </section>
+
+  <!-- Variant v1 — quiet -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      v1 — Colour amplification (quiet)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Maroon text, weight 600, solid Maroon underline. No frame, no fill.
+      Used in crowded editorial sections where a frame or fill would compete
+      with the body type.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <CTAButton href="/cpd/nsw-builder" label="Browse Construction CPD" variant="v1" />
+    </div>
+  </section>
+
+  <!-- Variant v3 — loud -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      v3 — Full fill (loud)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Solid Maroon background, Cream label, Cream arrow. Use on action-led
+      pages where the button IS the focal point — usually the page's primary
+      CTA.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <CTAButton href="/enrol" label="Get certified today" variant="v3" />
+    </div>
+  </section>
+
+  <!-- All three side by side (Volume Ladder comparison) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Volume ladder comparison
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      All three variants side by side, showing the volume progression: text
+      link → framed action → filled action. One family, three volumes.
+    </p>
+    <div
+      class="mt-3 px-6 py-6 flex flex-wrap items-baseline gap-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <CTAButton href="#" label="v1 quiet" variant="v1" />
+      <CTAButton href="#" label="v2 framed" variant="v2" />
+      <CTAButton href="#" label="v3 filled" variant="v3" />
+    </div>
+  </section>
+</div>

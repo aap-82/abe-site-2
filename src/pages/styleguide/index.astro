@@ -1,0 +1,106 @@
+---
+import StyleguideLayout from '@/layouts/StyleguideLayout.astro';
+import {
+  discoverComponents,
+  groupByCategory,
+  getDescription,
+} from '@/lib/styleguide';
+
+const grouped = groupByCategory(discoverComponents());
+const total =
+  grouped.layouts.length + grouped.sections.length + grouped.components.length;
+---
+
+<StyleguideLayout title="Home">
+  <header class="pb-6" style="border-bottom: 1px solid var(--color-rule);">
+    <p class="t-label" style="color: var(--color-ink-3);">Component library</p>
+    <h1 class="t-headline mt-2" style="color: var(--color-ink);">
+      ABE Astro Styleguide
+    </h1>
+    <p class="t-body mt-3" style="color: var(--color-ink-2); max-width: 75ch;">
+      Every layout, section, and component in the library, each with its spec
+      and live examples. {total} items in total. Read the
+      <a href="/styleguide/conventions" class="link-dotted">conventions</a>
+      before composing a new page.
+    </p>
+  </header>
+
+  {
+    total === 0 ? (
+      <section
+        class="mt-10 px-6 py-10"
+        style="border: 1px solid var(--color-rule); background: var(--color-bg-alt);"
+      >
+        <p class="t-body" style="color: var(--color-ink-2);">
+          No components discovered. Add one under <code>src/components/</code>,
+          <code>src/sections/</code>, or <code>src/layouts/</code> using the
+          three-file pattern (<code>Name.astro</code>, <code>Name.md</code>,
+          <code>Name.examples.astro</code>), then run
+          <code>npm run claude:reindex</code>.
+        </p>
+      </section>
+    ) : (
+      (['layouts', 'sections', 'components'] as const).map((group) =>
+        grouped[group].length === 0 ? null : (
+          <section class="mt-10">
+            <h2 class="t-label" style="color: var(--color-ink-3);">
+              {group} ({grouped[group].length})
+            </h2>
+            <ul class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+              {grouped[group].map((c) => (
+                <li>
+                  <a href={`/styleguide/${c.slug}`} class="sg-card">
+                    <div class="flex items-baseline justify-between gap-3">
+                      <span class="sg-card__name">{c.name}</span>
+                      <span
+                        class="t-label-footnote"
+                        style="color: var(--color-ink-3);"
+                      >
+                        {c.slug}
+                      </span>
+                    </div>
+                    <p class="sg-card__desc">
+                      {getDescription(c.specPath) ||
+                        'No description in spec frontmatter.'}
+                    </p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ),
+      )
+    )
+  }
+
+  <style>
+    /* Card — flat, 1px frame, sharp corners. Hover shifts the border colour,
+       never elevates (Flat-By-Default Rule). */
+    .sg-card {
+      display: block;
+      height: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: 1px solid var(--color-rule);
+      background: var(--color-bg);
+      text-decoration: none;
+      transition: border-color 140ms ease;
+    }
+    .sg-card:hover {
+      border-color: var(--color-ink);
+    }
+    .sg-card__name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      color: var(--color-ink);
+    }
+    .sg-card__desc {
+      margin-top: var(--spacing-xs);
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--color-ink-2);
+    }
+  </style>
+</StyleguideLayout>

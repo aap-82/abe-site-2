@@ -1,0 +1,66 @@
+---
+import AnswerCapsule from '../AnswerCapsule/AnswerCapsule.astro';
+import BodyParagraph from './BodyParagraph.astro';
+
+const capsuleText =
+  "The NSW Owner Builder Course is the approved education you must complete before applying for an Owner Builder Permit when residential building work on your home is valued at $20,000 or more. It covers the five nationally recognised units of competency set by Building Commission NSW.";
+
+const longBody =
+  "If you plan to supervise or do building work valued over $10,000 on your own home and you're not contracting a licensed builder, you need an Owner Builder Permit from Building Commission NSW. Once the work value reaches $20,000, you also need to complete the approved education or hold an equivalent qualification. The permit is administered through Service NSW. Your application is assessed by Building Commission NSW, usually within 3 business days.";
+
+const shortBody =
+  "Tasmania, the ACT, Queensland, and WA courses are typically completed in a few days of part-time study. The NSW course covers five nationally recognised units of competency and usually takes a week or two, longer because the units are formally assessed by an RTO.";
+
+function wordCount(s: string) {
+  return s.trim().split(/\s+/).length;
+}
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — canonical pairing with AnswerCapsule -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Canonical pairing with AnswerCapsule
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The Source Serif 4 capsule above and the Public Sans body below carry
+      different voices. No "BODY" label needed; the font switch is the cue.
+    </p>
+    <div
+      class="mt-3 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <AnswerCapsule text={capsuleText} />
+      <BodyParagraph text={longBody} />
+      <p class="t-label-footnote mt-2" style="color: var(--color-ink-3);">
+        body: {wordCount(longBody)} words · in target range (60–120)
+      </p>
+    </div>
+  </section>
+
+  <!-- Variant 2 — standalone short body -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Standalone body (without a capsule above)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The component renders correctly without a capsule, but reads as a
+      homeless paragraph; not the canonical use.
+    </p>
+    <div
+      class="mt-3 px-6 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <BodyParagraph text={shortBody} />
+      <p class="t-label-footnote mt-2" style="color: var(--color-ink-3);">
+        {wordCount(shortBody)} words · in target range
+      </p>
+    </div>
+  </section>
+</div>

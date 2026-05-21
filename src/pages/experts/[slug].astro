@@ -1,0 +1,43 @@
+---
+/**
+ * /experts/[slug] — the expert-profile generic renderer.
+ *
+ * Expert pages are pure data (skill: "a generic renderer can map the
+ * frontmatter directly"). This route reads every pages-expert content
+ * entry and renders each through ExpertPageLayout. The markdown body of
+ * the entry is the bio prose and flows into the layout's default slot.
+ *
+ * Add an expert by adding src/content/pages-expert/<slug>.md — no new
+ * route file is needed.
+ */
+import { getCollection, render } from 'astro:content';
+import ExpertPageLayout from '@layouts/ExpertPageLayout/ExpertPageLayout.astro';
+
+export async function getStaticPaths() {
+  const experts = await getCollection('pages-expert');
+  return experts.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const meta = entry.data;
+const { Content } = await render(entry);
+---
+
+<ExpertPageLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  name={meta.name}
+  role={meta.role}
+  credentials={meta.credentials}
+  linkedin={meta.linkedin}
+  headshot={meta.headshot}
+  pagesReviewed={meta.pagesReviewed}
+  breadcrumbs={[{ label: 'Home', href: '/' }, { label: meta.name }]}
+>
+  <Content />
+</ExpertPageLayout>

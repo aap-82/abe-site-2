@@ -1,0 +1,307 @@
+@import "tailwindcss";
+
+/*
+ * Google Fonts — the four locked faces from DESIGN.md §3
+ *   Archivo         display + headline + title
+ *   Public Sans     body
+ *   Source Serif 4  prose (answer capsules only)
+ *   Geist Mono      label + label-footnote
+ */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500..900&family=Geist+Mono:wght@400..700&family=Public+Sans:wght@400..700&family=Source+Serif+4:wght@400..700&display=swap");
+
+/*
+ * ABE Education design tokens — see DESIGN.md for the full spec.
+ *
+ * Colour discipline: 60-30-10
+ *   60% — Newsprint Cream-1/2/3 cool-slate neutrals (hue 240)
+ *   30% — 5-tier Document Ink palette
+ *    7% — Document Maroon (#800000) for action only
+ *    3% — Regulator Blue (oklch hue 235) for verification only
+ *
+ * Two-Accent Rule: maroon = action + brand, blue = verification + current-state,
+ * ink = structure + default. No overlap.
+ *
+ * Anti-patterns enforced elsewhere:
+ *   - No border-left/right > 1px as colour stripe (the AI design tell)
+ *   - No box-shadows (flat by default)
+ *   - No rounded corners outside form controls (sharp corners always)
+ *   - No warm tones (orange/yellow/peach/cream-as-paper forbidden)
+ *   - Em dashes forbidden in page body copy
+ */
+
+@theme {
+  /* --- Neutrals (60%) --- */
+  --color-bg: oklch(98.2% 0.004 240);      /* Newsprint Cream-1 — page ground */
+  --color-bg-alt: oklch(96.0% 0.006 240);  /* Newsprint Cream-2 — alternating section ground */
+  --color-bg-deep: oklch(93.5% 0.008 240); /* Newsprint Cream-3 — nested cards inside deep sections */
+  --color-rule: oklch(85% 0.010 240);      /* hairline divider colour */
+
+  /* --- Ink palette (30%) --- */
+  --color-ink: oklch(18% 0.020 240);   /* primary type — headings, body, dark plates */
+  --color-ink-2: oklch(35% 0.018 240); /* secondary type — descriptions, sub-taglines */
+  --color-ink-3: oklch(50% 0.014 240); /* tertiary — mono caps labels, dotted-link default */
+  --color-ink-4: oklch(62% 0.012 240); /* quaternary — big section number, disabled */
+
+  /* --- Maroon — action register (7%) --- */
+  --color-accent: #800000;       /* Document Maroon */
+  --color-accent-deep: #500000;  /* Deep Burgundy — hover, per-card stream words */
+  --color-accent-mid: #600000;   /* Auxiliary — legacy compatibility only */
+
+  /* --- Regulator Blue — verification register (3%) --- */
+  --color-info: oklch(46% 0.16 235);
+  --color-info-deep: oklch(32% 0.12 235);
+  --color-info-soft: oklch(85% 0.06 235);
+  --color-info-wash: oklch(95% 0.025 235);
+  --color-info-on-dark: oklch(78% 0.08 235);
+
+  /*
+   * --- Semantic status register ---
+   * A bounded, usage-limited register for status signals ONLY — callouts,
+   * badges, chips, inline status icons. Never page or section backgrounds,
+   * never body text. Each role has three tiers: base (1px borders, mono
+   * labels, icons), deep (label / text strength, AA on light grounds), and
+   * wash (a pale fill for a small signal).
+   *
+   * `information` mirrors Regulator Blue (identical values) — verification
+   * and information are the same register. `warning` is the system's one
+   * warm hue: a documented,
+   * bounded exception to the No Warm Tones Rule (DESIGN.md §2), permitted as
+   * a small signal only, never a surface.
+   */
+  --color-success: oklch(53% 0.13 150);
+  --color-success-deep: oklch(40% 0.10 150);
+  --color-success-wash: oklch(96% 0.022 150);
+
+  --color-warning: oklch(66% 0.14 74);
+  --color-warning-deep: oklch(47% 0.10 74);
+  --color-warning-wash: oklch(96% 0.035 74);
+
+  --color-information: oklch(46% 0.16 235);
+  --color-information-deep: oklch(32% 0.12 235);
+  --color-information-wash: oklch(95% 0.025 235);
+
+  --color-error: oklch(54% 0.19 27);
+  --color-error-deep: oklch(42% 0.16 27);
+  --color-error-wash: oklch(96% 0.03 27);
+
+  --color-premium: oklch(50% 0.15 305);
+  --color-premium-deep: oklch(38% 0.13 305);
+  --color-premium-wash: oklch(96% 0.028 305);
+
+  /* --- Typography — 4 faces --- */
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-prose: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* --- Sharp corners — locked --- */
+  --radius-base: 0;
+
+  /* --- Spacing scale (8px base) --- */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-xxxl: 64px;
+  --spacing-xxxxl: 96px;
+
+  /*
+   * Backward-compatibility aliases — keep the placeholder `abe-*` token names
+   * working for the components written in step 4 (AnswerCapsule + siblings).
+   * These will be removed once every component migrates to the design-system
+   * names above.
+   */
+  --color-abe-paper: oklch(98.2% 0.004 240);
+  --color-abe-ink: oklch(18% 0.020 240);
+  --color-abe-muted: oklch(50% 0.014 240);
+  --color-abe-ash: oklch(50% 0.014 240);
+  --color-abe-primary: #800000;
+  --color-abe-primary-dark: #500000;
+  --color-abe-warn: oklch(45% 0.18 25);
+  --color-abe-success: oklch(48% 0.15 150);
+  --color-abe-accent: #800000;
+}
+
+/* --- Base resets --- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-ink);
+  background: var(--color-bg);
+}
+
+/*
+ * Type role classes — one class per role, per DESIGN.md §3.
+ * Components attach these for typography; Tailwind utilities handle
+ * layout (margin, padding, flex, grid).
+ */
+.t-display {
+  font-family: var(--font-mono);
+  font-size: clamp(2.25rem, 3.5vw, 3rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0;
+  font-feature-settings: "lnum", "tnum";
+}
+
+.t-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+/*
+ * Headline-Small — a quieter H2 variant: sentence case (never uppercased) and
+ * one step smaller, snapped to the Title tier so it stays on the Five-Step
+ * Scale. Ink, not the maroon Title eyebrow. For sections that want a calmer
+ * heading than the default uppercase Headline.
+ */
+.t-headline-sm {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.t-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+}
+
+.t-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.t-prose {
+  font-family: var(--font-prose);
+  font-size: clamp(1.0625rem, 1.2vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.6;
+  font-feature-settings: "onum", "kern", "liga";
+}
+
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.t-label-footnote {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/*
+ * Dotted-underline link grammar (signature pattern, DESIGN.md §5).
+ * Apply to inline links inside body prose or fact values.
+ */
+.link-dotted {
+  color: var(--color-ink-3);
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+.link-dotted:hover {
+  color: var(--color-accent);
+}
+
+/* Legacy verification-note class — kept for the components that still use it. */
+.verification-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+  font-style: normal;
+}
+
+/*
+ * Spec markdown — used by /styleguide/[slug] to render component .md files.
+ * Custom prose styles instead of Tailwind Typography (one less dep, full
+ * control over wrapping behaviour for our code blocks).
+ */
+.prose {
+  color: var(--color-ink);
+  line-height: 1.6;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.prose h1 { font-size: 1.875rem; margin: 0 0 1rem; }
+.prose h2 {
+  font-size: 1.5rem;
+  margin: 2rem 0 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-rule);
+}
+.prose h3 { font-size: 1.125rem; margin: 1.5rem 0 0.5rem; }
+.prose h4 { font-size: 1rem; margin: 1.25rem 0 0.5rem; }
+.prose p { margin: 0 0 0.75rem; }
+.prose ul,
+.prose ol { margin: 0 0 0.75rem; padding-left: 1.5rem; }
+.prose li { margin: 0 0 0.25rem; }
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-bg-deep);
+  padding: 1px 4px;
+}
+.prose a {
+  color: var(--color-ink-3);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.prose a:hover { color: var(--color-accent); }
+.prose strong { color: var(--color-ink); font-weight: 600; }
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+}
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--color-rule);
+}
+.prose th {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}

@@ -1,0 +1,100 @@
+---
+import MicroCTA from './MicroCTA.astro';
+import { slugify } from '@/lib/slugify';
+
+const downSamples = [
+  { heading: 'See pricing', label: 'See pricing' },
+  { heading: 'Read FAQ', label: 'Read frequently asked questions' },
+  { heading: "What's next?", label: 'See what is next' },
+];
+
+const upSamples = [
+  { heading: 'Course requirements and eligibility', label: 'Back to course requirements' },
+  { heading: 'Top', label: 'Back to top' },
+];
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — jump down (default, most common) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Jump down (default) — target is below the current section
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Underline is on the label only; the arrow sits in Maroon with no
+      decoration. On hover the arrow translates 3px down.
+    </p>
+    <div
+      class="mt-3"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      {
+        downSamples.map((s) => (
+          <div class="px-6" style="border-bottom: 1px dotted var(--color-ink-3);">
+            <MicroCTA targetHeading={s.heading} label={s.label} />
+            <p class="t-label-footnote pb-3" style="color: var(--color-ink-3);">
+              <code>targetHeading="{s.heading}"</code> →{' '}
+              <code>href="#{slugify(s.heading)}"</code>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Variant 2 — jump up -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Jump up — target is above the current section
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Add <code>direction="up"</code> for back-to-top or "return to a higher
+      section" patterns. Arrow translates 3px up on hover.
+    </p>
+    <div
+      class="mt-3"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      {
+        upSamples.map((s) => (
+          <div class="px-6" style="border-bottom: 1px dotted var(--color-ink-3);">
+            <MicroCTA targetHeading={s.heading} label={s.label} direction="up" />
+            <p class="t-label-footnote pb-3" style="color: var(--color-ink-3);">
+              <code>targetHeading="{s.heading}" direction="up"</code> →{' '}
+              <code>href="#{slugify(s.heading)}"</code>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Variant 3 — explicit targetId override -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Override — explicit <code>targetId</code>
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      Use when an existing URL anchor must be preserved (e.g. inbound links
+      already point at <code>#page-review</code>).
+    </p>
+    <div
+      class="mt-3 px-6 pb-3"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <MicroCTA targetId="page-review" label="Jump to the page-review section" />
+      <p class="t-label-footnote" style="color: var(--color-ink-3);">
+        <code>targetId="page-review"</code> → <code>href="#page-review"</code>
+      </p>
+    </div>
+  </section>
+</div>

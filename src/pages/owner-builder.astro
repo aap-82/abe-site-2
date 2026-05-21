@@ -1,0 +1,172 @@
+---
+/**
+ * /owner-builder — the Owner Builder national hub.
+ *
+ * Page architecture (validation-pass decision, 21 May 2026):
+ *   - SEO metadata lives in the content collection at
+ *     src/content/pages-hub/owner-builder.md, Zod-validated by the
+ *     pages-hub schema in src/content.config.ts. That is the single
+ *     queryable, length-enforced source of truth for title / description /
+ *     canonical / lastUpdated.
+ *   - This route reads that entry via getEntry() and composes the page from
+ *     library sections. Section content lives here, beside the composition.
+ *
+ * Rebuilt entirely from library components — zero gaps.
+ */
+import { getEntry } from 'astro:content';
+import { slugify } from '@/lib/slugify';
+import HubLayout from '@layouts/HubLayout/HubLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import StateNavigator from '@sections/StateNavigator/StateNavigator.astro';
+import ScopeLimitNote from '@sections/ScopeLimitNote/ScopeLimitNote.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import ComparisonTable from '@sections/ComparisonTable/ComparisonTable.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import FinalCTA from '@sections/FinalCTA/FinalCTA.astro';
+import ExpertReviewerCard from '@components/ExpertReviewerCard/ExpertReviewerCard.astro';
+
+// SEO meta — Zod-validated content-collection entry.
+const entry = await getEntry('pages-hub', 'owner-builder');
+if (!entry) throw new Error('Missing content entry: pages-hub/owner-builder');
+const meta = entry.data;
+
+const stateNavHeading = 'Choose your state to find the right Owner Builder course';
+const stateNavId = slugify(stateNavHeading);
+
+const states = [
+  { name: 'New South Wales', regulator: 'NSW Fair Trading', href: '/owner-builder-nsw', detail: 'Delivered by AlertForce (RTO 91826); five nationally recognised units of competency.' },
+  { name: 'Queensland', regulator: 'QBCC', href: '/owner-builder-qld', detail: 'Required for residential work valued over $11,000.' },
+  { name: 'Western Australia', regulator: 'Consumer Protection WA', href: '/owner-builder-wa', detail: 'Meets the Building Services Board education requirement.' },
+  { name: 'Tasmania', regulator: 'CBOS Tasmania', href: '/owner-builder-tas', detail: 'Required for owner-builder work valued over $5,000.' },
+  { name: 'Australian Capital Territory', regulator: 'Access Canberra', href: '/owner-builder-act', detail: 'Meets Section 32 owner-builder eligibility.' },
+];
+
+const whyItems = [
+  { title: 'Verifiable authority', text: `every regulator approval links back to a .gov.au page you can check yourself` },
+  { title: 'Named experts', text: `our Owner Builder content is developed by Dominic Ogburn, a licensed NSW builder and Standards Australia committee member with over 40 years on Australian construction sites` },
+  { title: '100% online and self-paced', text: `start now, complete on any device, and return whenever suits you` },
+  { title: 'State-specific content', text: `your course is written for the regulator that issues your permit, not generic copy with the state name swapped in` },
+  { title: 'Australian support', text: `phone and email support during business hours from a team based in Sydney` },
+  { title: '31,000+ students', text: `have used ABE Education to meet a state regulator's training requirement` },
+];
+
+const compareRows = [
+  { label: 'Permit threshold', cells: ['Over $10,000 (course required over $20,000)', 'Over $11,000', 'Over $20,000', 'Over $5,000', 'Project-by-project'] },
+  { label: 'Course pathway', cells: ['Five nationally recognised units of competency', 'State-approved Owner Builder course', 'State-approved Owner Builder course', 'State-approved Owner Builder course', 'State-approved Owner Builder course'] },
+  { label: 'Certificate issued by', cells: ['AlertForce (RTO 91826), Statement of Attainment', 'ABE Education, Certificate of Completion', 'ABE Education, Certificate of Completion', 'ABE Education, Certificate of Completion', 'ABE Education, Certificate of Completion'] },
+  { label: 'Recognised by', cells: ['NSW Fair Trading / Building Commission NSW', 'QBCC', 'LGIRS / Consumer Protection WA', 'CBOS Tasmania', 'Access Canberra'] },
+];
+
+const steps = [
+  { title: `Check you're eligible`, text: `You must own or co-own the land you are building on, and the work must be for your own occupation, not for resale or investment. Most states limit how often you can take the owner-builder pathway, commonly once every five or six years on the same property.` },
+  { title: 'Get your White Card', text: `Every state requires a current General Construction Induction Card (the White Card) before you set foot on a residential site as an owner builder.` },
+  { title: 'Complete the approved course', text: `Enrol with ABE Education for the state where you are building. Work through the units at your own pace and pass the assessments. You will receive a Certificate of Completion, or for NSW a Statement of Attainment from AlertForce.` },
+  { title: 'Lodge your permit application', text: `Submit your course certificate, White Card, and supporting documents to the state regulator. Permit fees range from around $135 in NSW to $294 in Queensland, depending on the state and project value.` },
+  { title: 'Arrange insurance and start', text: `Some states require Home Warranty or Home Indemnity insurance before construction starts, with WA the most prescriptive.` },
+];
+
+const faqs = [
+  { question: 'How long does an Owner Builder course take?', answer: `It depends on the state. Tasmania, the ACT, Queensland, and WA courses are typically completed in a few days of part-time study. The NSW course covers five nationally recognised units of competency and usually takes a week or two, longer because the units are formally assessed by an RTO. All courses are self-paced.` },
+  { question: 'How much does the course cost?', answer: `ABE's Owner Builder courses sit in the $200 to $500 range depending on the state. That is separate from the government permit application fee, which is set by your state regulator and ranges from roughly $135 in NSW to $294 in Queensland. White Card training and any required insurance are additional.` },
+  { question: 'Is an Owner Builder course nationally recognised?', answer: `The NSW Owner Builder course is nationally recognised because it covers five nationally accredited units of competency delivered by AlertForce (RTO 91826). The courses for QLD, WA, TAS, and ACT are not ASQA-accredited; they are approved directly by each state regulator and accepted only in the state that approves them.` },
+  { question: 'Can I do the course online?', answer: `Yes. Every ABE Education Owner Builder course is delivered 100% online. You can complete it from a phone, tablet, or laptop, in your own time, and your progress saves automatically between sessions. There are no classroom attendance or in-person assessment requirements.` },
+  { question: 'Do I need a White Card as well?', answer: `Yes, every state requires a valid White Card (General Construction Induction Card) before you start work on a residential site. The White Card is a separate, nationally recognised course delivered by our RTO partners. You can complete it before, after, or alongside your Owner Builder course.` },
+  { question: `Does ABE Education's certificate get accepted by my state regulator?`, answer: `Yes. ABE is listed as an approved Owner Builder training provider by QBCC, LGIRS / Consumer Protection WA, CBOS Tasmania, and Access Canberra. For NSW, AlertForce (RTO 91826) issues the Statement of Attainment, which meets NSW Fair Trading's qualification requirement.` },
+  { question: `What happens if I don't get a permit before starting work?`, answer: `Working without the required Owner Builder permit can void your home warranty insurance, expose you to penalty notices from your state regulator, and create problems when you eventually sell the property. The thresholds differ by state, so check yours before lifting a hammer.` },
+];
+---
+
+<HubLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  pageHeading="Owner Builder Courses — Online, State-Approved, Australia-Wide"
+  breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Owner Builder Training' }]}
+  credentials={[
+    { regulator: 'QBCC', state: 'QLD' },
+    { regulator: 'LGIRS', state: 'WA' },
+    { regulator: 'CBOS', state: 'TAS' },
+    { regulator: 'Access Canberra', state: 'ACT' },
+    { regulator: 'NSW Fair Trading', state: 'NSW' },
+  ]}
+  stateItems={[
+    { name: 'NSW Owner Builder Course', url: '/owner-builder-nsw' },
+    { name: 'QLD Owner Builder Course', url: '/owner-builder-qld' },
+    { name: 'WA Owner Builder Course', url: '/owner-builder-wa' },
+    { name: 'TAS Owner Builder Course', url: '/owner-builder-tas' },
+    { name: 'ACT Owner Builder Course', url: '/owner-builder-act' },
+  ]}
+  faqs={faqs}
+>
+  <AnswerCapsuleSection
+    heading="What is an owner builder course and who needs one?"
+    answer="An Owner Builder course is the approved education you complete before applying for an Owner Builder permit to do residential building work on your own home. ABE Education delivers Owner Builder training online for New South Wales, Queensland, Western Australia, Tasmania, and the ACT, with each course matched to the regulator that issues your permit."
+    body="If you are planning to build, renovate, or supervise residential work on your own property without engaging a licensed builder, your state regulator will usually require an Owner Builder permit once the value of work crosses a set threshold. The threshold sits at $5,000 in Tasmania, $10,000 in NSW, $11,000 in Queensland, and $20,000 in Western Australia. To get the permit, you first need to finish an approved Owner Builder course."
+    nextSectionHeading={stateNavHeading}
+    nextSectionLabel="See state-by-state options"
+  />
+
+  <StateNavigator heading={stateNavHeading} states={states} />
+
+  <ScopeLimitNote>
+    Not in this list = not currently offered. ABE does not deliver Owner
+    Builder training in Victoria, South Australia, or the Northern Territory.
+    Victoria's permit is handled by the
+    <a href="https://www.vba.vic.gov.au/owner-builders" class="link-dotted" rel="external">
+      Victorian Building Authority</a>, and South Australia does not currently
+    require a formal course.
+  </ScopeLimitNote>
+
+  <WhyChooseList
+    heading="Why ABE for your Owner Builder training?"
+    answer="ABE Education holds direct approval from four state regulators (QBCC, LGIRS, CBOS Tasmania, Access Canberra) and partners with AlertForce (RTO 91826) for the NSW qualification. Every course is built and reviewed by named subject-matter experts, delivered fully online, and backed by an Australian support team."
+    items={whyItems}
+    style="ticked"
+  />
+
+  <ComparisonTable
+    heading="How do the courses differ between states?"
+    answer="Owner Builder training rules are set by each state regulator, not by the federal government. In four states (QLD, WA, TAS, ACT) ABE delivers the course directly with state-regulator approval. In NSW, the qualification must be issued by a Registered Training Organisation, so we deliver it through our RTO partner AlertForce (RTO 91826)."
+    body="The course content, length, and the body that issues your certificate all change depending on where you are building."
+    columns={['NSW', 'QLD', 'WA', 'TAS', 'ACT']}
+    rows={compareRows}
+    caption="State thresholds and regulator names verified against the linked authorities on 14 April 2026."
+  />
+
+  <NumberedStepsSection
+    heading="What are the steps to become an owner builder?"
+    answer="The process is broadly the same in every state: confirm you are eligible, get your White Card, complete an approved Owner Builder course, apply for the permit with your state regulator, and arrange any insurance your state requires before work starts."
+    steps={steps}
+  />
+
+  <FAQSection heading="Owner Builder course FAQs" items={faqs} />
+
+  <FinalCTA
+    heading="Get certified for your state, start your Owner Builder course today"
+    body="Choose your state above to see course detail, pricing, and the certificate you will receive. Most students get their certificate within a few days of completing the assessment."
+    primaryLabel="See Owner Builder courses by state"
+    primaryHref={`#${stateNavId}`}
+    secondaryLabel="Talk to our enrolments team"
+    secondaryHref="/contact"
+    secondaryNote="phone, email, or live chat during business hours."
+  />
+
+  <AnswerCapsuleSection
+    heading="How is Owner Builder course content developed and reviewed?"
+    answer="ABE Education uses a two-stage process: initial development by an industry-credentialled course developer, followed by independent compliance and currency review against current state legislation, building codes, and, for NSW, RTO Standards."
+    body="The two stages check different things. The course developer builds the training against each state regulator's education requirements and the relevant units of competency. The independent reviewer then confirms that what is published reflects current legislation, regulator names, fees, and process. Spoke pages list the reviewer for each state; this hub is reviewed by the course developer."
+  >
+    <ExpertReviewerCard
+      variant="blockquote"
+      name="Dominic Ogburn"
+      profileHref="/experts/dominic-ogburn"
+      role="Course Developer, ABE Education"
+      avatar="https://lwfiles.mycourse.app/638d2798a130a8e77268b848-public/f13e5463746db5554514e16b0804ce41.png"
+      specialties={['Construction', 'Building Codes', 'Consumer Advocacy', 'Waterproofing']}
+      bio="Licensed NSW builder (Licence 369417C), NSW Fair Trading Minister's award recipient (2005), and Standards Australia committee member with 40+ years on Australian construction sites, beginning at Stuart Brothers (Sydney builders since 1886). Cited in NSW Parliament and six Sydney Morning Herald articles. As CEO of ABE Education he has overseen the training of 31,000+ students."
+      reviewNote="Reviewed this hub on 14 April 2026. State spoke pages are independently reviewed; see each state page for the named reviewer."
+    />
+  </AnswerCapsuleSection>
+</HubLayout>

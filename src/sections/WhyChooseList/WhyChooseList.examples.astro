@@ -1,0 +1,73 @@
+---
+import WhyChooseList from './WhyChooseList.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — bullet style with intro (canonical homepage "Why ABE") -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Bullet style with intro (homepage "Why ABE")
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <WhyChooseList
+        heading="Why choose ABE Education?"
+        answer="ABE Education combines RTO partnerships with direct state-regulator approvals, giving you more verifiable authority than a single-RTO provider. Every course is built and reviewed by named subject-matter experts, delivered fully online, and backed by a support team based in Australia."
+        body="The mix matters: where NSW law requires a Registered Training Organisation to issue the qualification, we partner with AlertForce. Where state regulators approve non-RTO providers (QLD, WA, TAS, ACT) we hold the approval ourselves. The certificate you receive is always the one your state's permit authority will accept."
+        items={[
+          { title: 'Verifiable authority', text: 'every regulator approval links back to a .gov.au page you can check yourself' },
+          { title: 'Named experts', text: 'our content is reviewed by industry-credentialled people, not anonymous training teams' },
+          { title: '100% online', text: 'start in minutes, complete on your schedule, on any device' },
+          { title: 'Australian support', text: 'phone and email support during business hours (AEST and AEDT)' },
+          { title: 'State-specific content', text: 'courses written for the regulator that issues your certificate, not generic copy with the state name swapped in' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — ticked style, no intro (verified trust signals) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Ticked style, no intro (verified trust signals)
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <WhyChooseList
+        heading="Why choose Upskill Institute for your online White Card?"
+        style="ticked"
+        items={[
+          { text: 'SafeWork NSW Approved Provider, Approval No. RTO800520' },
+          { text: 'Nationally Recognised RTO 45708, verifiable at training.gov.au' },
+          { text: '4.9 stars across 2,820+ Google reviews' },
+          { text: 'Same-day Statement of Training' },
+          { text: 'White Card delivered in approximately 2 weeks' },
+          { text: 'Live trainer on every session, not pre-recorded videos' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — bullet style, no intro (compact pattern) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Bullet style, no intro (compact)
+    </h3>
+    <div
+      class="mt-2 px-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <WhyChooseList
+        heading="Why ABE for your Owner Builder training?"
+        items={[
+          { title: 'Direct state approvals', text: 'four regulators (QBCC, LGIRS, CBOS Tasmania, Access Canberra) recognise ABE as an approved Owner Builder training provider' },
+          { title: 'RTO partner for NSW', text: 'AlertForce (RTO 91826) issues the nationally recognised qualification where NSW law requires it' },
+          { title: 'Built by a licensed builder', text: 'Dominic Ogburn, NSW Builder Lic. 369417C, with 40 years on Australian construction sites' },
+        ]}
+      />
+    </div>
+  </section>
+</div>

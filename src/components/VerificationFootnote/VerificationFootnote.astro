@@ -1,0 +1,87 @@
+---
+/**
+ * VerificationFootnote — the stacked two-row "Source / Verified on" trust
+ * signal from DESIGN.md §5, used at the bottom of streamcards:
+ *
+ *   ─────────────────────────────────
+ *           SOURCE RTO 31193 • RTO 91826
+ *        VERIFIED ON 01 MAY 2026
+ *
+ * Right-aligned. 10px Geist Mono caps labels in Ink-4 (quieter); 10px Public
+ * Sans values (source links and the uppercased date) in Ink-3; 1px solid Rule
+ * divider above. Source is a slot;
+ * multiple sources are bullet-separated inside the slot with a
+ * double-spaced • bullet.
+ *
+ * For the one-line stamp, use `VerificationNote`.
+ */
+
+interface Props {
+  /** ISO date YYYY-MM-DD of the last verification. */
+  lastVerified: string;
+}
+
+const { lastVerified } = Astro.props;
+
+const formatted = new Date(lastVerified)
+  .toLocaleDateString('en-AU', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+  .toUpperCase();
+---
+
+<div class="vfootnote">
+  <div class="vfootnote__row">
+    <span class="vfootnote__label">Source</span>
+    <span class="vfootnote__value"><slot /></span>
+  </div>
+  <div class="vfootnote__row">
+    <span class="vfootnote__label">Verified on</span>
+    <time class="vfootnote__value" datetime={lastVerified}>{formatted}</time>
+  </div>
+</div>
+
+<style>
+  .vfootnote {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-rule);
+    text-align: right;
+  }
+
+  .vfootnote__row {
+    padding: 2px 0;
+  }
+
+  /* Label — 10px Geist Mono caps, Ink-3. Every property explicit. */
+  .vfootnote__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-4);
+    margin-right: 0.4em;
+  }
+
+  /* Value — 10px Public Sans, Ink-3 (source links and the uppercased date). */
+  .vfootnote__value {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--color-ink-3);
+  }
+
+  /* Source links keep the Ink-3 value colour and inherit the 10px size, with
+     the dotted underline and the Maroon hover. */
+  .vfootnote__value :global(a) {
+    color: var(--color-ink-3);
+  }
+  .vfootnote__value :global(a:hover) {
+    color: var(--color-accent);
+  }
+</style>

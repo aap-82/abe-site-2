@@ -1,0 +1,61 @@
+---
+import LegalCallout from './LegalCallout.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 (canonical): fee disclaimer -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Fee disclaimer (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The default <code>Legal</code> label. Small print under a price: a 1px
+      rule frame, no fill, 14px Ink-2 body.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <LegalCallout>
+        The course fee covers training and assessment for the five units of
+        competency. The permit fee is paid separately when you submit your
+        application to Service NSW. Fees are reviewed periodically by Building
+        Commission NSW.
+      </LegalCallout>
+    </div>
+  </section>
+
+  <!-- Variant 2: refund terms with an inline link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Refund terms with an inline link
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The body slot carries an inline <code>link-dotted</code> link out to a
+      student handbook.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <LegalCallout>
+        No refund of course fees is paid for failure to complete the course
+        once it has commenced. If you are not successful in all assessments,
+        you will need to rebook at the advertised cost. For full refund,
+        cancellation, and rescheduling terms, see the
+        <a
+          href="https://upskillinstitute.com.au/docs/Upskill-Institute-Learner-Handbook.pdf"
+          class="link-dotted"
+          rel="external"
+        >
+          Student Handbook</a>.
+      </LegalCallout>
+    </div>
+  </section>
+</div>

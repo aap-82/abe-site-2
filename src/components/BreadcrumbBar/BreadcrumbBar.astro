@@ -1,0 +1,118 @@
+---
+/**
+ * BreadcrumbBar — the top-of-page navigation row.
+ *
+ * Two variants:
+ *   - Plain crumbs: Home › Owner Builder Training › NSW Owner Builder
+ *   - With reviewer line: same plus right-aligned "Reviewed by [Person] · DD MMM YYYY"
+ *
+ * Typography per DESIGN.md §5: Geist Mono caps for the crumbs, dotted-underline
+ * grammar on the linked crumb names, hover shifts to Document Maroon.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading prop convention applies to sections, not navs; this component
+ *        takes a `crumbs` data array.
+ */
+
+interface Crumb {
+  label: string;
+  /** Omit on the last crumb (it's the current page). */
+  href?: string;
+}
+
+interface Reviewer {
+  name: string;
+  /** ISO date YYYY-MM-DD. */
+  date: string;
+  /** Slug of the reviewer's expert profile page, e.g. "warwick-smith". */
+  profileSlug: string;
+}
+
+interface Props {
+  crumbs: Crumb[];
+  reviewer?: Reviewer;
+}
+
+const { crumbs, reviewer } = Astro.props;
+
+const reviewerDateFormatted = reviewer
+  ? new Date(reviewer.date).toLocaleDateString('en-AU', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+  : null;
+---
+
+<nav aria-label="Breadcrumb" class="breadcrumb-bar">
+  <ol class="breadcrumb-list t-label" style="color: var(--color-ink-3);">
+    {
+      crumbs.map((c, i) => (
+        <li class="breadcrumb-item">
+          {c.href ? (
+            <a href={c.href} class="link-dotted">{c.label}</a>
+          ) : (
+            <span aria-current="page">{c.label}</span>
+          )}
+          {i < crumbs.length - 1 && (
+            <span class="breadcrumb-sep" aria-hidden="true">›</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+
+  {
+    reviewer && (
+      <div class="breadcrumb-reviewer t-label" style="color: var(--color-ink-3);">
+        Reviewed by{' '}
+        <a href={`/experts/${reviewer.profileSlug}`} class="link-dotted">
+          {reviewer.name}
+        </a>
+        <span aria-hidden="true"> · </span>
+        <time datetime={reviewer.date}>{reviewerDateFormatted}</time>
+      </div>
+    )
+  }
+</nav>
+
+<style>
+  .breadcrumb-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .breadcrumb-sep {
+    color: var(--color-ink-4);
+    margin: 0 var(--spacing-xs);
+  }
+
+  /* Current-page crumb has no link, sits in default Ink-3. */
+  .breadcrumb-item span[aria-current="page"] {
+    color: var(--color-ink);
+  }
+
+  .breadcrumb-reviewer {
+    margin-left: auto;
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+import SuccessCallout from './SuccessCallout.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 (canonical): enrolment confirmed -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Enrolment confirmation (canonical)
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      A 1px green success frame with a <code>success-deep</code> mono caps
+      label, no fill. Confirms a completed action, not a regulator approval.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <SuccessCallout label="Enrolled">
+        Your place in the 14 July intake is confirmed. A receipt and your course
+        login have been emailed to you.
+      </SuccessCallout>
+    </div>
+  </section>
+
+  <!-- Variant 2 (custom label): assessment passed, with next-step link -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Custom label, assessment passed
+    </h3>
+    <p
+      class="t-body mt-2"
+      style="color: var(--color-ink-2); font-size: 14px; max-width: 70ch;"
+    >
+      The <code>label</code> prop reframes the callout. The body slot carries an
+      inline link to the next step.
+    </p>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <SuccessCallout label="Passed">
+        You have passed all five units. Your Statement of Attainment is on its
+        way. Next, lodge your permit application with
+        <a
+          href="https://www.service.nsw.gov.au"
+          class="link-dotted"
+          rel="external"
+        >
+          Service NSW</a>.
+      </SuccessCallout>
+    </div>
+  </section>
+</div>

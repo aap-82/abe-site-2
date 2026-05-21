@@ -1,0 +1,117 @@
+---
+/**
+ * CTAButton — the streamcard CTA pattern from DESIGN.md §5.
+ *
+ * One component, three volume tiers (Volume Ladder Rule, DESIGN.md §2):
+ *
+ *   v1 — Colour amplification. Maroon text, weight 600, solid maroon
+ *        underline. No frame, no fill. The "active version of the text link"
+ *        register. Used when a button-tier fill would compete with the
+ *        editorial body type.
+ *
+ *   v2 — Structural framing (PRODUCTION DEFAULT). 1px solid Document Ink
+ *        frame, transparent background, ink label, maroon arrow. Padding
+ *        10px 16px. Reads as a discrete framed action without the visual
+ *        mass of a fill. Hover flips frame + label to maroon.
+ *
+ *   v3 — Full fill. Solid Document Maroon background, Newsprint Cream label.
+ *        Padding 12px 24px. The loudest of the three; identical register to
+ *        the global primary-button token. Used on action-led pages where the
+ *        button IS the focal point.
+ *
+ * Arrow grammar exception:
+ *   Per the site's rule, text links use ↑/↓ for in-page jumps and no arrow
+ *   for cross-page navigation. The CTAButton breaks this rule deliberately
+ *   because it's a button (framed/filled action trigger), not a text link.
+ *   Buttons always carry the → arrow because they are explicit action calls.
+ *
+ * Locked decisions reflected here:
+ *   #3 — design-system tokens only.
+ *   DESIGN.md §2 Volume Ladder Rule — three variants form ONE family at
+ *   three volumes. Pick by surface density; don't mix variants on a single
+ *   page outside A/B comparison or design-system showcase.
+ */
+
+type Variant = 'v1' | 'v2' | 'v3';
+
+interface Props {
+  href: string;
+  label: string;
+  /** Volume tier. Defaults to v2 (production-default framed register). */
+  variant?: Variant;
+}
+
+const { href, label, variant = 'v2' } = Astro.props;
+---
+
+<a href={href} class={`cta cta--${variant}`}>
+  <span class="cta__label t-label">{label}</span>
+  <span class="cta__arrow" aria-hidden="true">→</span>
+</a>
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    text-decoration: none;
+    align-self: start;
+    transition:
+      color 180ms cubic-bezier(0.2, 0, 0, 1),
+      background-color 180ms cubic-bezier(0.2, 0, 0, 1),
+      border-color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .cta__arrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--color-accent);
+    display: inline-block;
+    transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .cta:hover .cta__arrow {
+    transform: translateX(3px);
+  }
+
+  /* v1 — Colour amplification.
+     Underline lives on the label span only, never under the arrow. */
+  .cta--v1 {
+    color: var(--color-accent);
+    padding: 4px 0;
+  }
+  .cta--v1 .cta__label {
+    font-weight: 600;
+    text-decoration: underline solid;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .cta--v1:hover {
+    color: var(--color-accent-deep);
+  }
+
+  /* v2 — Structural framing (production default) */
+  .cta--v2 {
+    border: 1px solid var(--color-ink);
+    color: var(--color-ink);
+    padding: 10px 16px;
+  }
+  .cta--v2:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* v3 — Full fill */
+  .cta--v3 {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    padding: 12px 24px;
+  }
+  .cta--v3:hover {
+    background: var(--color-accent-deep);
+  }
+  .cta--v3 .cta__arrow {
+    color: var(--color-bg);
+  }
+</style>

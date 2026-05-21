@@ -1,0 +1,183 @@
+---
+/**
+ * TrustBadgeGrid — the mid-page grid of verifiable credential badges.
+ *
+ * The §2.3 "FAQ + trust" trust block that appears on all four reference
+ * pages. A responsive grid of credential badges: each badge pairs a
+ * Regulator Blue mono caps label with a credential value, and where the
+ * claim is verifiable the value links out to its .gov.au / training.gov.au
+ * authority page. A shared "Last verified" stamp closes the block.
+ *
+ * NOT a Trust Stripe. RegulatorBand and TrustStrip are the hero-level
+ * stripe family governed by the Stripe Singleton Rule. TrustBadgeGrid is a
+ * mid-page content block and is not subject to that rule — it can sit on the
+ * same page as a hero trust stripe.
+ *
+ * Design-system notes:
+ *   - The analysis doc described badges as "icon + label". Decorative icons
+ *     are dropped here to honour the Two-Ornament Rule (DESIGN.md §4): the
+ *     dotted verify link and the blue label carry the meaning instead.
+ *   - Two-Accent Rule: blue labels the credential, ink carries the value,
+ *     maroon appears only on link hover (via the global link-dotted grammar).
+ *   - The 1px grid is built from the two permitted ornaments — a 1px solid
+ *     ink-rule frame with 1px rule dividers showing through the grid gaps.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop, rendered as a visually-hidden <h2> (trust grids
+ *        carry no visible title) so the section keeps a real document-outline
+ *        entry without a visible heading.
+ *   #3 — brand tokens only; no hard-coded colours, sizes, or spacing.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Badge {
+  /** Mono caps credential category, e.g. "APPROVED PROVIDER", "NATIONALLY RECOGNISED". */
+  label: string;
+  /** The credential value, e.g. "SafeWork NSW — RTO800520". Keep to one short line. */
+  value: string;
+  /**
+   * Optional verification link — a .gov.au or training.gov.au page. When set,
+   * the value renders as a dotted link so a reader can check the claim.
+   */
+  href?: string;
+}
+
+interface Props {
+  /** Accessible section label (visually hidden). e.g. "Accreditation and credentials". */
+  heading: string;
+  /** 3–5 credential badges. */
+  badges: Badge[];
+  /** Optional ISO date YYYY-MM-DD — the shared freshness stamp for the grid. */
+  lastVerified?: string;
+  /** Override the auto-generated wrapper id (decision #7). */
+  anchorId?: string;
+}
+
+const { heading, badges, lastVerified, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+
+const formattedDate = lastVerified
+  ? new Date(lastVerified).toLocaleDateString('en-AU', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+  : null;
+---
+
+<section id={id} class="tbg-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="sr-only">{heading}</h2>
+
+  <ul class="tbg__grid">
+    {
+      badges.map((badge) => (
+        <li class="tbg__badge">
+          <span class="tbg__label">{badge.label}</span>
+          {badge.href ? (
+            <a class="tbg__value link-dotted" href={badge.href} rel="external">
+              {badge.value}
+            </a>
+          ) : (
+            <span class="tbg__value tbg__value--plain">{badge.value}</span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    formattedDate && (
+      <p class="tbg__verified">
+        <span class="tbg__verified-label">Last verified</span>{' '}
+        <time class="tbg__verified-value" datetime={lastVerified}>
+          {formattedDate}
+        </time>
+      </p>
+    )
+  }
+</section>
+
+<style>
+  .tbg-section {
+    scroll-margin-top: var(--spacing-xl);
+  }
+
+  /*
+   * 1px hairline grid: the grid background is the rule colour, every cell
+   * sits on a near-white ground, and a 1px gap lets the rule show through
+   * as a clean divider. The outer 1px frame closes the block. Both are the
+   * Two-Ornament Rule's permitted ornaments — no doubled borders.
+   */
+  .tbg__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1px;
+    background: var(--color-rule);
+    border: 1px solid var(--color-rule);
+  }
+
+  .tbg__badge {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--color-bg);
+  }
+
+  /* Credential category — 10px Geist Mono caps, Regulator Blue (the
+     verification register per the Two-Accent Rule). */
+  .tbg__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-info-deep);
+  }
+
+  /* Credential value — Public Sans body register. Colour is set per
+     variant below so the link form can keep the global link-dotted colour. */
+  .tbg__value {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* Plain (non-verifiable) value — primary ink. */
+  .tbg__value--plain {
+    color: var(--color-ink);
+  }
+
+  /* Verify link — keeps the global dotted-underline link grammar
+     (Ink-3 default, Maroon on hover). Colour is left to .link-dotted. */
+
+  /* Shared freshness stamp — the verification register, right-aligned,
+     matching VerificationNote (10px mono caps label, 12px value, Ink-3). */
+  .tbg__verified {
+    margin: var(--spacing-md) 0 0;
+    text-align: right;
+  }
+  .tbg__verified-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    margin-right: 0.4em;
+  }
+  .tbg__verified-value {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-ink-3);
+  }
+</style>

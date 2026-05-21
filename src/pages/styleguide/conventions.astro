@@ -1,0 +1,336 @@
+---
+import StyleguideLayout from '@/layouts/StyleguideLayout.astro';
+
+// Writing rules — Andrey's global user preferences + project CLAUDE.md.
+const writingRules = [
+  {
+    rule: 'Australian English everywhere',
+    detail:
+      'organise (not organize), centre (not center), colour (not color), recognised (not recognized), realise, specialised, programme, behaviour, licence (noun)/license (verb).',
+  },
+  {
+    rule: 'Never use the word "comprehensive"',
+    detail:
+      'Personal preference — avoid in any output. Reach for "complete", "full", "thorough", or just delete the modifier.',
+  },
+  {
+    rule: 'No em dashes in page body copy',
+    detail:
+      'Per DESIGN.md §6. Use commas, colons, semicolons, periods, or parentheses. Not "--" either.',
+  },
+  {
+    rule: 'Markdown is the default output format',
+    detail:
+      "Reports, summaries, drafts — all default to .md unless the task specifically calls for another format.",
+  },
+  {
+    rule: 'Never create .docx without explicit ask',
+    detail:
+      "Don't create Word documents unless the user says so directly. Markdown opens cleanly in Word too if needed.",
+  },
+];
+
+// 8 locked component-API decisions (mirror of api-decisions.md).
+const apiDecisions = [
+  { n: 1, title: 'Section headings are props, not slots', detail: 'Section components accept `heading: string` and pick `<h2>`/`<h3>` themselves.' },
+  { n: 2, title: 'Content lives in Astro Content Collections', detail: 'Page markdown under `src/content/pages-{archetype}/`. Zod-validated frontmatter.' },
+  { n: 3, title: 'Tailwind 4 utility classes only', detail: 'Brand tokens in `@theme` in `global.css`. Never hard-code values.' },
+  { n: 4, title: 'One ASQADisclosure component, variant prop', detail: 'Four verbatim templates in `src/data/disclosures/`. Never paraphrase.' },
+  { n: 5, title: 'Schema graphs from layout-level builders', detail: 'Each archetype layout calls its own `build*Graph()`. No hand-written JSON-LD.' },
+  { n: 6, title: '`lastUpdated` from frontmatter, never git', detail: 'Required ISO date `YYYY-MM-DD`. Reviewer bumps explicitly.' },
+  { n: 7, title: 'Anchor IDs auto-generate from heading slug', detail: 'Via `src/lib/slugify.ts`. `anchorId` prop overrides only to preserve existing URL anchors.' },
+  { n: 8, title: 'Single RTO partner per state page', detail: 'Shape `{ name, code, url }`. Multi-RTO not currently supported.' },
+];
+
+// 10 locked design rules (mirror of DESIGN.md §2–§4).
+const designRules = [
+  { name: 'Contrast-First Rule', detail: 'Primary content uses max-contrast Ink/Cream, not coloured tokens. Chromatic signal is subordinate to legibility when the element IS the content.' },
+  { name: 'Two-Accent Rule', detail: 'Maroon = action + brand. Blue = verification + current-state. Ink = structure + default. No overlap.' },
+  { name: '60-30-10 Weight Rule', detail: '~60% neutral surfaces, 30% ink/text/rules, 7% maroon, 3% blue. Audit the rendered page; if maroon > 10% or blue > 5%, something is mis-tagged.' },
+  { name: 'No Warm Tones Rule', detail: 'Orange, yellow, peach, cream-as-paper forbidden as surfaces and decorative accents. Two prior attempts rolled back; do not propose again. The one bounded exception is the semantic warning amber, permitted as a small status signal only (1px border, mono label, pale wash), never a background.' },
+  { name: 'Flat-By-Default Rule', detail: 'Zero box-shadows. Depth via tonal layering (three near-white grounds) and 1px ink frames.' },
+  { name: 'Two-Ornament Rule', detail: 'Only two ornaments exist: 1px solid ink frame, and 1px dotted ink-3 rule. Nothing else.' },
+  { name: 'Voice-Per-Face Rule', detail: 'Mono = label voice. Display = title voice. Body = argument voice. Prose = editorial-longform voice. Each face has one job.' },
+  { name: 'Five-Step Scale Rule', detail: 'Type scale has ≥1.25 ratio between adjacent steps. No intermediate sizes; use weight or the label-footnote variant for emphasis.' },
+  { name: 'Volume Ladder Rule', detail: 'Streamcard CTAs v1/v2/v3 are one component family at three volumes. Pick one for production; don\'t mix outside A/B comparison.' },
+  { name: 'Stripe Singleton Rule', detail: 'Only one trust-stripe variant per page. Variant C ships in production (chosen 19 May 2026).' },
+];
+
+// Don'ts — the anti-patterns to scan for during review.
+const donts = [
+  'border-left or border-right > 1px as a colour stripe (THE AI design tell)',
+  'Box-shadows (the system is flat; depth via tonal layering)',
+  'Rounded rectangles (sharp corners always; radius 0 outside form controls)',
+  'Gradient text, glassmorphism, glow rings, decorative borders',
+  'Cyan-on-dark, purple-to-blue gradients, any 2024 AI-slop palette',
+  'Orange, yellow, peach, cream-as-paper as surfaces (only exception: warning amber as a small status signal, never a background)',
+  'Coloured body text outside the ink palette',
+  'Em dashes in body copy (also no "--")',
+  'New fonts (4-face system locked: Archivo, Public Sans, Source Serif 4, Geist Mono)',
+  'Entrance cascades or hero reveal animations (motion is structural, never decorative)',
+  'Modals as a first thought (exhaust inline / progressive alternatives)',
+  'Restating the same fact three ways (label + heading + lede)',
+];
+
+// Brand colours — mirror of @theme in global.css.
+const groups = [
+  {
+    title: 'Neutrals — 60% of surface',
+    items: [
+      { name: '--color-bg', value: 'oklch(98.2% 0.004 240)', use: 'Newsprint Cream-1 — page ground (default body bg)' },
+      { name: '--color-bg-alt', value: 'oklch(96.0% 0.006 240)', use: 'Newsprint Cream-2 — alternating section ground' },
+      { name: '--color-bg-deep', value: 'oklch(93.5% 0.008 240)', use: 'Newsprint Cream-3 — cards nested in deep sections' },
+      { name: '--color-rule', value: 'oklch(85% 0.010 240)', use: 'Hairline divider colour for dotted rules' },
+    ],
+  },
+  {
+    title: 'Ink palette — 30% of surface',
+    items: [
+      { name: '--color-ink', value: 'oklch(18% 0.020 240)', use: 'Document Ink — primary type, dark plates' },
+      { name: '--color-ink-2', value: 'oklch(35% 0.018 240)', use: 'Document Ink-2 — descriptions, sub-taglines' },
+      { name: '--color-ink-3', value: 'oklch(50% 0.014 240)', use: 'Document Ink-3 — mono caps labels, dotted-link default' },
+      { name: '--color-ink-4', value: 'oklch(62% 0.012 240)', use: 'Document Ink-4 — section numbers, disabled' },
+    ],
+  },
+  {
+    title: 'Maroon — action register (7%)',
+    items: [
+      { name: '--color-accent', value: '#800000', use: 'Document Maroon — CTAs, link hover, named-person credits' },
+      { name: '--color-accent-deep', value: '#500000', use: 'Deep Burgundy — hover state, per-card stream words' },
+      { name: '--color-accent-mid', value: '#600000', use: 'Auxiliary — legacy compatibility only' },
+    ],
+  },
+  {
+    title: 'Regulator Blue — verification register (3%)',
+    items: [
+      { name: '--color-info', value: 'oklch(46% 0.16 235)', use: 'Regulator Blue — base verification colour' },
+      { name: '--color-info-deep', value: 'oklch(32% 0.12 235)', use: 'Deep — chip text, footnote source colour' },
+      { name: '--color-info-soft', value: 'oklch(85% 0.06 235)', use: 'Soft — chip borders' },
+      { name: '--color-info-wash', value: 'oklch(95% 0.025 235)', use: 'Wash — chip backgrounds' },
+      { name: '--color-info-on-dark', value: 'oklch(78% 0.08 235)', use: 'On dark — chip text on ink plates' },
+    ],
+  },
+  {
+    title: 'Semantic status colours — small signals only (1px borders, mono labels, pale washes)',
+    items: [
+      { name: '--color-success', value: 'oklch(53% 0.13 150)', use: 'Success — confirmation, completion, approved states' },
+      { name: '--color-success-deep', value: 'oklch(40% 0.10 150)', use: 'Deep — label / text strength on light grounds' },
+      { name: '--color-success-wash', value: 'oklch(96% 0.022 150)', use: 'Wash — pale fill for a small signal' },
+      { name: '--color-warning', value: 'oklch(66% 0.14 74)', use: 'Warning — caution, must-read constraints (the one warm hue; signal only, never a surface)' },
+      { name: '--color-warning-deep', value: 'oklch(47% 0.10 74)', use: 'Deep — label / text strength' },
+      { name: '--color-warning-wash', value: 'oklch(96% 0.035 74)', use: 'Wash — pale fill for a small signal' },
+      { name: '--color-error', value: 'oklch(54% 0.19 27)', use: 'Error — failures, blocking problems, destructive actions' },
+      { name: '--color-error-deep', value: 'oklch(42% 0.16 27)', use: 'Deep — label / text strength' },
+      { name: '--color-error-wash', value: 'oklch(96% 0.03 27)', use: 'Wash — pale fill for a small signal' },
+      { name: '--color-premium', value: 'oklch(50% 0.15 305)', use: 'Premium — paid tiers, featured / prestige content' },
+      { name: '--color-premium-deep', value: 'oklch(38% 0.13 305)', use: 'Deep — label / text strength' },
+      { name: '--color-premium-wash', value: 'oklch(96% 0.028 305)', use: 'Wash — pale fill for a small signal' },
+    ],
+  },
+];
+
+// Type roles — live samples for each.
+const typeRoles = [
+  { class: 't-display', name: 'Display', spec: 'Geist Mono 700 · clamp(2.25rem, 3.5vw, 3rem) · lh 0.9 · tabular-nums', sample: '04' },
+  { class: 't-headline', name: 'Headline', spec: 'Archivo 800 · clamp(1.3rem, 2vw, 1.9rem) · lh 1.1 · tracking -0.015em', sample: 'What is the NSW Owner Builder Course?' },
+  { class: 't-headline-sm', name: 'Headline-Small (sentence case)', spec: 'Archivo 800 · clamp(1.125rem, 1.6vw, 1.375rem) · sentence case · Ink · quieter H2', sample: 'How does the online course work?' },
+  { class: 't-title', name: 'Title (eyebrow)', spec: 'Archivo 800 · clamp(1.125rem, 1.6vw, 1.375rem) · sentence case · always Document Maroon', sample: 'Courses', colour: 'var(--color-accent)' },
+  { class: 't-body', name: 'Body', spec: 'Public Sans 400 · 16px · lh 1.55', sample: 'ABE Education partners with RTOs to deliver nationally recognised qualifications across NSW, QLD, WA, TAS, and ACT.' },
+  { class: 't-prose', name: 'Prose', spec: 'Source Serif 4 · clamp(1.0625rem, 1.2vw, 1.125rem) · lh 1.6 · old-style figures · ONLY for §02 answer capsules', sample: 'The NSW Owner Builder Course is the approved education you must complete before applying for an Owner Builder Permit when residential building work on your home is valued at $20,000 or more.' },
+  { class: 't-label', name: 'Label', spec: 'Geist Mono 500 · 11px · tracking 0.1em · uppercase', sample: 'Last verified · 28 Apr 2026' },
+  { class: 't-label-footnote', name: 'Label-Footnote', spec: 'Geist Mono 500 · 10px · tracking 0.12em · uppercase', sample: 'Source · Building Commission NSW' },
+];
+---
+
+<StyleguideLayout title="Conventions" activeSlug="__conventions__">
+  <header class="pb-6" style="border-bottom: 1px solid var(--color-rule);">
+    <p class="t-label" style="color: var(--color-ink-3);">Reference</p>
+    <h1 class="t-headline mt-2" style="color: var(--color-ink);">Conventions</h1>
+    <p class="t-body mt-3" style="color: var(--color-ink-2); max-width: 75ch;">
+      The rules every page on this site follows. Writing register, locked
+      design system, component-API decisions, and the anti-patterns to scan
+      for during review. Read these before composing a new page.
+    </p>
+  </header>
+
+  <!-- Writing rules -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">Writing rules</h2>
+    <ul class="mt-3 space-y-3">
+      {
+        writingRules.map((r) => (
+          <li
+            class="px-5 py-4"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+          >
+            <p class="t-body font-semibold" style="color: var(--color-ink);">
+              {r.rule}
+            </p>
+            <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 14px;">
+              {r.detail}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Design rules -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">
+      Design rules — DESIGN.md (10 named rules)
+    </h2>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      The locked discipline for every visual decision on the site. Source spec
+      at <code>DESIGN.md</code> in the project root.
+    </p>
+    <ol class="mt-3 space-y-3">
+      {
+        designRules.map((r, i) => (
+          <li
+            class="flex gap-4 px-5 py-4"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+          >
+            <span class="t-display shrink-0" style="color: var(--color-ink-4); font-size: 1.5rem; line-height: 1;">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div class="min-w-0">
+              <p class="t-body font-semibold" style="color: var(--color-ink);">
+                {r.name}
+              </p>
+              <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 14px;">
+                {r.detail}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- API decisions -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">
+      Component-API decisions — 8 locked rules
+    </h2>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      How components are built. Source:
+      <code>.claude/skills/abe-astro-library/references/api-decisions.md</code>.
+    </p>
+    <ol class="mt-3 space-y-3">
+      {
+        apiDecisions.map((d) => (
+          <li
+            class="flex gap-4 px-5 py-4"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+          >
+            <span class="t-display shrink-0" style="color: var(--color-accent); font-size: 1.5rem; line-height: 1;">
+              {String(d.n).padStart(2, '0')}
+            </span>
+            <div class="min-w-0">
+              <p class="t-body font-semibold" style="color: var(--color-ink);">
+                {d.title}
+              </p>
+              <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 14px;">
+                {d.detail}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Colour palette -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">
+      Colour tokens — 60-30-10 discipline
+    </h2>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      Defined in <code>src/styles/global.css</code> inside <code>@theme</code>.
+      Components consume via Tailwind classes (<code>text-ink</code>,
+      <code>bg-bg-alt</code>) or via <code>var(--color-…)</code> for CSS.
+    </p>
+
+    {
+      groups.map((g) => (
+        <div class="mt-6">
+          <h3 class="t-label-footnote" style="color: var(--color-ink-3);">
+            {g.title}
+          </h3>
+          <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {g.items.map((c) => (
+              <div
+                class="flex items-center gap-3 px-4 py-3"
+                style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+              >
+                <span
+                  class="h-10 w-10 shrink-0"
+                  style={{ background: c.value, border: '1px solid var(--color-rule)' }}
+                  aria-hidden="true"
+                />
+                <div class="min-w-0 flex-1">
+                  <p class="t-label" style="color: var(--color-ink);">{c.name}</p>
+                  <p class="t-label-footnote" style="color: var(--color-ink-3);">{c.value}</p>
+                  <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+                    {c.use}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- Typography -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">
+      Type roles — 4 faces, 7 roles
+    </h2>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      Each role is a CSS class (<code>.t-display</code>, <code>.t-prose</code>,
+      etc.) bundling font family, size, line-height, tracking, and feature
+      settings. Components attach the class; never inline these properties.
+    </p>
+    <div class="mt-3 space-y-3">
+      {
+        typeRoles.map((r) => (
+          <div
+            class="px-5 py-4"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+          >
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <code class="t-label" style="color: var(--color-accent);">.{r.class}</code>
+              <span class="t-label-footnote" style="color: var(--color-ink-3);">{r.spec}</span>
+            </div>
+            <div class={`mt-3 ${r.class}`} style={{ color: r.colour ?? 'var(--color-ink)' }}>
+              {r.sample}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Don'ts -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">
+      Don'ts — scan for these during review
+    </h2>
+    <ul class="mt-3 space-y-2">
+      {
+        donts.map((d) => (
+          <li
+            class="t-body flex items-start gap-3 px-5 py-3"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg); color: var(--color-ink-2); font-size: 14px;"
+          >
+            <span style="color: var(--color-accent); font-weight: 600;">✕</span>
+            <span>{d}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</StyleguideLayout>

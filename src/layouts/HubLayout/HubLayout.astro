@@ -1,0 +1,143 @@
+---
+/**
+ * HubLayout — the hub-page archetype layout.
+ *
+ * Used by every course-stream hub (/owner-builder confirmed; /white-card,
+ * /cpd to come). Wraps BaseLayout, builds and injects the hub JSON-LD graph,
+ * and renders the fixed hub chrome. The variable content sections are
+ * composed by the page into the default <slot>.
+ *
+ * Fixed chrome, in order:
+ *   BreadcrumbBar → PageHeading → HeroTrustBar → <slot> (content sections)
+ *
+ * Locked decisions reflected here:
+ *   #5 — schema is assembled by a layout-level builder (buildHubGraph) and
+ *        injected into BaseLayout's named "schema" slot. No hand-written
+ *        JSON-LD in pages.
+ *   #6 — lastUpdated comes from frontmatter and is passed straight to
+ *        PageHeading; this layout does not derive it from git.
+ */
+import BaseLayout from '@layouts/BaseLayout/BaseLayout.astro';
+import BreadcrumbBar from '@components/BreadcrumbBar/BreadcrumbBar.astro';
+import PageHeading from '@components/PageHeading/PageHeading.astro';
+import HeroTrustBar from '@sections/HeroTrustBar/HeroTrustBar.astro';
+import { buildHubGraph } from '@/lib/buildHubGraph';
+import type { HubGraphLink, HubGraphFaq } from '@/lib/buildHubGraph';
+
+interface Crumb {
+  label: string;
+  /** Omit on the last crumb — it is the current page. */
+  href?: string;
+}
+
+interface Credential {
+  regulator: string;
+  state?: string;
+}
+
+interface Props {
+  /** <title> and og:title. */
+  title: string;
+  /** Meta description and the schema description. */
+  description: string;
+  /** Canonical URL — also the schema page id. */
+  canonical: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  /** Visible page H1. */
+  pageHeading: string;
+  /** ISO date YYYY-MM-DD from frontmatter (decision #6). */
+  lastUpdated: string;
+  /** Breadcrumb trail, Home first, this hub last. */
+  breadcrumbs: Crumb[];
+  /** Regulators for the HeroTrustBar. */
+  credentials: Credential[];
+  /** State spoke pages — become the schema ItemList. */
+  stateItems: HubGraphLink[];
+  /** FAQ entries — become the schema FAQPage. */
+  faqs?: HubGraphFaq[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  noIndex,
+  pageHeading,
+  lastUpdated,
+  breadcrumbs,
+  credentials,
+  stateItems,
+  faqs,
+} = Astro.props;
+
+const schema = buildHubGraph({
+  url: canonical,
+  name: title,
+  description,
+  breadcrumbs: breadcrumbs.map((c) => ({ name: c.label, url: c.href ?? canonical })),
+  items: stateItems,
+  faqs,
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  noIndex={noIndex}
+>
+  <script
+    type="application/ld+json"
+    slot="schema"
+    set:html={schema}
+    is:inline
+  />
+
+  <div class="hub">
+    <header class="hub__head">
+      <BreadcrumbBar crumbs={breadcrumbs} />
+      <PageHeading heading={pageHeading} lastUpdated={lastUpdated} />
+      <HeroTrustBar heading="Course recognition" credentials={credentials} />
+    </header>
+
+    <main class="hub__main">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .hub {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-xxxxl);
+  }
+
+  .hub__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  /* Vertical rhythm between content sections — flex gap applies to slotted
+     children regardless of style scoping. */
+  .hub__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxxl);
+    margin-top: var(--spacing-xxxl);
+  }
+
+  @media (max-width: 720px) {
+    .hub {
+      padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xxxl);
+    }
+    .hub__main {
+      gap: var(--spacing-xxl);
+      margin-top: var(--spacing-xxl);
+    }
+  }
+</style>

@@ -1,0 +1,184 @@
+---
+/**
+ * RegulatorBand — the deep Regulator Blue credentials band.
+ *
+ * The blue member of the Trust Stripe family (DESIGN.md §5). A saturated
+ * `--info-deep` plate carrying an optional left brand block and N credential
+ * stat tiles: cream numerals over blue-on-dark mono caps labels. The blue
+ * analogue of the production dark-ink Trust Stripe Variant C.
+ *
+ * Two-Accent Rule compliance: every tile is verification / current-state
+ * (RTO numbers, states served, regulator, freshness stamps), never decoration.
+ * Contrast-First Rule: the numerals ARE the content, so they go max-contrast
+ * cream; only the small mono labels carry the `--info-on-dark` blue tint.
+ *
+ * Stripe Singleton Rule: at most one Trust Stripe variant per page. Don't
+ * render this alongside another trust stripe.
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop (rendered as a visually-hidden <h2> so the band
+ *        keeps a real entry in the document outline without a visible title,
+ *        which trust stripes never have).
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+interface Stat {
+  /** The credential value, e.g. "5", "RTO 91826", "Yes", "21 May 2026". Keep short. */
+  value: string;
+  /** Mono caps label, e.g. "STATES COVERED", "RTO PARTNER". */
+  label: string;
+}
+
+interface Props {
+  /** Accessible section label (visually hidden). e.g. "Accreditation and credentials". */
+  heading: string;
+  /** Optional left brand stamp, e.g. "ABE Education". */
+  brand?: string;
+  /** Optional mono caps tagline under the brand stamp. */
+  brandTag?: string;
+  /** 3–5 credential tiles. */
+  stats: Stat[];
+  anchorId?: string;
+}
+
+const { heading, brand, brandTag, stats, anchorId } = Astro.props;
+const id = anchorId ?? slugify(heading);
+---
+
+<section id={id} class="band-section" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="sr-only">{heading}</h2>
+
+  <div class="band">
+    {
+      brand && (
+        <div class="band__brand">
+          <span class="band__brand-name">{brand}</span>
+          {brandTag && <span class="band__brand-tag">{brandTag}</span>}
+        </div>
+      )
+    }
+
+    <ul class="band__stats">
+      {
+        stats.map((stat) => (
+          <li class="band__stat">
+            <span class="band__stat-value">{stat.value}</span>
+            <span class="band__stat-label">{stat.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .band-section {
+    background: var(--color-info-deep);
+    scroll-margin-top: var(--spacing-xl);
+    /*
+     * Hairline frame colour for the dark plate — 1px only, the dark-plate
+     * analogue of the Two-Ornament Rule's 1px solid ink frame. Derived from
+     * existing tokens so no new colour token is introduced.
+     */
+    --band-rule: color-mix(in oklch, var(--color-bg) 18%, transparent);
+  }
+
+  .band {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    column-gap: var(--spacing-xl);
+    row-gap: var(--spacing-lg);
+  }
+
+  .band__brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding-right: var(--spacing-xl);
+    border-right: 1px solid var(--band-rule);
+  }
+  .band__brand-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.125rem;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-bg);
+  }
+  .band__brand-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-info-on-dark);
+  }
+
+  .band__stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    column-gap: var(--spacing-xl);
+    row-gap: var(--spacing-lg);
+  }
+  .band__stat {
+    flex: 1 1 0;
+    min-width: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  /* 1px dividers only between tiles — sits in the column-gap, never a thick stripe. */
+  .band__stat + .band__stat {
+    padding-left: var(--spacing-xl);
+    border-left: 1px solid var(--band-rule);
+  }
+
+  .band__stat-value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-bg);
+    font-feature-settings: "lnum", "tnum";
+  }
+  .band__stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-info-on-dark);
+  }
+
+  @media (max-width: 720px) {
+    .band {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .band__brand {
+      border-right: 0;
+      border-bottom: 1px solid var(--band-rule);
+      padding-right: 0;
+      padding-bottom: var(--spacing-md);
+    }
+    .band__stats {
+      column-gap: var(--spacing-lg);
+    }
+    .band__stat {
+      flex-basis: 40%;
+      min-width: 6rem;
+    }
+    .band__stat + .band__stat {
+      padding-left: var(--spacing-lg);
+    }
+  }
+</style>

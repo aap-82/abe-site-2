@@ -1,0 +1,62 @@
+---
+/**
+ * RTOAttributionLine — the hero short-form RTO attribution.
+ *
+ * Analysis §3.3: the one-line "Training delivered by AlertForce (RTO 91826)
+ * · Enrolled through ABE Education" that sits under the page heading on an
+ * RTO-partnered course-state page. This is ASQA disclosure location 1 of 7
+ * (the hero inline short form).
+ *
+ * For the longer verbatim disclosures (near-CTA, footer-legal, copyright
+ * bar) use ASQADisclosure. This component is the short hero line only.
+ *
+ * It states a plain fact about who delivers and who enrols; the wording is
+ * fixed and must not be paraphrased into a marketing claim.
+ */
+
+interface Props {
+  /** Display name of the Registered Training Organisation. */
+  rto: string;
+  /** RTO code label, e.g. "RTO 91826". */
+  rtoCode: string;
+  /** The enrolment partner. */
+  enrolPartner?: string;
+}
+
+const { rto, rtoCode, enrolPartner = 'ABE Education' } = Astro.props;
+---
+
+<p class="rto-attr">
+  Training delivered by <span class="rto-attr__org">{rto}</span>
+  <span class="rto-attr__code">({rtoCode})</span>
+  <span class="rto-attr__sep" aria-hidden="true">·</span>
+  Enrolled through <span class="rto-attr__org">{enrolPartner}</span>
+</p>
+
+<style>
+  /* A quiet hero attribution line — body register, Ink-3, no frame. */
+  .rto-attr {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-ink-3);
+  }
+
+  /* The two named organisations sit one tier stronger than the line. */
+  .rto-attr__org {
+    color: var(--color-ink-2);
+  }
+
+  .rto-attr__code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-3);
+  }
+
+  .rto-attr__sep {
+    margin: 0 0.5em;
+    color: var(--color-ink-4);
+  }
+</style>

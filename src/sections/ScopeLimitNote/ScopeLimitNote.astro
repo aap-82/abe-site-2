@@ -1,0 +1,77 @@
+---
+/**
+ * ScopeLimitNote — the honest scope-limit callout.
+ *
+ * Analysis §2.2 / §3: the "📋 NOTE: Not in this list = not currently
+ * offered" block. Placed straight after a state or service list to state
+ * plainly what ABE does NOT offer, and to point the reader at the relevant
+ * external authority. Reusable wherever a list excludes states or services.
+ *
+ * A neutral member of the callout family: a 1px rule frame with an Ink-3 mono
+ * caps label and no fill, matching the rest of the family. It shares the
+ * neutral rule frame with LegalCallout and is distinguished by purpose and
+ * default label rather than by appearance. The honest-scope content is itself
+ * an E-E-A-T signal, so it earns a visible, deliberate block.
+ *
+ * Design-system notes:
+ *   - The "📋" emoji is dropped; the NOTE mono caps label names it.
+ *   - Body is a slot so the note can link out to the external regulator it
+ *     defers to (e.g. the Victorian Building Authority).
+ *
+ * Locked decisions reflected here:
+ *   #7 — optional anchorId only; the note carries no heading, so there is
+ *        no slug to auto-generate from.
+ */
+interface Props {
+  /** Mono caps label naming the callout. Rendered uppercase by CSS. */
+  label?: string;
+  /** Optional anchor id, if the note needs to be a jump target. */
+  anchorId?: string;
+}
+
+const { label = 'Note', anchorId } = Astro.props;
+---
+
+<aside id={anchorId} class="scope-limit-note">
+  <p class="scope-limit-note__label">{label}</p>
+  <div class="scope-limit-note__body"><slot /></div>
+</aside>
+
+<style>
+  /* A 1px rule frame, no fill, matching the rest of the callout family. */
+  .scope-limit-note {
+    border: 1px solid var(--color-rule);
+    background: transparent;
+    padding: var(--spacing-md) var(--spacing-lg);
+    scroll-margin-top: var(--spacing-xl);
+  }
+
+  .scope-limit-note__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .scope-limit-note__body {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 70ch;
+  }
+
+  /* Reset margins if the author passes paragraph elements into the slot. */
+  .scope-limit-note__body :global(p) {
+    margin: 0;
+  }
+  .scope-limit-note__body :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+</style>
