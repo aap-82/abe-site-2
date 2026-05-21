@@ -1,13 +1,15 @@
-@import "tailwindcss";
-
 /*
  * Google Fonts — the four locked faces from DESIGN.md §3
  *   Archivo         display + headline + title
  *   Public Sans     body
  *   Source Serif 4  prose (answer capsules only)
  *   Geist Mono      label + label-footnote
+ *
+ * Must precede `@import "tailwindcss"`: that import expands into rules, and
+ * the CSS spec requires every @import to come before all other rules.
  */
 @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500..900&family=Geist+Mono:wght@400..700&family=Public+Sans:wght@400..700&family=Source+Serif+4:wght@400..700&display=swap");
+@import "tailwindcss";
 
 /*
  * ABE Education design tokens — see DESIGN.md for the full spec.

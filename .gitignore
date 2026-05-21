@@ -35,3 +35,9 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+
+# Backup files
+*.bak
+
+# Machine-local Claude settings
+.claude/settings.local.json
