@@ -7,7 +7,8 @@
  *
  * Section 2 "What courses do we offer" composes the CourseStreams section.
  * Section 3 "Find your course by state" composes StateNavigator in its
- * multi-link `links` variant — several course links per state.
+ * `board` variant — a state-code card per state. Each course is a live link
+ * once its page ships, or a muted "Coming soon" row until then.
  */
 import { getEntry } from 'astro:content';
 import HomepageLayout from '@layouts/HomepageLayout/HomepageLayout.astro';
@@ -64,42 +65,50 @@ const courseStreams = [
   },
 ];
 
-const stateLinks = [
+// Find-your-course-by-state board. A course carries an `href` once its page
+// ships (rendered as a live link); until then it carries `status` and shows a
+// muted "Coming soon" row. Built pages: NSW White Card and NSW Owner Builder.
+const stateBoard = [
   {
+    abbr: 'NSW',
     name: 'New South Wales',
     courses: [
-      { label: 'White Card NSW', href: '/white-card-nsw' },
-      { label: 'Owner Builder NSW', href: '/owner-builder-nsw' },
+      { label: 'White Card', href: '/white-card-nsw' },
+      { label: 'Owner Builder', href: '/owner-builder-nsw' },
     ],
   },
   {
+    abbr: 'QLD',
     name: 'Queensland',
     courses: [
-      { label: 'White Card QLD', href: '/white-card-qld' },
-      { label: 'Owner Builder QLD', href: '/owner-builder-qld' },
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
     ],
   },
   {
+    abbr: 'WA',
     name: 'Western Australia',
     courses: [
-      { label: 'White Card WA', href: '/white-card-wa' },
-      { label: 'Owner Builder WA', href: '/owner-builder-wa' },
-      { label: 'CPD for real-estate agents', href: '/cpd' },
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
+      { label: 'CPD for real-estate agents', status: 'Coming soon' },
     ],
   },
   {
+    abbr: 'TAS',
     name: 'Tasmania',
     courses: [
-      { label: 'White Card TAS', href: '/white-card-tas' },
-      { label: 'Owner Builder TAS', href: '/owner-builder-tas' },
-      { label: 'CPD for building practitioners', href: '/cpd' },
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
+      { label: 'CPD for building practitioners', status: 'Coming soon' },
     ],
   },
   {
+    abbr: 'ACT',
     name: 'Australian Capital Territory',
     courses: [
-      { label: 'White Card ACT', href: '/white-card-act' },
-      { label: 'Owner Builder ACT', href: '/owner-builder-act' },
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
     ],
   },
 ];
@@ -152,8 +161,8 @@ const faqs = [
 
   <StateNavigator
     heading="Find your course by state"
-    variant="links"
-    states={stateLinks}
+    variant="board"
+    states={stateBoard}
   />
 
   <ScopeLimitNote>

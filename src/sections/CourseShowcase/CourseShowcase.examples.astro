@@ -1,0 +1,103 @@
+---
+import CourseShowcase from './CourseShowcase.astro';
+
+const supporting = [
+  {
+    num: '02',
+    tag: 'Construction induction / nationally recognised',
+    title: 'Get your White Card online.',
+    continuation: 'The CPCWHS1001 induction every site requires, issued same day.',
+    ctaLabel: 'Browse White Card',
+    href: '/white-card',
+  },
+  {
+    num: '03',
+    tag: 'Continuing professional development',
+    title: 'Keep your builder licence current.',
+    continuation: 'Regulator-aligned CPD points, completed in an evening.',
+    ctaLabel: 'Browse CPD',
+    href: '/cpd',
+  },
+];
+---
+
+<div class="space-y-10">
+  <!-- Variant 1 — panel media (default, on-brand document treatment) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Panel media (default) — "at a glance" fact panel
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <CourseShowcase
+        heading="Our courses"
+        intro="Three nationally recognised pathways, each built and reviewed by named industry experts and delivered fully online."
+        featured={{
+          num: '01',
+          tag: 'Owner builder permits / 5 states',
+          title: 'Become a licensed owner builder.',
+          continuation: 'Build or renovate your own home legally, with the certificate your state permit authority accepts.',
+          ctaLabel: 'Browse Owner Builder',
+          href: '/owner-builder',
+          states: ['NSW', 'QLD', 'WA', 'TAS', 'ACT'],
+          facts: [
+            { label: 'Delivery', value: '100% online, self-paced' },
+            { label: 'Recognition', value: 'RTO 91826 plus four state regulators' },
+            { label: 'Start', value: 'Enrol and begin today' },
+          ],
+        }}
+        items={supporting}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 2 — image media (framed photo) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Image media — framed construction photo
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <CourseShowcase
+        heading="Our courses"
+        featuredMedia="image"
+        featured={{
+          num: '01',
+          tag: 'Owner builder permits / 5 states',
+          title: 'Become a licensed owner builder.',
+          continuation: 'Build or renovate your own home legally, in five states.',
+          ctaLabel: 'Browse Owner Builder',
+          href: '/owner-builder',
+          image: {
+            src: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80',
+            alt: 'Builders in hi-vis and hard hats on a concrete slab over a steel-reinforced residential foundation.',
+          },
+        }}
+        items={supporting}
+      />
+    </div>
+  </section>
+
+  <!-- Variant 3 — minimal (no numbers, no intro) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Minimal — no numbers, no intro
+    </h3>
+    <div class="mt-2 px-6" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+      <CourseShowcase
+        heading="Choose a course"
+        anchorId="choose-a-course-eg"
+        featured={{
+          tag: 'Owner builder permits / 5 states',
+          title: 'Become a licensed owner builder.',
+          continuation: 'The certificate your state permit authority accepts.',
+          ctaLabel: 'Browse Owner Builder',
+          href: '/owner-builder',
+          facts: [
+            { label: 'Delivery', value: '100% online, self-paced' },
+            { label: 'Recognition', value: 'RTO 91826 plus four state regulators' },
+          ],
+        }}
+        items={supporting}
+      />
+    </div>
+  </section>
+</div>

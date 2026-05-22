@@ -1,0 +1,430 @@
+---
+/**
+ * CourseShowcase — a featured course over a supporting grid.
+ *
+ * The ABE-register adaptation of the shadcn "casestudy-5" block: one large
+ * featured course entry above a hairline-separated grid of supporting course
+ * entries. Each entry carries a mono caps category tag, an Archivo title with
+ * a quieter Ink-2 continuation line, and a maroon "Browse → " action. The whole
+ * entry is a stretched link to the course hub.
+ *
+ * Two featured-media variants (the focal slot the source block filled with a
+ * photo):
+ *   featuredMedia="panel" (default) — an on-brand "at a glance" fact panel: a
+ *     Cream-2 panel in a 1px ink frame with Regulator Blue state chips and a
+ *     dotted-rule fact grid. Holds the document-grade, imagery-light register.
+ *   featuredMedia="image" — a real framed photo (1px ink frame, 14/9, lazy).
+ *     Closer to the source block; use when a page wants warmth over restraint.
+ *
+ * Deliberate deviations from the source block, to hold the locked design rules:
+ *   - the radial-dot texture columns are dropped — the Two-Ornament Rule
+ *     (DESIGN.md §4) gives the system only the 1px ink frame and the 1px dotted
+ *     rule; a decorative dot field is neither.
+ *   - no hover image-scale and no background-fill shift — the Flat-By-Default
+ *     Rule keeps hover to colour shifts and a 3px arrow translate, never lift.
+ *   - the muted title continuation uses Ink-2 (in-palette), never a tinted
+ *     accent (no coloured body text; maroon stays action-only).
+ *
+ * Locked decisions reflected here:
+ *   #1 — heading is a prop; the section renders <h2>, entries render <h3>.
+ *   #3 — design-system tokens only; sharp corners; no shadow.
+ *   #7 — wrapper id auto-generates from slugify(heading).
+ */
+import { slugify } from '@/lib/slugify';
+
+type FeaturedMedia = 'panel' | 'image';
+
+interface Fact {
+  /** Mono caps label, e.g. "Delivery". */
+  label: string;
+  /** Public Sans value, e.g. "100% online, self-paced". */
+  value: string;
+}
+
+interface CourseItem {
+  /** Optional two-digit entry number, e.g. "01". */
+  num?: string;
+  /** Mono caps category eyebrow, e.g. "OWNER BUILDER PERMITS / 5 STATES". */
+  tag: string;
+  /** Entry title (rendered <h3>), e.g. "Become a licensed owner builder." */
+  title: string;
+  /** Quieter Ink-2 continuation of the title. */
+  continuation?: string;
+  /** Action label, e.g. "Browse Owner Builder". Mono caps. */
+  ctaLabel: string;
+  /** Course hub the entry links to, e.g. "/owner-builder". */
+  href: string;
+}
+
+interface FeaturedItem extends CourseItem {
+  /** State codes shown as Regulator Blue chips in the panel variant. */
+  states?: string[];
+  /** Fact rows for the panel variant. */
+  facts?: Fact[];
+  /** Photo for the image variant. */
+  image?: { src: string; alt: string };
+}
+
+interface Props {
+  /** The section H2. */
+  heading: string;
+  /** Optional one-line section intro under the heading. */
+  intro?: string;
+  /** The featured (large) course entry. */
+  featured: FeaturedItem;
+  /** The supporting course entries. Tuned for two (the 1 + 2 = 3 stream IA). */
+  items: CourseItem[];
+  /** Featured focal slot: on-brand fact panel (default) or a framed photo. */
+  featuredMedia?: FeaturedMedia;
+  /** Anchor override; defaults to slugify(heading). */
+  anchorId?: string;
+}
+
+const {
+  heading,
+  intro,
+  featured,
+  items,
+  featuredMedia = 'panel',
+  anchorId,
+} = Astro.props;
+
+const id = anchorId ?? slugify(heading);
+const showImage = featuredMedia === 'image' && Boolean(featured.image);
+---
+
+<section id={id} class="cshow" aria-labelledby={`${id}-label`}>
+  <h2 id={`${id}-label`} class="t-headline cshow__heading">{heading}</h2>
+  {intro && <p class="cshow__intro">{intro}</p>}
+
+  <div class="cshow__block">
+    <!-- Featured entry -->
+    <article class="cshow__entry cshow__featured">
+      <div class="cshow__text">
+        <div class="cshow__entry-head">
+          <span class="cshow__tag t-label">{featured.tag}</span>
+          {featured.num && <span class="cshow__num">{featured.num}</span>}
+        </div>
+        <h3 class="cshow__title cshow__title--featured">
+          <a href={featured.href} class="cshow__link">{featured.title}</a>
+          {featured.continuation && (
+            <span class="cshow__cont"> {featured.continuation}</span>
+          )}
+        </h3>
+        <span class="cshow__cta">
+          <span class="cshow__cta-label t-label">{featured.ctaLabel}</span>
+          <span class="cshow__cta-arrow" aria-hidden="true">&rarr;</span>
+        </span>
+      </div>
+
+      <div class="cshow__media">
+        {showImage ? (
+          <div class="cshow__frame">
+            <img
+              class="cshow__img"
+              src={featured.image!.src}
+              alt={featured.image!.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ) : (
+          <div class="cshow__panel">
+            <span class="cshow__panel-label t-label">At a glance</span>
+            {featured.states && featured.states.length > 0 && (
+              <ul class="cshow__chips">
+                {featured.states.map((s) => (
+                  <li class="cshow__chip">{s}</li>
+                ))}
+              </ul>
+            )}
+            {featured.facts && featured.facts.length > 0 && (
+              <dl class="cshow__facts">
+                {featured.facts.map((f) => (
+                  <div class="cshow__fact">
+                    <dt class="cshow__fact-label t-label">{f.label}</dt>
+                    <dd class="cshow__fact-value">{f.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
+
+    <!-- Supporting grid -->
+    <div class="cshow__grid">
+      {items.map((item) => (
+        <article class="cshow__entry cshow__cell">
+          <div class="cshow__entry-head">
+            <span class="cshow__tag t-label">{item.tag}</span>
+            {item.num && <span class="cshow__num">{item.num}</span>}
+          </div>
+          <h3 class="cshow__title">
+            <a href={item.href} class="cshow__link">{item.title}</a>
+            {item.continuation && (
+              <span class="cshow__cont"> {item.continuation}</span>
+            )}
+          </h3>
+          <span class="cshow__cta">
+            <span class="cshow__cta-label t-label">{item.ctaLabel}</span>
+            <span class="cshow__cta-arrow" aria-hidden="true">&rarr;</span>
+          </span>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cshow {
+    border-top: 1px solid var(--color-rule);
+    padding: var(--spacing-xxl) 0;
+    scroll-margin-top: var(--spacing-xl);
+  }
+  .cshow__heading {
+    color: var(--color-ink);
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .cshow__intro {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 70ch;
+    margin: var(--spacing-sm) 0 0;
+  }
+
+  /* The showcase block — a single 1px-rule perimeter frame, sharp corners. */
+  .cshow__block {
+    border: 1px solid var(--color-rule);
+    margin-top: var(--spacing-lg);
+  }
+
+  /* ---- shared entry grammar ---- */
+  .cshow__entry {
+    position: relative; /* anchors the stretched-link ::after */
+  }
+  .cshow__entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  .cshow__tag {
+    color: var(--color-ink-3);
+    max-width: 42ch;
+    min-width: 0; /* allow the label to shrink/wrap inside the flex row */
+  }
+  .cshow__num {
+    flex-shrink: 0; /* keep the number on-screen in the narrow column */
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    color: var(--color-ink-4);
+    font-feature-settings: "lnum", "tnum";
+  }
+
+  .cshow__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .cshow__title--featured {
+    font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  }
+  .cshow__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* Stretched link: the whole entry becomes the click + focus target. */
+  .cshow__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .cshow__link:focus-visible {
+    outline: none;
+  }
+  .cshow__link:focus-visible::after {
+    outline: 2px solid var(--color-ink);
+    outline-offset: -2px;
+  }
+  .cshow__cont {
+    font-weight: 600;
+    color: var(--color-ink-2);
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .cshow__cta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    align-self: start;
+  }
+  .cshow__cta-label {
+    color: var(--color-accent);
+    transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .cshow__cta-arrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--color-accent);
+    display: inline-block;
+    transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  /* Hover lives on the whole entry: colour shift + 3px arrow translate, no lift. */
+  .cshow__entry:hover .cshow__cta-arrow {
+    transform: translateX(3px);
+  }
+  .cshow__entry:hover .cshow__cta-label {
+    color: var(--color-accent-deep);
+  }
+  .cshow__entry:hover .cshow__cont {
+    color: var(--color-ink);
+  }
+
+  /* ---- featured entry ---- */
+  /* Explicit minmax(0, 1fr) column: an `auto` track would size to the
+     longest unwrapped sentence (max-content) and overflow narrow screens. */
+  .cshow__featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+  }
+  .cshow__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    min-width: 0;
+  }
+  .cshow__media {
+    min-width: 0;
+  }
+  .cshow__featured .cshow__num {
+    font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+  }
+
+  /* ---- featured media: panel (default) ---- */
+  .cshow__panel {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-ink); /* the 1px ink frame ornament */
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  .cshow__panel-label {
+    color: var(--color-ink-3);
+  }
+  .cshow__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cshow__chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-info-deep);
+    background: var(--color-info-wash);
+    border: 1px solid var(--color-info-soft);
+    padding: 4px 8px;
+  }
+  .cshow__facts {
+    margin: 0;
+  }
+  .cshow__fact {
+    padding: var(--spacing-sm) 0;
+  }
+  .cshow__fact + .cshow__fact {
+    border-top: 1px dotted var(--color-ink-3);
+  }
+  .cshow__fact-label {
+    color: var(--color-ink-3);
+    display: block;
+  }
+  .cshow__fact-value {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin: 4px 0 0;
+  }
+
+  /* ---- featured media: image ---- */
+  .cshow__frame {
+    border: 1px solid var(--color-ink); /* the 1px ink frame ornament */
+    background: var(--color-bg);
+    padding: var(--spacing-xs);
+  }
+  .cshow__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 14 / 9;
+    object-fit: cover;
+  }
+
+  @media (min-width: 1024px) {
+    .cshow__featured {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--spacing-xxl);
+      padding: var(--spacing-xxl);
+      align-items: center;
+    }
+  }
+
+  /* ---- supporting grid ---- */
+  /* Hairline grid — 1px gaps over a Rule ground; each cell carries its own
+     Cream-1 fill so the gaps read as 1px dividers (same as CourseStreams). */
+  .cshow__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--color-rule);
+    border-top: 1px solid var(--color-rule);
+  }
+  .cshow__cell {
+    background: var(--color-bg);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    min-width: 0;
+  }
+
+  @media (max-width: 880px) {
+    .cshow__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cshow__cont,
+    .cshow__cta-label,
+    .cshow__cta-arrow {
+      transition: none;
+    }
+    .cshow__entry:hover .cshow__cta-arrow {
+      transform: none;
+    }
+  }
+</style>
