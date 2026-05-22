@@ -5,7 +5,8 @@
  * Built from library components, following the two-file page architecture:
  * SEO meta in src/content/pages-homepage/index.md, composition here.
  *
- * Section 2 "What courses do we offer" composes the CourseStreams section.
+ * Section 2 "What courses do we offer" composes the CourseShowcase section,
+ * Owner Builder featured over White Card and CPD.
  * Section 3 "Find your course by state" composes StateNavigator in its
  * `board` variant — a state-code card per state. Each course is a live link
  * once its page ships, or a muted "Coming soon" row until then.
@@ -13,7 +14,7 @@
 import { getEntry } from 'astro:content';
 import HomepageLayout from '@layouts/HomepageLayout/HomepageLayout.astro';
 import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
-import CourseStreams from '@sections/CourseStreams/CourseStreams.astro';
+import CourseShowcase from '@sections/CourseShowcase/CourseShowcase.astro';
 import StateNavigator from '@sections/StateNavigator/StateNavigator.astro';
 import ScopeLimitNote from '@sections/ScopeLimitNote/ScopeLimitNote.astro';
 import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
@@ -35,33 +36,39 @@ const navItems = [
   { name: 'CPD courses', url: '/cpd' },
 ];
 
-const courseStreams = [
-  {
-    num: '01',
-    eyebrow: 'Build or renovate your own home',
-    title: 'Owner Builder',
-    body: `The approved education you complete before applying for an Owner Builder permit, matched to the regulator that issues your permit in your state.`,
-    ctaLabel: 'Browse Owner Builder courses',
-    ctaHref: '/owner-builder',
-    footnote: 'Approved by QBCC, Consumer Protection WA, CBOS Tasmania and Access Canberra',
-  },
+// "What courses do we offer" — CourseShowcase: Owner Builder featured over
+// White Card and CPD. Panel media (the default on-brand fact panel).
+const featuredCourse = {
+  num: '01',
+  tag: 'Owner Builder permits / five states',
+  title: 'Become a licensed owner builder.',
+  continuation: 'Build or renovate your own home legally, with the certificate your state permit authority accepts.',
+  ctaLabel: 'Browse Owner Builder',
+  href: '/owner-builder',
+  states: ['NSW', 'QLD', 'WA', 'TAS', 'ACT'],
+  facts: [
+    { label: 'Delivery', value: '100% online, self-paced' },
+    { label: 'Recognition', value: 'RTO 91826 plus four state regulators' },
+    { label: 'Start', value: 'Enrol and begin today' },
+  ],
+};
+
+const supportingCourses = [
   {
     num: '02',
-    eyebrow: 'Work on any construction site',
-    title: 'White Card',
-    body: `The General Construction Induction card every worker needs before stepping onto a construction site, delivered online by our RTO partners.`,
-    ctaLabel: 'Browse White Card courses',
-    ctaHref: '/white-card',
-    footnote: 'Delivered by Blue Dog Training, AlertForce and Upskill Institute',
+    tag: 'Construction induction / nationally recognised',
+    title: 'Get your White Card online.',
+    continuation: 'The CPCWHS1001 induction every site requires, issued the same day.',
+    ctaLabel: 'Browse White Card',
+    href: '/white-card',
   },
   {
     num: '03',
-    eyebrow: 'Keep your registration current',
-    title: 'CPD',
-    body: `Continuing professional development for building, plumbing and electrical practitioners in Tasmania, and for real-estate agents in Western Australia.`,
-    ctaLabel: 'Browse CPD courses',
-    ctaHref: '/cpd',
-    footnote: 'State-approved continuing professional development',
+    tag: 'Continuing professional development',
+    title: 'Keep your registration current.',
+    continuation: 'Regulator-aligned CPD points for licensed practitioners, completed in an evening.',
+    ctaLabel: 'Browse CPD',
+    href: '/cpd',
   },
 ];
 
@@ -157,7 +164,12 @@ const faqs = [
     body="Every course is built and reviewed by industry-credentialled experts, then delivered online so you can complete it from a phone, tablet, or laptop. You will never sit in a classroom, drive across the state, or take a day off work to get certified. More than 31,000 students have used ABE Education to meet a regulator's training requirement, first time, on time."
   />
 
-  <CourseStreams heading="What courses do we offer?" streams={courseStreams} />
+  <CourseShowcase
+    heading="What courses do we offer?"
+    intro="Three streams of construction training, each matched to the regulator that approves it in your state."
+    featured={featuredCourse}
+    items={supportingCourses}
+  />
 
   <StateNavigator
     heading="Find your course by state"
