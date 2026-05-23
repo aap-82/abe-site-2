@@ -6,9 +6,11 @@
  *               VERIFIED AGAINST QBCC VERIFIED ON 19 MAY 2026
  *
  * Right-aligned. Two mono caps labels (VERIFIED AGAINST, VERIFIED ON) at
- * 10px Geist Mono in Ink-4 (quieter), source and date at 12px Public Sans in
- * Ink-3. The date is uppercased to the DD MMM YYYY stamp form (e.g. 11 APR
- * 2026). 1px solid Rule divider above.
+ * 12px Geist Mono in Ink-2, source and date at 12px Public Sans in Ink-3.
+ * The date is uppercased to the DD MMM YYYY stamp form (e.g. 11 APR 2026).
+ * 1px solid Rule divider above. Sized at the 12px small-text floor and kept
+ * off Ink-4 because the source and date are meaningful content that must
+ * clear WCAG AA.
  *
  * Source is provided as a slot; multiple sources are bullet-separated
  * inside the slot with a double-spaced • bullet.
@@ -47,16 +49,16 @@ const formatted = new Date(lastVerified)
     text-align: right;
   }
 
-  /* Label — 10px Geist Mono caps, Ink-3. Every property explicit so it
-     cannot drift from VerificationFootnote / SourceCitation. */
+  /* Label — 12px Geist Mono caps, Ink-2 (clears AA). Every property explicit
+     so it cannot drift from VerificationFootnote / SourceCitation. */
   .vnote__label {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-ink-4);
+    color: var(--color-ink-2);
     margin-right: 0.4em;
   }
 
@@ -69,7 +71,7 @@ const formatted = new Date(lastVerified)
   /* Value — 12px Public Sans regular, Ink-3, mixed case. */
   .vnote__value {
     font-family: var(--font-body);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 1.5;
     letter-spacing: 0;
