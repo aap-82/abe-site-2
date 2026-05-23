@@ -1,0 +1,292 @@
+---
+/**
+ * /owner-builder-qld — the QLD Owner Builder course-state page.
+ *
+ * Built from library components, two-file architecture: SEO meta in
+ * src/content/pages-course-state/owner-builder-qld.md, the composition here.
+ *
+ * AUTHORITY MODEL — ABE-DIRECT (confirmed by Andrey, 22 May 2026).
+ * ABE Education's own course, recognised by QBCC. No RTO partner, so the
+ * `disclosure` context is omitted: no RTOAttributionLine, no ASQA disclosure.
+ * `provider` in the schema is ABE Education.
+ *
+ * BUILD STATUS — HOLD before publish. Three gates, all carried from the
+ * source draft (owner-builder-qld.md v0.9):
+ *   1. QBCC approval pending. `noIndex` is set so the page is not indexed
+ *      until approval lands. Every approval-dependent claim uses the
+ *      pre-approval-safe wording (see the "Why choose" item and the
+ *      "Who approves this course?" FAQ).
+ *   2. ABE course price unconfirmed. The PricingTable row shows a visible
+ *      [TO VERIFY] placeholder — replace before publish.
+ *   3. No `reviewer` is passed. Warwick Smith's QLD compliance and currency
+ *      review is not yet complete, so only the freshness date renders.
+ *
+ * RECONCILIATION NOTE: the source draft flags that Dominic Ogburn's verified
+ * Notion record still describes the QLD course as Edway co-delivery. Building
+ * ABE-direct per Andrey's decision; the Notion record must be updated to match
+ * before publish, or this page flipped to the RTO-partner pattern.
+ *
+ * Fidelity note: the source draft's "can / cannot" two-list table is rendered
+ * as a ComparisonTable (the library has no two-column-list component); rows are
+ * grouped by work area so every cell carries content.
+ */
+import { getEntry } from 'astro:content';
+import CoursePageLayout from '@layouts/CoursePageLayout/CoursePageLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import ComparisonTable from '@sections/ComparisonTable/ComparisonTable.astro';
+import PricingTable from '@sections/PricingTable/PricingTable.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import BodyParagraph from '@components/BodyParagraph/BodyParagraph.astro';
+import VerificationNote from '@components/VerificationNote/VerificationNote.astro';
+import SourceCitation from '@components/SourceCitation/SourceCitation.astro';
+import WarningCallout from '@components/WarningCallout/WarningCallout.astro';
+import LegalCallout from '@components/LegalCallout/LegalCallout.astro';
+import CrossRefLink from '@components/CrossRefLink/CrossRefLink.astro';
+import ExpertReviewerCard from '@components/ExpertReviewerCard/ExpertReviewerCard.astro';
+
+const entry = await getEntry('pages-course-state', 'owner-builder-qld');
+if (!entry) throw new Error('Missing content entry: pages-course-state/owner-builder-qld');
+const meta = entry.data;
+
+// QBCC source URLs — verified against qbcc.qld.gov.au on 22 May 2026.
+const QBCC_ABOUT = 'https://www.qbcc.qld.gov.au/home-owner-hub/owner-build/about-owner-building';
+const QBCC_COURSES = 'https://www.qbcc.qld.gov.au/home-owner-hub/owner-build/required-courses-owner-builders';
+const QBCC_APPLY = 'https://www.qbcc.qld.gov.au/home-owner-hub/owner-build/apply-owner-builder-permit';
+
+const courseSteps = [
+  {
+    title: 'Enrol online',
+    text: 'Sign up and start straight away. The course is 100% online and self-paced, so you can fit it around work and family.',
+  },
+  {
+    title: 'Work through the modules',
+    text: 'Cover the knowledge a Queensland owner builder needs: your responsibilities, the building approval process, contracts and trades, work health and safety, and what you can and cannot do under a permit.',
+  },
+  {
+    title: 'Complete the assessment',
+    text: 'Finish the assessment inside the platform to receive your Certificate of Completion.',
+  },
+  {
+    title: 'Apply to QBCC for your permit',
+    text: 'Submit your permit application to QBCC with your certificate, which must be no more than 5 years old. Your permit must be approved before any work starts on site.',
+  },
+];
+
+const learningOutcomes = [
+  { text: 'Your legal responsibilities as a Queensland owner builder' },
+  { text: 'The building approval and certification process' },
+  { text: 'How to engage and coordinate licensed trades' },
+  { text: 'Work health and safety obligations on a residential site' },
+  { text: 'Managing contracts, costs and variations' },
+  { text: 'How to avoid the common mistakes that lead to defects and disputes' },
+];
+
+const scopeRows = [
+  {
+    label: 'Building new',
+    cells: [
+      'Build a new home, garage, carport or shed on your own land',
+      'Build commercial, industrial or farm buildings',
+    ],
+  },
+  {
+    label: 'Renovating',
+    cells: [
+      'Renovate, alter or extend your existing home',
+      'Build or renovate multiple dwellings such as duplexes, units or granny flats',
+    ],
+  },
+  {
+    label: 'Outdoor projects',
+    cells: [
+      'Build a residential pool, pergola or entertainment area',
+      'Remove more than 10 square metres of asbestos',
+    ],
+  },
+  {
+    label: 'Continuing a build',
+    cells: [
+      'Complete a home from a stage built by a licensed builder',
+      'Carry out fire-protection or mechanical-services work over $1,100 without a licence',
+    ],
+  },
+  {
+    label: 'Specialist trades',
+    cells: [
+      'Coordinate licensed trades across the whole project',
+      'Carry out plumbing, drainage or gas fitting yourself without a licence',
+    ],
+  },
+];
+
+const pricingRows = [
+  { item: 'ABE owner builder course (QLD)', cost: '[TO VERIFY: ABE price]' },
+  {
+    item: 'QBCC owner builder permit application fee',
+    cost: '$477.47',
+    costHref: QBCC_APPLY,
+  },
+];
+
+const whyItems = [
+  { title: '100% online and self-paced', text: 'start today and study around work and family' },
+  { title: 'Written by a licensed builder', text: 'real residential construction experience behind every module' },
+  { title: 'Independently reviewed for currency', text: 'legislation and regulator details are kept up to date' },
+  { title: 'Built for the QBCC requirement', text: "designed to meet QBCC's owner builder course requirement" },
+];
+
+const faqs = [
+  {
+    question: 'Do I need an owner builder course in Queensland?',
+    answer: 'Most people do. Unless you qualify for a QBCC exemption, for example you hold a current QBCC licence or certain professional qualifications, you must complete an approved owner builder course before you apply for your permit.',
+  },
+  {
+    question: 'When do I need an owner builder permit?',
+    answer: "You need a permit for owner building work valued at more than $11,000 on your own land, company-owned land if you are a director, or land you lease with the owner's permission. Farm buildings have a higher threshold of $27,500.",
+  },
+  {
+    question: 'How long is my course certificate valid?',
+    answer: 'Your owner builder course certificate must be no more than 5 years old when you apply to QBCC for your permit. If your certificate is older than that, you will need to complete the course again before you can apply.',
+  },
+  {
+    question: 'How long does the course take?',
+    answer: 'The course is online and self-paced, so the timing is up to you. Most learners complete it over a few sittings, fitting study around work and family. There is no set deadline once you enrol.',
+  },
+  {
+    question: 'Can I get the Queensland Home Warranty Scheme as an owner builder?',
+    answer: 'No. Owner builders cannot access the Queensland Home Warranty Scheme. That cover protects home owners who contract a licensed builder, so it is worth weighing up before you decide to owner build.',
+  },
+  {
+    question: 'How often can I be an owner builder?',
+    answer: 'QBCC can issue you only one owner builder permit every 6 years, though exemptions are sometimes granted. If you have held a permit recently, check your eligibility with QBCC before you enrol.',
+  },
+  {
+    question: 'Who approves this course?',
+    answer: "This course is designed to meet QBCC's owner builder course requirement. ABE Education's QBCC approval is being finalised. Contact ABE to confirm the current status before you enrol, so you have the latest information.",
+  },
+];
+---
+
+<CoursePageLayout
+  title={meta.title}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  noIndex={true}
+  pageHeading="Owner Builder Course QLD — Online Training for Your Permit"
+  breadcrumbs={[
+    { label: 'Home', href: '/' },
+    { label: 'Owner Builder Training', href: '/owner-builder' },
+    { label: 'QLD Owner Builder' },
+  ]}
+  courseName="QLD Owner Builder Course"
+  provider={{ name: 'ABE Education', url: 'https://www.abeeducation.edu.au' }}
+  faqs={faqs}
+>
+  <AnswerCapsuleSection
+    heading="What is an owner builder course and who needs one in QLD?"
+    answer="An owner builder course prepares you to manage building work on your own property in Queensland. Most people must complete an approved owner builder course before they apply to QBCC for an owner builder permit, and you need that permit for residential building work valued at more than $11,000."
+    body="Owner building means running a residential project on your own land without a licensed builder overseeing it. You take on the head contractor role: engaging trades, scheduling work, and making sure the build meets the National Construction Code. The course gives you the knowledge to do that safely and lawfully before you apply for your permit. It is the same starting point whether you are building a new home or taking on a major renovation."
+  >
+    <BodyParagraph text="Do I always need the course? Most applicants do. You are exempt if you hold a current QBCC licence, in which case you enter your licence number on the permit form, or if you hold certain qualifications or an interstate builder or trade contractor's licence. Building experience on its own, without a formal qualification, is not enough for an exemption." />
+    <SourceCitation>
+      <a href={QBCC_COURSES} class="link-dotted" rel="external">QBCC</a>
+    </SourceCitation>
+    <VerificationNote lastVerified="2026-05-22">
+      <a href={QBCC_ABOUT} class="link-dotted" rel="external">QBCC</a>
+    </VerificationNote>
+    <CrossRefLink href="/owner-builder" label="View all owner builder course states" />
+  </AnswerCapsuleSection>
+
+  <NumberedStepsSection
+    heading="How does the owner builder course work?"
+    answer="Enrol online and work through the modules at your own pace, then complete the assessment to receive your Certificate of Completion. You take that certificate to QBCC when you apply for your owner builder permit. The course is fully online, so you can study around work."
+    steps={courseSteps}
+  />
+  <WarningCallout>
+    Working without an approved permit may attract fines, and you will still
+    have to pay an application fee to have the work approved after it is done.
+  </WarningCallout>
+
+  <WhyChooseList
+    heading="What will you learn?"
+    answer="An owner builder takes on the head contractor role, so the course focuses on the knowledge you need to run a residential build lawfully and safely. You finish knowing how the approval process works and where your responsibilities begin and end."
+    items={learningOutcomes}
+  />
+
+  <ComparisonTable
+    heading="What can an owner builder do, and what is off limits?"
+    answer="An owner builder permit lets you manage and carry out a wide range of residential work on your own land. It does not cover specialist trades or larger commercial projects. The table below sets out what you can do, and what still needs a licensed contractor."
+    rowHeader="Work area"
+    columns={['You can', 'You cannot without a licence']}
+    rows={scopeRows}
+    caption="Work scope verified against QBCC on 22 May 2026. Some specialist work needs a licensed contractor regardless of your permit."
+  />
+
+  <AnswerCapsuleSection
+    heading="Who can apply for an owner builder permit?"
+    answer="To apply for a QBCC owner builder permit you must be an owner named on the property title, a director of the company that owns the land, or a lease occupier who has the owner's written permission. Building experience on its own does not qualify you."
+    body="The person who completes the course becomes the Nominated Permit Holder on the application. If the property is owned in joint names, only one owner needs to complete the course and hold the permit. Check that the name on your course certificate matches the name you list on the QBCC permit form, since the regulator cross-checks the two before it issues a permit."
+  >
+    <WarningCallout label="Eligibility">
+      You cannot apply if you, or any applicant on the form, have an unpaid QBCC
+      infringement fine, have been served a notice for Tier 1 defective work,
+      have had an owner builder permit cancelled in the last 3 years, or already
+      hold an owner builder permit issued in the last 6 years. QBCC can grant
+      exemptions to the 6-year rule in some cases.
+    </WarningCallout>
+    <LegalCallout>
+      A notification of your owner builder permit is recorded on the property
+      title for 7 years. If you sell the property within 6 years of completing
+      the build, you must tell the buyer in writing.
+    </LegalCallout>
+    <VerificationNote lastVerified="2026-05-22">
+      <a href={QBCC_ABOUT} class="link-dotted" rel="external">QBCC</a>
+    </VerificationNote>
+  </AnswerCapsuleSection>
+
+  <PricingTable
+    heading="How much does the QLD owner builder course cost?"
+    rows={pricingRows}
+    caption="QBCC permit application fee verified against QBCC on 22 May 2026. QBCC fees are reviewed on 1 July each year, so confirm the current fee before you apply. The ABE course price is being finalised."
+  />
+  <LegalCallout>
+    The ABE course fee and the QBCC permit application fee are separate. The
+    permit application fee is set and collected by QBCC, not by ABE. Course fees
+    are reviewed periodically.
+  </LegalCallout>
+
+  <FAQSection heading="QLD owner builder course FAQs" items={faqs} />
+
+  <WhyChooseList
+    heading="Why choose ABE Education for your owner builder course?"
+    answer="ABE Education has delivered owner builder and CPD training to more than 31,000 students across five Australian states and territories since 2007. Courses are written by a licensed builder and independently checked for currency, so what you study reflects current Queensland rules."
+    items={whyItems}
+  />
+
+  <AnswerCapsuleSection
+    heading="How is the course content developed and reviewed?"
+    anchorId="content-review"
+    answer="ABE uses a two-stage quality process. The course is developed by a licensed builder, then the published page is independently checked for compliance and currency against current Queensland legislation and QBCC requirements. The two stages keep the course accurate and the page trustworthy."
+    body="Stage one is course development by an industry expert who verifies the content against the National Construction Code and Queensland building rules. Stage two is an independent compliance and currency review that confirms the legislative references, regulator details, and permit requirements on this page are accurate and up to date. Each stage is carried out by a named expert, not an anonymous team."
+  >
+    <ExpertReviewerCard
+      name="Dominic Ogburn"
+      profileHref="/experts/dominic-ogburn"
+      role="Course Developer, CEO of ABE Education"
+      specialties={['Licensed NSW Builder 369417C', '2005 NSW Fair Trading Award', '40+ Years Experience', '5 Australian Jurisdictions']}
+      bio="Forty-plus years in Australian residential construction, beginning at Stuart Brothers Pty Ltd (Sydney builders since 1886). Co-author of Your Home: Buying, Selling, Renovating, Building (Allen and Unwin, 2004). Cited in NSW Legislative Council Hansard (2001) and six Sydney Morning Herald articles. As CEO of ABE Education, Dominic has developed owner builder and CPD training completed by 31,000+ students across five jurisdictions."
+      reviewNote="Course content developed by Dominic Ogburn, ABE Education."
+    />
+    <ExpertReviewerCard
+      name="Warwick Smith"
+      profileHref="/experts/warwick-smith"
+      role="Compliance and Currency Reviewer, Corporate Development Resource Group"
+      specialties={['27+ Years in VET', 'Senior Consultant', 'Corporate Development Resource Group']}
+      bio="Senior Consultant, Compliance and Operations at Corporate Development Resource Group, with over 27 years across the Australian vocational education and training sector. Former CEO of Training Aid Australia and the Australian Institute of Compliance Professionals. Compliance Manager at TasCollege. Specialist areas include construction, compliance, and operational design."
+      reviewNote="Independently reviews ABE's published course pages for legislative currency and regulatory accuracy."
+    />
+  </AnswerCapsuleSection>
+</CoursePageLayout>

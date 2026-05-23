@@ -4,7 +4,7 @@ description: A featured course over a hairline-separated grid of supporting cour
 
 # CourseShowcase
 
-A promotional section that leads with one **featured course** (large, two-column) above a **hairline-separated grid of supporting courses**. Each entry pairs a mono caps category tag with an Archivo title and a quieter Ink-2 continuation line, closing on a maroon "Browse →" action; the whole entry is a stretched link to the course hub.
+A promotional section that leads with one **featured course** (large, two-column) above a **hairline-separated grid of supporting courses**. Each entry pairs a mono caps category tag with an Archivo title and a quieter Ink-2 continuation line, closing on a "Browse →" action in the **v1 "Colour amplification"** CTA register (DESIGN.md §5 Volume Ladder); the whole entry is a stretched link to the course hub.
 
 It is the ABE-register translation of the shadcn `casestudy-5` marketing block. Built for the homepage "one featured stream + the rest" pattern (Owner Builder featured, White Card and CPD supporting), it also suits a hub leading with one state-page over the others.
 
@@ -57,6 +57,8 @@ Three deliberate departures from the source `casestudy-5` block hold the locked 
 - **No radial-dot texture columns.** The Two-Ornament Rule (DESIGN.md §4) gives the system only the 1px ink frame and the 1px dotted rule; a decorative dot field is neither. Cell separation uses the hairline-grid technique instead.
 - **No hover image-scale or background-fill shift.** The Flat-By-Default Rule keeps hover to a colour shift and a 3px arrow translate, never a lift.
 - **The title continuation is Ink-2, not a tinted accent.** No coloured body text; maroon stays the action register (the "Browse →" line only).
+
+The "Browse →" action uses the **v1 "Colour amplification"** register from the CTAButton Volume Ladder (Maroon, weight 600, solid 1px Maroon underline, no frame or fill). Because the whole entry is a stretched link, the CTA is rendered as a non-interactive `<span>` that replicates the v1 treatment inline, rather than a nested `<CTAButton>` `<a>` — a link inside a link is invalid. v1 is also the only register the stretched-link card can carry: a framed v2 or filled v3 button would be a second interactive element.
 
 Sharp corners throughout; flat; the section owns its 1px top rule + `xxl` padding + scroll-margin like every other section.
 

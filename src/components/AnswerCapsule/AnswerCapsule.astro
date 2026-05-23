@@ -7,9 +7,9 @@
  * BodyParagraph below for the expanded explanation.
  *
  * Typography per DESIGN.md §3:
- *   - Eyebrow label: Geist Mono 11px uppercase, tracking 0.1em,
- *     Regulator Blue Deep (matches the abe-homepage section-eyebrow
- *     register on the verification axis)
+ *   - Eyebrow: an info-tone StatusPill in the outline variant (1px Regulator
+ *     Blue border, no background) carrying the section label, e.g. "Overview".
+ *     The pill replaces the earlier plain mono-caps eyebrow text.
  *   - Body text: Source Serif 4 prose (the editorial-longform register
  *     reserved for §02 answer capsules)
  *
@@ -21,13 +21,14 @@
  *   #1 — no heading slot (heading lives on the parent section).
  *   #3 — all styling via design-system tokens.
  */
+import StatusPill from '@components/StatusPill/StatusPill.astro';
 
 interface Props {
   /** The 40–60 word answer body. */
   text: string;
   /**
-   * Optional section eyebrow shown above the text in Regulator Blue Deep.
-   * Defaults to `Overview`. Pass `null` to suppress.
+   * Optional section eyebrow, shown above the text inside an info StatusPill.
+   * Defaults to `Overview`. Pass `null` to suppress the pill entirely.
    */
   eyebrow?: string | null;
 }
@@ -37,15 +38,18 @@ const { text, eyebrow = 'Overview' } = Astro.props;
 
 <div class="answer-capsule mt-4">
   {eyebrow && (
-    <div class="t-label answer-capsule__eyebrow">{eyebrow}</div>
+    <div class="answer-capsule__eyebrow">
+      <StatusPill tone="info" variant="outline">{eyebrow}</StatusPill>
+    </div>
   )}
   <p class="t-prose answer-capsule__text">{text}</p>
 </div>
 
 <style>
+  /* Block wrapper so the inline-block StatusPill sits on its own line above
+     the prose, with a gap before the answer text. */
   .answer-capsule__eyebrow {
-    color: var(--color-info-deep);
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-xs);
   }
 
   .answer-capsule__text {

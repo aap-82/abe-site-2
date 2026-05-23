@@ -1,0 +1,126 @@
+---
+/**
+ * StatusPill — a small inline status chip in the semantic status colours.
+ *
+ * Marks a short status word inline: an "Info" note, an "Important" flag, an
+ * "Error" state, a "Success" confirmation, a "Legal" fine-print tag. The pill
+ * labels a status; it does not act (it is not a button) and does not explain
+ * (it is not a callout — for a sentence of explanation use the block-level
+ * InfoCallout / WarningCallout / ErrorCallout / SuccessCallout / LegalCallout
+ * siblings).
+ *
+ * Two axes:
+ *   - `tone` picks the register. Four are semantic status colours:
+ *       info → information (Regulator Blue), important → warning (amber),
+ *       error → error (red), success → success (green).
+ *     One is the quiet neutral legal register:
+ *       legal → ink / rule neutrals (mirrors LegalCallout, no status colour).
+ *   - `variant` picks the fill style, drawn from the same register:
+ *       fill    — pale wash background, no border (the default)
+ *       outline — 1px base-tone border, transparent background
+ *       framed  — 1px base-tone border plus the wash background
+ *
+ * Design-system notes:
+ *   - Geist Mono caps (the label voice), 11px, sharp corners, flat.
+ *   - Status tones: text is the `*-deep` tier, borders the `*` base tier,
+ *     fills the `*-wash` tier. The legal tone mirrors LegalCallout — Ink-2
+ *     text, a 1px `rule` hairline border, a quiet Cream-3 fill.
+ *   - Every variant carries a 1px border box (transparent on `fill`) so all
+ *     variants share the exact same dimensions.
+ *
+ * Content comes from the default slot, with `label` as a fallback, so both
+ * <StatusPill tone="error">Enrolment closed</StatusPill> and
+ * <StatusPill tone="error" /> (renders "Error") work.
+ */
+type Tone = 'info' | 'important' | 'error' | 'success' | 'legal';
+type Variant = 'fill' | 'outline' | 'framed';
+
+interface Props {
+  /** The pill register — four semantic status tones plus the neutral `legal`. */
+  tone: Tone;
+  /** The fill style. Defaults to `fill` (wash background, no border). */
+  variant?: Variant;
+  /** Fallback text when no slot content is passed. Defaults to the tone word. */
+  label?: string;
+}
+
+const TONE_LABEL: Record<Tone, string> = {
+  info: 'Info',
+  important: 'Important',
+  error: 'Error',
+  success: 'Success',
+  legal: 'Legal',
+};
+
+const { tone, variant = 'fill', label } = Astro.props;
+const fallback = label ?? TONE_LABEL[tone];
+---
+
+<span class:list={['status-pill', `status-pill--${tone}`, `status-pill--${variant}`]}><slot>{fallback}</slot></span>
+
+<style>
+  .status-pill {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    /* A 1px border box on every variant (transparent on `fill`) keeps all
+       three variants the exact same size. Sharp corners, per the locked
+       system — no border-radius. */
+    border: 1px solid transparent;
+    color: var(--pill-deep);
+  }
+
+  /* --- Tone: each tone exposes its colour trio (base / deep / wash) --- */
+  /* info → information (the Regulator Blue register) */
+  .status-pill--info {
+    --pill-base: var(--color-information);
+    --pill-deep: var(--color-information-deep);
+    --pill-wash: var(--color-information-wash);
+  }
+  /* important → warning (the system's one warm hue, bounded status use) */
+  .status-pill--important {
+    --pill-base: var(--color-warning);
+    --pill-deep: var(--color-warning-deep);
+    --pill-wash: var(--color-warning-wash);
+  }
+  /* error → error */
+  .status-pill--error {
+    --pill-base: var(--color-error);
+    --pill-deep: var(--color-error-deep);
+    --pill-wash: var(--color-error-wash);
+  }
+  /* success → success */
+  .status-pill--success {
+    --pill-base: var(--color-success);
+    --pill-deep: var(--color-success-deep);
+    --pill-wash: var(--color-success-wash);
+  }
+  /* legal → the quiet neutral register. No status colour: mirrors
+     LegalCallout — a 1px `rule` hairline, Ink-2 text, a Cream-3 fill. */
+  .status-pill--legal {
+    --pill-base: var(--color-rule);
+    --pill-deep: var(--color-ink-2);
+    --pill-wash: var(--color-bg-deep);
+  }
+
+  /* --- Variant: each variant decides the fill and the border --- */
+  /* fill — pale wash background, no border (the default) */
+  .status-pill--fill {
+    background: var(--pill-wash);
+  }
+  /* outline — 1px base-tone border, transparent background */
+  .status-pill--outline {
+    background: transparent;
+    border-color: var(--pill-base);
+  }
+  /* framed — 1px base-tone border plus the wash background */
+  .status-pill--framed {
+    background: var(--pill-wash);
+    border-color: var(--pill-base);
+  }
+</style>

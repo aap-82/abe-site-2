@@ -294,11 +294,17 @@ const id = anchorId ?? slugify(heading);
     justify-content: space-between;
     gap: var(--spacing-sm);
   }
+  /* Coming-soon course (no href) — muted to Ink-4 so it reads as inactive
+     next to the live link-dotted course rows. */
   .snav__coursetext {
-    color: var(--color-ink-2);
+    color: var(--color-ink-4);
   }
   .snav__via {
     color: var(--color-ink-2);
+  }
+  /* A "(via …)" inside a coming-soon entry inherits the muted Ink-4. */
+  .snav__coursetext .snav__via {
+    color: inherit;
   }
   .snav__badge {
     flex-shrink: 0;

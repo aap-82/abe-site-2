@@ -1,0 +1,118 @@
+---
+import StatusPill from './StatusPill.astro';
+---
+
+<div class="space-y-10">
+  <!-- Variant: fill (default) -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Variant: fill (default) — wash background, no border
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StatusPill tone="info" variant="fill" />
+      <span class="ml-3"><StatusPill tone="important" variant="fill" /></span>
+      <span class="ml-3"><StatusPill tone="error" variant="fill" /></span>
+      <span class="ml-3"><StatusPill tone="success" variant="fill" /></span>
+      <span class="ml-3"><StatusPill tone="legal" variant="fill" /></span>
+    </div>
+  </section>
+
+  <!-- Variant: outline -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Variant: outline — 1px border, no background
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StatusPill tone="info" variant="outline" />
+      <span class="ml-3"><StatusPill tone="important" variant="outline" /></span>
+      <span class="ml-3"><StatusPill tone="error" variant="outline" /></span>
+      <span class="ml-3"><StatusPill tone="success" variant="outline" /></span>
+      <span class="ml-3"><StatusPill tone="legal" variant="outline" /></span>
+    </div>
+  </section>
+
+  <!-- Variant: framed -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Variant: framed — 1px border plus wash background
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StatusPill tone="info" variant="framed" />
+      <span class="ml-3"><StatusPill tone="important" variant="framed" /></span>
+      <span class="ml-3"><StatusPill tone="error" variant="framed" /></span>
+      <span class="ml-3"><StatusPill tone="success" variant="framed" /></span>
+      <span class="ml-3"><StatusPill tone="legal" variant="framed" /></span>
+    </div>
+  </section>
+
+  <!-- The legal tone across all three variants -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      The legal tone (quiet neutral register) across the three variants
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StatusPill tone="legal" variant="fill">Legal</StatusPill>
+      <span class="ml-3"><StatusPill tone="legal" variant="outline">Legal</StatusPill></span>
+      <span class="ml-3"><StatusPill tone="legal" variant="framed">Legal</StatusPill></span>
+    </div>
+  </section>
+
+  <!-- Custom slot content -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Custom label (slot content)
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <StatusPill tone="info">Pending approval</StatusPill>
+      <span class="ml-3"><StatusPill tone="important">Action needed</StatusPill></span>
+      <span class="ml-3"><StatusPill tone="error">Enrolment closed</StatusPill></span>
+      <span class="ml-3"><StatusPill tone="success">Approved</StatusPill></span>
+      <span class="ml-3"><StatusPill tone="legal">GST inclusive</StatusPill></span>
+    </div>
+  </section>
+
+  <!-- Inline in a list -->
+  <section>
+    <h3 class="t-label" style="color: var(--color-ink-3);">
+      Inline in a list item
+    </h3>
+    <div
+      class="mt-3 px-6 py-6"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+    >
+      <ul class="t-body" style="color: var(--color-ink);">
+        <li>
+          Owner Builder NSW
+          <span class="align-middle"><StatusPill tone="success">Live</StatusPill></span>
+        </li>
+        <li>
+          Owner Builder QLD
+          <span class="align-middle"><StatusPill tone="success">Live</StatusPill></span>
+        </li>
+        <li>
+          Owner Builder WA
+          <span class="align-middle"><StatusPill tone="info" variant="outline">Soon</StatusPill></span>
+        </li>
+        <li>
+          QBCC permit application fee
+          <span class="align-middle"><StatusPill tone="legal" variant="outline">Set by regulator</StatusPill></span>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>

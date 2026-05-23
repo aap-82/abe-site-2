@@ -1,19 +1,19 @@
 ---
-description: The 📌 Answer block. Cornerstone of the library — sits under every H2 question heading. Source Serif 4 prose body with a Regulator Blue mono caps eyebrow (default "Overview"). ~29 instances across the four reference pages.
+description: The 📌 Answer block. Cornerstone of the library — sits under every H2 question heading. Source Serif 4 prose body with an info StatusPill eyebrow (default "Overview") in the Regulator Blue verification register. ~29 instances across the four reference pages.
 ---
 
 # AnswerCapsule
 
 The 40–60 word direct answer that sits under an H2 question heading on every content section. Voice assistants, AI Overviews, and skim-readers pull this as a snippet. Always paired with `BodyParagraph` below for the expanded explanation.
 
-A small Regulator Blue Deep mono caps eyebrow sits above the prose text, identifying the section's purpose ("OVERVIEW", "HOW IT WORKS", "WHAT YOU'LL LEARN"). The eyebrow uses the verification-register blue rather than ink because it's a structural label, not a body claim — matches the abe-homepage section-eyebrow pattern.
+A small info `StatusPill` in the `outline` variant (a 1px Regulator Blue border, no background) sits above the prose text, identifying the section's purpose ("OVERVIEW", "HOW IT WORKS", "WHAT YOU'LL LEARN"). It uses the info tone — the Regulator Blue verification register — because the eyebrow is a structural label, not a body claim.
 
 ## Props
 
 | Prop | Type | Required | Default | Notes |
 |---|---|:-:|---|---|
 | `text` | `string` | ✓ | — | The answer body. Target 40–60 words. |
-| `eyebrow` | `string \| null` | — | `'Overview'` | Section eyebrow text rendered in Regulator Blue Deep. Pass `null` to hide the eyebrow entirely. |
+| `eyebrow` | `string \| null` | — | `'Overview'` | Section eyebrow text, rendered inside an info `StatusPill`. Pass `null` to hide the eyebrow entirely. |
 
 ## When to use
 
@@ -39,7 +39,7 @@ import AnswerCapsule from '@components/AnswerCapsule/AnswerCapsule.astro';
 />
 ```
 
-Renders with `OVERVIEW` (the default eyebrow) above the prose text in Regulator Blue Deep.
+Renders with an info pill reading `OVERVIEW` (the default eyebrow) above the prose text.
 
 ## Example — custom eyebrow
 
@@ -75,6 +75,7 @@ The build pipeline maps this pattern onto `<AnswerCapsule text="..." />`. Author
 
 ## Related
 
+- `StatusPill` — the info-tone pill used as the eyebrow above the prose.
 - `BodyParagraph` — the 📖 Body block paired with this capsule.
 - `MicroCTA` — the ↕️ jump-link that typically closes a capsule section.
 - `VerificationNote` / `SourceCitation` — the trust-signal pair that often follows the body paragraph.

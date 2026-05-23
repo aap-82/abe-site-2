@@ -74,7 +74,8 @@ const supportingCourses = [
 
 // Find-your-course-by-state board. A course carries an `href` once its page
 // ships (rendered as a live link); until then it carries `status` and shows a
-// muted "Coming soon" row. Built pages: NSW White Card and NSW Owner Builder.
+// muted "Coming soon" row. Built pages: NSW White Card, NSW Owner Builder,
+// QLD Owner Builder.
 const stateBoard = [
   {
     abbr: 'NSW',
@@ -89,7 +90,7 @@ const stateBoard = [
     name: 'Queensland',
     courses: [
       { label: 'White Card', status: 'Coming soon' },
-      { label: 'Owner Builder', status: 'Coming soon' },
+      { label: 'Owner Builder', href: '/owner-builder-qld' },
     ],
   },
   {

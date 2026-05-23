@@ -48,6 +48,7 @@
   --color-accent: #800000;       /* Document Maroon */
   --color-accent-deep: #500000;  /* Deep Burgundy — hover, per-card stream words */
   --color-accent-mid: #600000;   /* Auxiliary — legacy compatibility only */
+  --color-accent-wash: oklch(95% 0.035 29); /* pale Maroon — link hover highlight */
 
   /* --- Regulator Blue — verification register (3%) --- */
   --color-info: oklch(46% 0.16 235);
@@ -223,14 +224,33 @@ body {
  * Apply to inline links inside body prose or fact values.
  */
 .link-dotted {
-  color: var(--color-ink-3);
+  color: var(--color-ink-2);
   text-decoration: underline dotted;
   text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-accent); /* Maroon #800000 underline at rest */
   text-underline-offset: 3px;
-  transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+  /* The pale-Maroon highlight is a no-repeat background image pinned to the
+     left edge; hover sweeps it left to right by growing its width 0 -> 100%.
+     A colour shift, not an elevation, so it holds the Flat-By-Default Rule;
+     sharp corners (radius 0) inherited from the locked system. */
+  background-image: linear-gradient(
+    var(--color-accent-wash),
+    var(--color-accent-wash)
+  );
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 100%;
+  transition:
+    color 180ms cubic-bezier(0.2, 0, 0, 1),
+    text-decoration-color 180ms cubic-bezier(0.2, 0, 0, 1),
+    background-size 340ms cubic-bezier(0.2, 0, 0, 1);
 }
+/* Hover: the text and the dotted underline both shift to #600000
+   (--color-accent-mid), and the highlight sweeps in. */
 .link-dotted:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-mid);
+  text-decoration-color: var(--color-accent-mid);
+  background-size: 100% 100%;
 }
 
 /* Legacy verification-note class — kept for the components that still use it. */
@@ -282,11 +302,39 @@ body {
   padding: 1px 4px;
 }
 .prose a {
-  color: var(--color-ink-3);
+  color: var(--color-ink-2);
   text-decoration: underline dotted;
+  text-decoration-color: var(--color-accent); /* Maroon #800000 underline at rest */
   text-underline-offset: 3px;
+  background-image: linear-gradient(
+    var(--color-accent-wash),
+    var(--color-accent-wash)
+  );
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 100%;
+  transition:
+    color 180ms cubic-bezier(0.2, 0, 0, 1),
+    text-decoration-color 180ms cubic-bezier(0.2, 0, 0, 1),
+    background-size 340ms cubic-bezier(0.2, 0, 0, 1);
 }
-.prose a:hover { color: var(--color-accent); }
+.prose a:hover {
+  color: var(--color-accent-mid);
+  text-decoration-color: var(--color-accent-mid);
+  background-size: 100% 100%;
+}
+
+/* Reduced motion: the highlight still appears on hover, but without the
+   left-to-right sweep — background-size is dropped from the transition so it
+   snaps in instantly. The colour fades are kept (colour is not motion). */
+@media (prefers-reduced-motion: reduce) {
+  .link-dotted,
+  .prose a {
+    transition:
+      color 180ms cubic-bezier(0.2, 0, 0, 1),
+      text-decoration-color 180ms cubic-bezier(0.2, 0, 0, 1);
+  }
+}
 .prose strong { color: var(--color-ink); font-weight: 600; }
 .prose table {
   width: 100%;

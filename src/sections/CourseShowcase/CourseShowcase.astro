@@ -5,8 +5,12 @@
  * The ABE-register adaptation of the shadcn "casestudy-5" block: one large
  * featured course entry above a hairline-separated grid of supporting course
  * entries. Each entry carries a mono caps category tag, an Archivo title with
- * a quieter Ink-2 continuation line, and a maroon "Browse → " action. The whole
- * entry is a stretched link to the course hub.
+ * a quieter Ink-2 continuation line, and a "Browse →" action in the v1
+ * "Colour amplification" CTA register (DESIGN.md §5 Volume Ladder). The whole
+ * entry is a stretched link to the course hub, so the CTA stays a
+ * non-interactive <span> that replicates CTAButton's v1 treatment inline —
+ * nesting a <CTAButton> <a> inside the stretched link would be a link in a
+ * link.
  *
  * Two featured-media variants (the focal slot the source block filled with a
  * photo):
@@ -270,9 +274,17 @@ const showImage = featuredMedia === 'image' && Boolean(featured.image);
     align-items: baseline;
     gap: 0.5rem;
     align-self: start;
+    padding: 4px 0; /* v1 register padding (CTAButton v1) */
   }
+  /* v1 "Colour amplification" register (CTAButton v1, DESIGN.md §5 Volume
+     Ladder): Maroon, weight 600, solid 1px Maroon underline. No frame, no
+     fill. The entry is a stretched link, so this stays a <span>. */
   .cshow__cta-label {
     color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: underline solid;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
     transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
   }
   .cshow__cta-arrow {
