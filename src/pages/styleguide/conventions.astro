@@ -140,6 +140,44 @@ const typeRoles = [
   { class: 't-label', name: 'Label', spec: 'Geist Mono 500 · 11px · tracking 0.1em · uppercase', sample: 'Last verified · 28 Apr 2026' },
   { class: 't-label-footnote', name: 'Label-Footnote', spec: 'Geist Mono 500 · 10px · tracking 0.12em · uppercase', sample: 'Source · Building Commission NSW' },
 ];
+
+// Motion principles — the positive framing of DESIGN.md §4/§6.
+const motionPrinciples = [
+  'Motion is structural, never decorative. It clarifies state and direction; it never announces itself (DESIGN.md §6).',
+  'Hover shifts colour, translates 3px, or sweeps an underline. It never elevates: no shadow, no scale (the Flat-By-Default Rule).',
+  'No entrance cascades, hero reveals, or scroll-triggered animation. Content is present at load.',
+  '3px is the one nudge distance, and 180ms the one hover duration. Reuse them; do not invent new values per component.',
+];
+
+// Duration scale — the literal ms values used across the live components + global.css.
+const motionDurations = [
+  { value: '140ms', name: 'Chrome', use: 'Styleguide sidebar links and index cards — background, colour, and border-colour shifts. The fastest tier; chrome should feel instant.' },
+  { value: '180ms', name: 'Standard', use: 'The default for every component hover: colour, background-color, border-color, and the 3px transform nudge. If a component animates on hover, it animates at 180ms.' },
+  { value: '340ms', name: 'Sweep', use: 'The dotted-link highlight only — background-size grows 0% → 100%, left to right. The single slow channel, paired with quick 180ms colour fades on the same element.' },
+  { value: '60s', name: 'Marquee (legacy)', use: 'The retired trust-bar scroll loop. Used by no current component; catalogued in DESIGN.md §5 as an opt-in alternative only.' },
+];
+
+// Easing curves — each demo class drives a live sweep below (shown at 340ms so the curve is visible).
+const motionEasings = [
+  {
+    value: 'cubic-bezier(0.2, 0, 0, 1)',
+    name: 'Quick-out (--ease-q)',
+    demoClass: 'mo-sweep--q',
+    use: 'The primary curve: fast start, long settle. Drives nearly every hover (CTAButton, MicroCTA, Streamcard, CrossRefLink, StatPanel, CourseShowcase) and the dotted-link grammar in global.css. DESIGN.md names it --ease-q, but it is currently inlined as a literal, not defined as a token.',
+  },
+  {
+    value: 'cubic-bezier(0.25, 1, 0.5, 1)',
+    name: 'Soft-out',
+    demoClass: 'mo-sweep--soft',
+    use: 'A gentler ease-out used only by FAQSection, on the question text and the +/× icon colour shift.',
+  },
+  {
+    value: 'ease',
+    name: 'Keyword default',
+    demoClass: 'mo-sweep--ease',
+    use: 'The CSS ease keyword. Used by the styleguide chrome (sidebar, index cards) and the transform-only nudges in InsuranceCrossSell and StateNavigator.',
+  },
+];
 ---
 
 <StyleguideLayout title="Conventions" activeSlug="__conventions__">
@@ -314,6 +352,189 @@ const typeRoles = [
     </div>
   </section>
 
+  <!-- Motion & animation -->
+  <section class="mt-10">
+    <h2 class="t-label" style="color: var(--color-ink-3);">
+      Motion & animation — structural only
+    </h2>
+    <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 14px; max-width: 75ch;">
+      Every value below is read from the live components and
+      <code>src/styles/global.css</code>. There is no motion token block in
+      <code>@theme</code> yet: durations and easings are inlined as literals at
+      each call site, so this is the catalogue of what is actually shipping.
+    </p>
+
+    <!-- Principles -->
+    <h3 class="t-label-footnote mt-6" style="color: var(--color-ink-3);">
+      Principles
+    </h3>
+    <ul class="mt-3 space-y-2">
+      {
+        motionPrinciples.map((p) => (
+          <li
+            class="t-body flex items-start gap-3 px-5 py-3"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg); color: var(--color-ink-2); font-size: 14px;"
+          >
+            <span style="color: var(--color-info-deep); font-weight: 600;">→</span>
+            <span>{p}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- Duration scale -->
+    <h3 class="t-label-footnote mt-6" style="color: var(--color-ink-3);">
+      Duration scale
+    </h3>
+    <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+      {
+        motionDurations.map((d) => (
+          <div
+            class="flex items-baseline gap-4 px-4 py-3"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+          >
+            <code
+              class="t-display shrink-0"
+              style="color: var(--color-ink); font-size: 1.25rem; line-height: 1; min-width: 4.5rem;"
+            >
+              {d.value}
+            </code>
+            <div class="min-w-0">
+              <p class="t-label" style="color: var(--color-accent);">{d.name}</p>
+              <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+                {d.use}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Easing curves -->
+    <h3 class="t-label-footnote mt-6" style="color: var(--color-ink-3);">
+      Easing curves — hover a card to play the sweep
+    </h3>
+    <div class="mt-3 space-y-3">
+      {
+        motionEasings.map((e) => (
+          <div
+            class="mo-ease-card px-5 py-4"
+            style="border: 1px solid var(--color-rule); background: var(--color-bg);"
+          >
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <p class="t-label" style="color: var(--color-ink);">{e.name}</p>
+              <code class="t-label-footnote" style="color: var(--color-accent);">
+                {e.value}
+              </code>
+            </div>
+            <div class={`mo-sweep ${e.demoClass}`} aria-hidden="true" />
+            <p class="t-body mt-3" style="color: var(--color-ink-2); font-size: 13px;">
+              {e.use}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Patterns -->
+    <h3 class="t-label-footnote mt-6" style="color: var(--color-ink-3);">
+      Motion patterns — hover or focus the demos
+    </h3>
+    <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <!-- Colour shift -->
+      <div class="px-5 py-4" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+        <p class="t-body font-semibold" style="color: var(--color-ink);">Colour shift</p>
+        <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+          The default hover. Text, border, or background crosses to maroon. A
+          colour change, not an elevation, so it holds the Flat-By-Default Rule.
+        </p>
+        <div class="mt-3">
+          <a href="#" class="mo-colour t-label">Hover this label →</a>
+        </div>
+      </div>
+
+      <!-- 3px nudge -->
+      <div class="px-5 py-4" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+        <p class="t-body font-semibold" style="color: var(--color-ink);">3px nudge</p>
+        <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+          A directional translate of exactly 3px. translateX for horizontal
+          arrows and cards; translateY for stacked CTAs.
+        </p>
+        <div class="mt-3">
+          <a href="#" class="mo-nudge t-label">
+            Browse courses <span class="mo-nudge__arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Highlight sweep -->
+      <div class="px-5 py-4" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+        <p class="t-body font-semibold" style="color: var(--color-ink);">Highlight sweep</p>
+        <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+          The dotted-link signature: a pale-maroon background grows 0% → 100%
+          over 340ms while the text and underline deepen. The real
+          <code>.link-dotted</code> grammar.
+        </p>
+        <div class="mt-3">
+          <a href="#" class="link-dotted">Hover this dotted link</a>
+        </div>
+      </div>
+
+      <!-- Accordion swap -->
+      <div class="px-5 py-4" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+        <p class="t-body font-semibold" style="color: var(--color-ink);">Accordion swap</p>
+        <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+          FAQSection toggles a + / × icon by display (no tween); only the icon
+          colour transitions. Open/close is the native
+          <code>&lt;details&gt;</code> element.
+        </p>
+        <details class="mo-acc mt-3">
+          <summary class="mo-acc__summary t-label">
+            <span class="mo-acc__sign" aria-hidden="true" />
+            Open this row
+          </summary>
+          <p class="t-body mt-2" style="color: var(--color-ink-2); font-size: 13px;">
+            The answer body. No height tween — the native element handles it.
+          </p>
+        </details>
+      </div>
+
+      <!-- Focus ring -->
+      <div class="px-5 py-4" style="border: 1px solid var(--color-rule); background: var(--color-bg);">
+        <p class="t-body font-semibold" style="color: var(--color-ink);">Focus ring</p>
+        <p class="t-body mt-1" style="color: var(--color-ink-2); font-size: 13px;">
+          A 2px solid Ink outline at 2px offset (or inset on cards) for
+          <code>:focus-visible</code>. Applied instantly, no transition.
+        </p>
+        <div class="mt-3">
+          <button type="button" class="mo-focus t-label">Tab or click to focus</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reduced motion -->
+    <h3 class="t-label-footnote mt-6" style="color: var(--color-ink-3);">
+      Reduced motion
+    </h3>
+    <div
+      class="t-body mt-3 px-5 py-4"
+      style="border: 1px solid var(--color-rule); background: var(--color-bg); color: var(--color-ink-2); font-size: 14px;"
+    >
+      <p>
+        Under <code>@media (prefers-reduced-motion: reduce)</code>,
+        <code>global.css</code> drops <code>background-size</code> from the
+        dotted-link transition so the highlight snaps in; the colour fades stay,
+        because colour is not motion. <code>CourseShowcase</code> sets its
+        transitions and transforms to <code>none</code>.
+      </p>
+      <p class="mt-2">
+        Coverage is not yet universal: those two files carry a reduced-motion
+        guard, while other hover transitions are short enough (≤180ms colour and
+        3px) to ship without one. New larger movements should add a guard.
+      </p>
+    </div>
+  </section>
+
   <!-- Don'ts -->
   <section class="mt-10">
     <h2 class="t-label" style="color: var(--color-ink-3);">
@@ -333,4 +554,100 @@ const typeRoles = [
       }
     </ul>
   </section>
+
+  <style>
+    /* Live motion demos — each uses the real production durations and curves so
+       the catalogue stays honest. */
+
+    /* Easing — a sweep bar per curve, shown at 340ms (the real sweep duration)
+       so the curve character is visible across the full width. */
+    .mo-sweep {
+      margin-top: 12px;
+      height: 10px;
+      border: 1px solid var(--color-rule);
+      background-image: linear-gradient(
+        var(--color-accent-wash),
+        var(--color-accent-wash)
+      );
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-size: 0% 100%;
+    }
+    .mo-sweep--q { transition: background-size 340ms cubic-bezier(0.2, 0, 0, 1); }
+    .mo-sweep--soft { transition: background-size 340ms cubic-bezier(0.25, 1, 0.5, 1); }
+    .mo-sweep--ease { transition: background-size 340ms ease; }
+    .mo-ease-card:hover .mo-sweep { background-size: 100% 100%; }
+
+    /* Colour shift — 180ms quick-out, the default hover. */
+    .mo-colour {
+      color: var(--color-ink);
+      text-decoration: none;
+      transition: color 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+    .mo-colour:hover { color: var(--color-accent); }
+
+    /* 3px nudge — the arrow translates 3px on hover of the link. */
+    .mo-nudge {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+    .mo-nudge__arrow {
+      display: inline-block;
+      transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+    .mo-nudge:hover .mo-nudge__arrow { transform: translateX(3px); }
+
+    /* Accordion swap — + / × by display, only the colour transitions. */
+    .mo-acc {
+      border: 1px solid var(--color-rule);
+      padding: 8px 12px;
+    }
+    .mo-acc__summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-ink);
+      cursor: pointer;
+      list-style: none;
+    }
+    .mo-acc__summary::-webkit-details-marker { display: none; }
+    .mo-acc__sign {
+      position: relative;
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+    /* + drawn from two 1px bars; the vertical bar hides when open -> ×-like read */
+    .mo-acc__sign::before,
+    .mo-acc__sign::after {
+      content: "";
+      position: absolute;
+      background: var(--color-accent);
+      transition: color 180ms cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .mo-acc__sign::before { inset: 5px 0; height: 2px; }
+    .mo-acc__sign::after { inset: 0 5px; width: 2px; }
+    .mo-acc[open] .mo-acc__sign::after { display: none; }
+
+    /* Focus ring — instant 2px solid ink outline, no transition. */
+    .mo-focus {
+      padding: 8px 14px;
+      border: 1px solid var(--color-ink);
+      background: var(--color-bg);
+      color: var(--color-ink);
+      cursor: pointer;
+    }
+    .mo-focus:focus-visible {
+      outline: 2px solid var(--color-ink);
+      outline-offset: 2px;
+    }
+
+    /* Honour reduced motion in the demos themselves. */
+    @media (prefers-reduced-motion: reduce) {
+      .mo-sweep,
+      .mo-nudge__arrow {
+        transition: none;
+      }
+    }
+  </style>
 </StyleguideLayout>
