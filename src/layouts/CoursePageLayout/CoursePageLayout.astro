@@ -42,6 +42,13 @@ interface Reviewer {
   profileSlug: string;
 }
 
+interface TocItem {
+  /** Short, scannable label (curated, not the full H2). */
+  label: string;
+  /** In-page anchor, e.g. `#how-does-the-course-work`. */
+  href: string;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -69,6 +76,12 @@ interface Props {
    * hero RTOAttributionLine and the footer ASQADisclosures render.
    */
   disclosure?: DisclosureContext;
+  /**
+   * Optional on-page jump index. When supplied, an "On this page" nav renders
+   * below the header chrome, linking each label to its section anchor. Hrefs
+   * should be `#${slugify(heading)}` so they match the section ids.
+   */
+  onThisPage?: TocItem[];
 }
 
 const {
@@ -86,6 +99,7 @@ const {
   faqs,
   aggregateRating,
   disclosure,
+  onThisPage,
 } = Astro.props;
 
 const schema = buildCourseGraph({
@@ -128,6 +142,21 @@ const schema = buildCourseGraph({
       }
     </header>
 
+    {
+      onThisPage && onThisPage.length > 0 && (
+        <nav class="course__toc" aria-label="On this page">
+          <p class="course__toc-label t-label">On this page</p>
+          <ol class="course__toc-list">
+            {onThisPage.map((item) => (
+              <li class="course__toc-item">
+                <a href={item.href} class="link-dotted">{item.label}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
     <main class="course__main">
       <slot />
     </main>
@@ -156,6 +185,27 @@ const schema = buildCourseGraph({
     gap: var(--spacing-lg);
   }
 
+  /* On-page jump index — framed by the two-ornament hairline rules,
+     a 2-up list of dotted anchor links in the label voice. */
+  .course__toc {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-md) 0;
+    border-top: 1px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-ink);
+  }
+  .course__toc-label {
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-ink-3);
+  }
+  .course__toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-xs) var(--spacing-lg);
+  }
+
   .course__main {
     display: flex;
     flex-direction: column;
@@ -177,6 +227,9 @@ const schema = buildCourseGraph({
     .course__main {
       gap: var(--spacing-xxl);
       margin-top: var(--spacing-xxl);
+    }
+    .course__toc-list {
+      grid-template-columns: 1fr;
     }
   }
 </style>
