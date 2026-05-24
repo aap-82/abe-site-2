@@ -87,13 +87,19 @@ Every archetype layout (`HubLayout`, `CoursePageLayout`, `ExpertPageLayout`, `Ho
 
 ### Section structure
 
-A content section separates itself with **a 1px top rule and its own vertical padding**, never a background fill:
+Sections sit in the layout's content column (`.course__main` and the hub / homepage equivalents) — a flex column with `gap: var(--spacing-xxxl)` desktop, `var(--spacing-xxl)` mobile. That gap is the one separator every section gets for free. Two patterns build on it.
 
-- `border-top: 1px solid var(--color-rule)`
-- `padding: var(--spacing-xxl) 0`
-- `scroll-margin-top: var(--spacing-xl)` so an anchor jump lands clear of the heading
+**Ruled content section — the default.** A document-grade content section (a heading plus answer, body, table, or list) marks itself off with three properties on its `<section>` root:
 
-A new section component reproduces this: the layout supplies the gap between sections, the section supplies its own rule and padding.
+- `border-top: 1px solid var(--color-rule)` — the hairline that opens the section
+- `padding: var(--spacing-xxl) 0` — its own vertical padding, inside the rule
+- `scroll-margin-top: var(--spacing-xl)` — so an anchor jump lands clear of the heading
+
+Nine sections use it exactly: AnswerCapsuleSection, ComparisonTable, CourseShowcase, FAQSection, NumberedStepsSection, PricingTable, StatPanel, UnitOfCompetencyList, WhyChooseList. A new content section reproduces all three. The section that renders first on a page resets `border-top` to `0` so the page does not open with a stray rule; AnswerCapsuleSection, the standard course-page opener, carries that `:first-child` reset.
+
+**Band / plate section — the exception.** A full-bleed feature band or a coloured plate is not a ruled document section: it carries no top rule and no vertical padding of its own, and is set apart from its neighbours only by the layout gap. It owns its internal padding and, if coloured, its own ground. This covers the dark RegulatorBand plate and the homepage feature bands (CourseStreams, FinalCTA, TrustBadgeGrid, StateNavigator, CEOQuoteBlock, InsuranceCrossSell).
+
+Two components sit outside both patterns: **HeroTrustBar** is a slim credential strip framed by a 1px Rule line top and bottom with `padding: var(--spacing-sm) 0`; **ScopeLimitNote** is a callout (`<aside>` with a full 1px frame), a member of the callout family, not a rhythm section.
 
 ### Background grounds — no alternation
 

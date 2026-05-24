@@ -89,7 +89,11 @@ const id = anchorId ?? slugify(heading);
 </section>
 
 <style>
+  /* Ruled content section — border-top rule + xxl padding + scroll-margin.
+     The shared pattern; see DESIGN.md "Section parameters". */
   .ptable-section {
+    border-top: 1px solid var(--color-rule);
+    padding: var(--spacing-xxl) 0;
     scroll-margin-top: var(--spacing-xl);
   }
   .ptable__heading {

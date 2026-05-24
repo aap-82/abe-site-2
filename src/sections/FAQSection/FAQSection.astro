@@ -76,7 +76,12 @@ const id = anchorId ?? (heading ? slugify(heading) : 'faq');
 </section>
 
 <style>
+  /* Ruled content section — border-top rule + xxl padding + scroll-margin.
+     The shared pattern; see DESIGN.md "Section parameters". The light Rule
+     line opens the section; the accordion below carries its own heavier
+     1px ink outline. */
   .faqs-section {
+    border-top: 1px solid var(--color-rule);
     padding: var(--spacing-xxl) 0;
     scroll-margin-top: var(--spacing-xl);
   }

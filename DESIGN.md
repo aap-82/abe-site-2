@@ -446,13 +446,17 @@ Every archetype layout (Homepage, Hub, Course, Expert) is built on one frame:
 
 ### Section parameters
 
-A content section marks itself off with **a 1px top rule and its own vertical padding** — never a background fill. Three parameters define every section:
+Two section patterns share the layout's `xxxl` inter-section gap.
 
-- `border-top: 1px solid var(--color-rule)` — the hairline that opens a new section.
-- `padding: var(--spacing-xxl) 0` — 48px of vertical breathing room within the section.
+**The ruled content section** is the default — a document-grade section (a heading with answer, body, table, or list). It marks itself off with three parameters on its `<section>` root, never a background fill:
+
+- `border-top: 1px solid var(--color-rule)` — the hairline that opens the section.
+- `padding: var(--spacing-xxl) 0` — 48px of vertical breathing room within the section, inside the rule.
 - `scroll-margin-top: var(--spacing-xl)` — so an in-page anchor jump lands clear of the heading rather than flush against the viewport top.
 
-Division of labour: the layout owns the `xxxl` gap *between* sections; each section owns its top rule and its `xxl` internal padding. A new section component reproduces these three parameters exactly.
+Division of labour: the layout owns the `xxxl` gap *between* sections; each ruled section owns its top rule and its `xxl` internal padding. Nine sections reproduce these three parameters exactly — AnswerCapsuleSection, ComparisonTable, CourseShowcase, FAQSection, NumberedStepsSection, PricingTable, StatPanel, UnitOfCompetencyList, and WhyChooseList — and a new content section does the same. The first section on a page resets `border-top` to `0` so the page does not open with a stray rule; AnswerCapsuleSection, the standard course-page opener, carries that `:first-child` reset.
+
+**The band / plate section** is the exception — a full-bleed feature band or a coloured plate, not a ruled document section. It carries no top rule and no vertical padding of its own; it is set apart from its neighbours by the layout gap alone, and owns its internal padding and, if coloured, its own ground. The dark RegulatorBand plate and the homepage feature bands (CourseStreams, FinalCTA, TrustBadgeGrid, StateNavigator, CEOQuoteBlock, InsuranceCrossSell) use this pattern. Two further components sit outside both patterns: HeroTrustBar is a slim credential strip framed by a 1px Rule line top and bottom with `sm` padding, and ScopeLimitNote is a callout `<aside>` with a full 1px frame, a member of the callout family rather than a rhythm section.
 
 ### Section background grounds
 

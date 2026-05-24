@@ -29,6 +29,11 @@
  * Fidelity note: the source draft's "can / cannot" two-list table is rendered
  * as a ComparisonTable (the library has no two-column-list component); rows are
  * grouped by work area so every cell carries content.
+ *
+ * Page-scoped styling: the two reviewer cards in the final section sit in a
+ * Cream-2 tonal panel (.ob-reviewer-panel, see <style> below). Per DESIGN.md
+ * "Background grounds", bg-alt is a contained panel inside a section, never a
+ * section-wide ground. The shared ExpertReviewerCard is left untouched.
  */
 import { getEntry } from 'astro:content';
 import CoursePageLayout from '@layouts/CoursePageLayout/CoursePageLayout.astro';
@@ -272,21 +277,45 @@ const faqs = [
     answer="ABE uses a two-stage quality process. The course is developed by a licensed builder, then the published page is independently checked for compliance and currency against current Queensland legislation and QBCC requirements. The two stages keep the course accurate and the page trustworthy."
     body="Stage one is course development by an industry expert who verifies the content against the National Construction Code and Queensland building rules. Stage two is an independent compliance and currency review that confirms the legislative references, regulator details, and permit requirements on this page are accurate and up to date. Each stage is carried out by a named expert, not an anonymous team."
   >
-    <ExpertReviewerCard
-      name="Dominic Ogburn"
-      profileHref="/experts/dominic-ogburn"
-      role="Course Developer, CEO of ABE Education"
-      specialties={['Licensed NSW Builder 369417C', '2005 NSW Fair Trading Award', '40+ Years Experience', '5 Australian Jurisdictions']}
-      bio="Forty-plus years in Australian residential construction, beginning at Stuart Brothers Pty Ltd (Sydney builders since 1886). Co-author of Your Home: Buying, Selling, Renovating, Building (Allen and Unwin, 2004). Cited in NSW Legislative Council Hansard (2001) and six Sydney Morning Herald articles. As CEO of ABE Education, Dominic has developed owner builder and CPD training completed by 31,000+ students across five jurisdictions."
-      reviewNote="Course content developed by Dominic Ogburn, ABE Education."
-    />
-    <ExpertReviewerCard
-      name="Warwick Smith"
-      profileHref="/experts/warwick-smith"
-      role="Compliance and Currency Reviewer, Corporate Development Resource Group"
-      specialties={['27+ Years in VET', 'Senior Consultant', 'Corporate Development Resource Group']}
-      bio="Senior Consultant, Compliance and Operations at Corporate Development Resource Group, with over 27 years across the Australian vocational education and training sector. Former CEO of Training Aid Australia and the Australian Institute of Compliance Professionals. Compliance Manager at TasCollege. Specialist areas include construction, compliance, and operational design."
-      reviewNote="Independently reviews ABE's published course pages for legislative currency and regulatory accuracy."
-    />
+    <div class="ob-reviewer-panel">
+      <ExpertReviewerCard
+        name="Dominic Ogburn"
+        profileHref="/experts/dominic-ogburn"
+        role="Course Developer, CEO of ABE Education"
+        specialties={['Licensed NSW Builder 369417C', '2005 NSW Fair Trading Award', '40+ Years Experience', '5 Australian Jurisdictions']}
+        bio="Forty-plus years in Australian residential construction, beginning at Stuart Brothers Pty Ltd (Sydney builders since 1886). Co-author of Your Home: Buying, Selling, Renovating, Building (Allen and Unwin, 2004). Cited in NSW Legislative Council Hansard (2001) and six Sydney Morning Herald articles. As CEO of ABE Education, Dominic has developed owner builder and CPD training completed by 31,000+ students across five jurisdictions."
+        reviewNote="Course content developed by Dominic Ogburn, ABE Education."
+      />
+      <ExpertReviewerCard
+        name="Warwick Smith"
+        profileHref="/experts/warwick-smith"
+        role="Compliance and Currency Reviewer, Corporate Development Resource Group"
+        specialties={['27+ Years in VET', 'Senior Consultant', 'Corporate Development Resource Group']}
+        bio="Senior Consultant, Compliance and Operations at Corporate Development Resource Group, with over 27 years across the Australian vocational education and training sector. Former CEO of Training Aid Australia and the Australian Institute of Compliance Professionals. Compliance Manager at TasCollege. Specialist areas include construction, compliance, and operational design."
+        reviewNote="Independently reviews ABE's published course pages for legislative currency and regulatory accuracy."
+      />
+    </div>
   </AnswerCapsuleSection>
 </CoursePageLayout>
+
+<style>
+  /*
+   * Tonal panel — the two-stage review block (course developer + compliance
+   * reviewer) reads as one contained object on a Cream-2 ground. Per the
+   * DESIGN.md "Background grounds" rule, bg-alt is a contained panel inside a
+   * section, never a section-wide ground; the page itself stays one Cream-1
+   * ground separated by 1px rules. Scoped to this route, so the shared
+   * ExpertReviewerCard and every other page are unaffected.
+   *
+   * The flex `gap` also supplies the spacing between the two cards, which
+   * ExpertReviewerCard (margin: 0) does not carry itself.
+   */
+  .ob-reviewer-panel {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-bg-alt);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+</style>
