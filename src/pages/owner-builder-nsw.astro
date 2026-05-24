@@ -13,6 +13,7 @@
  * (ComparisonTable cells are plain strings).
  */
 import { getEntry } from 'astro:content';
+import { slugify } from '@/lib/slugify';
 import CoursePageLayout from '@layouts/CoursePageLayout/CoursePageLayout.astro';
 import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
 import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
@@ -108,6 +109,20 @@ const faqs = [
   { question: `Can I sell my home after I have finished?`, answer: `Yes, but if you sell within 7 years and 6 months of the permit being issued, the contract of sale must include a consumer warning that an owner-builder permit was issued. If the warning is missing, the buyer can void the contract before settlement. You also carry statutory warranties under the Home Building Act 1989 that pass to the next owner.` },
   { question: `What can't I do under an Owner Builder Permit?`, answer: `You cannot do specialist work like electrical wiring, plumbing, drainage, gasfitting, or air-conditioning and refrigeration unless you hold the relevant trade licence. Those tasks must be done by an appropriately licensed tradesperson, and you must use a written contract if their work exceeds $5,000.` },
 ];
+
+// On-page jump index. Each href is derived from the exact section heading via
+// slugify, so it always matches the section's auto-generated id.
+const onThisPage = [
+  { label: 'Course overview', heading: 'What is the NSW Owner Builder Course and who needs it?' },
+  { label: 'How the course works', heading: 'How does the course work?' },
+  { label: 'What you will learn', heading: 'What will you learn?' },
+  { label: 'Requirements and eligibility', heading: 'Course requirements and eligibility' },
+  { label: 'Course cost', heading: 'How much does the course cost?' },
+  { label: 'FAQs', heading: 'NSW Owner Builder course FAQs' },
+  { label: 'Why choose ABE', heading: 'Why ABE for your NSW Owner Builder training?' },
+  { label: 'Your training provider', heading: 'About your training provider' },
+  { label: 'How content is reviewed', heading: 'How is the course content developed and reviewed?' },
+].map((s) => ({ label: s.label, href: `#${slugify(s.heading)}` }));
 ---
 
 <CoursePageLayout
@@ -126,6 +141,7 @@ const faqs = [
   provider={{ name: 'AlertForce', url: 'https://training.gov.au/Organisation/Details/91826' }}
   faqs={faqs}
   disclosure={disclosure}
+  onThisPage={onThisPage}
 >
   <AnswerCapsuleSection
     heading="What is the NSW Owner Builder Course and who needs it?"
