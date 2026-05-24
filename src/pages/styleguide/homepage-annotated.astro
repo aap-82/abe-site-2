@@ -1,0 +1,384 @@
+---
+/**
+ * /styleguide/homepage-annotated — a reference copy of the live homepage (/)
+ * with every section wrapped in an AnnotatedSection marker that names the
+ * library component rendering it, its folder, key props, and a link to its
+ * styleguide entry.
+ *
+ * This MIRRORS src/pages/index.astro. It is a hand-kept snapshot, not a live
+ * import, so if the real homepage changes, update the data block below to
+ * match. noIndex is set so the annotated copy never reaches search.
+ */
+import { getEntry } from 'astro:content';
+import HomepageLayout from '@layouts/HomepageLayout/HomepageLayout.astro';
+import AnswerCapsuleSection from '@sections/AnswerCapsuleSection/AnswerCapsuleSection.astro';
+import CourseShowcase from '@sections/CourseShowcase/CourseShowcase.astro';
+import StateNavigator from '@sections/StateNavigator/StateNavigator.astro';
+import ScopeLimitNote from '@sections/ScopeLimitNote/ScopeLimitNote.astro';
+import WhyChooseList from '@sections/WhyChooseList/WhyChooseList.astro';
+import NumberedStepsSection from '@sections/NumberedStepsSection/NumberedStepsSection.astro';
+import RegulatorBand from '@sections/RegulatorBand/RegulatorBand.astro';
+import HeroTrustBar from '@sections/HeroTrustBar/HeroTrustBar.astro';
+import CEOQuoteBlock from '@sections/CEOQuoteBlock/CEOQuoteBlock.astro';
+import InsuranceCrossSell from '@sections/InsuranceCrossSell/InsuranceCrossSell.astro';
+import FAQSection from '@sections/FAQSection/FAQSection.astro';
+import FinalCTA from '@sections/FinalCTA/FinalCTA.astro';
+import AnnotatedSection from '@/dev/AnnotatedSection.astro';
+
+const entry = await getEntry('pages-homepage', 'index');
+if (!entry) throw new Error('Missing content entry: pages-homepage/index');
+const meta = entry.data;
+
+const navItems = [
+  { name: 'White Card courses', url: '/white-card' },
+  { name: 'Owner Builder courses', url: '/owner-builder' },
+  { name: 'CPD courses', url: '/cpd' },
+];
+
+const featuredCourse = {
+  num: '01',
+  tag: 'Owner Builder permits / five states',
+  title: 'Become a licensed owner builder.',
+  continuation: 'Build or renovate your own home legally, with the certificate your state permit authority accepts.',
+  ctaLabel: 'Browse Owner Builder',
+  href: '/owner-builder',
+  states: ['NSW', 'QLD', 'WA', 'TAS', 'ACT'],
+  facts: [
+    { label: 'Delivery', value: '100% online, self-paced' },
+    { label: 'Recognition', value: 'RTO 91826 plus four state regulators' },
+    { label: 'Start', value: 'Enrol and begin today' },
+  ],
+};
+
+const supportingCourses = [
+  {
+    num: '02',
+    tag: 'Construction induction / nationally recognised',
+    title: 'Get your White Card online.',
+    continuation: 'The CPCWHS1001 induction every site requires, issued the same day.',
+    ctaLabel: 'Browse White Card',
+    href: '/white-card',
+  },
+  {
+    num: '03',
+    tag: 'Continuing professional development',
+    title: 'Keep your registration current.',
+    continuation: 'Regulator-aligned CPD points for licensed practitioners, completed in an evening.',
+    ctaLabel: 'Browse CPD',
+    href: '/cpd',
+  },
+];
+
+const stateBoard = [
+  {
+    abbr: 'NSW',
+    name: 'New South Wales',
+    courses: [
+      { label: 'White Card', href: '/white-card-nsw' },
+      { label: 'Owner Builder', href: '/owner-builder-nsw' },
+    ],
+  },
+  {
+    abbr: 'QLD',
+    name: 'Queensland',
+    courses: [
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', href: '/owner-builder-qld' },
+    ],
+  },
+  {
+    abbr: 'WA',
+    name: 'Western Australia',
+    courses: [
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
+      { label: 'CPD for real-estate agents', status: 'Coming soon' },
+    ],
+  },
+  {
+    abbr: 'TAS',
+    name: 'Tasmania',
+    courses: [
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
+      { label: 'CPD for building practitioners', status: 'Coming soon' },
+    ],
+  },
+  {
+    abbr: 'ACT',
+    name: 'Australian Capital Territory',
+    courses: [
+      { label: 'White Card', status: 'Coming soon' },
+      { label: 'Owner Builder', status: 'Coming soon' },
+    ],
+  },
+];
+
+const whyItems = [
+  { title: 'Verifiable authority', text: `every claim links back to a .gov.au source you can check yourself` },
+  { title: 'Named experts', text: `courses are reviewed by industry-credentialled people, not anonymous training teams` },
+  { title: '100% online', text: `start in minutes, complete on your schedule, on any device` },
+  { title: 'Australian support', text: `phone and email support during business hours` },
+  { title: 'State-specific content', text: `courses written for the regulator that issues your certificate, not generic copy` },
+];
+
+const steps = [
+  { title: 'Pick your course', text: `Choose by course type or by state. Each landing page lists the regulator, the certificate you will receive, and the price.` },
+  { title: 'Enrol and learn online', text: `Pay online, log in, and start. Our courses run in any modern browser: phone, tablet, or computer. You can pause and resume any time.` },
+  { title: 'Get certified', text: `Pass the assessment and your certificate is issued by the appropriate authority: Blue Dog Training, AlertForce, or directly by the relevant state regulator.` },
+];
+
+const trustStats = [
+  { value: '4.8 / 5', label: '52 Google reviews' },
+  { value: '95%', label: 'First-attempt pass rate' },
+  { value: '31,000+', label: 'Students certified' },
+  { value: 'Since 2007', label: 'Australian provider' },
+];
+
+const faqs = [
+  { question: 'Is ABE Education a registered training organisation (RTO)?', answer: `No, and we don't claim to be. ABE partners with RTOs to deliver White Card training across all states and the NSW Owner Builder qualification, since NSW requires Owner Builder training to be issued by a registered training organisation. For Owner Builder in QLD, WA, TAS, and ACT, and for all CPD courses, ABE holds direct state-regulator approval and delivers the training itself.` },
+  { question: 'Are ABE Education courses nationally recognised?', answer: `White Card courses and the NSW Owner Builder qualification are nationally recognised; both are delivered by RTO partners and lead to Statements of Attainment for nationally accredited units of competency. Owner Builder courses in QLD, WA, TAS, and ACT, plus all CPD courses, are not ASQA-accredited; they are approved by individual state regulators and accepted only in the state that approves them.` },
+  { question: 'Where can I take an ABE Education course?', answer: `All ABE courses are 100% online. White Card is offered in NSW, QLD, WA, TAS, and ACT. Owner Builder is offered in NSW, QLD, WA, TAS, and ACT. CPD is offered to building, plumbing, and electrical practitioners in Tasmania, and to real-estate agents in WA.` },
+  { question: 'How quickly can I get certified?', answer: `Most White Card students finish the same day. Owner Builder courses are longer and typically take a few days to a week, depending on the state. Once you pass, your certificate is issued by the relevant authority, usually within 1 to 2 business days.` },
+  { question: `How do I verify ABE's accreditation?`, answer: `Every accreditation claim on our site links to a .gov.au or training.gov.au page you can check yourself. White Card RTOs are listed on training.gov.au under RTO 31193 (Blue Dog Training) and RTO 91826 (AlertForce). Owner Builder and CPD approvals are listed on each state regulator's website.` },
+];
+---
+
+<HomepageLayout
+  title={`Annotated · ${meta.title}`}
+  description={meta.description}
+  canonical={meta.canonical}
+  lastUpdated={meta.lastUpdated}
+  pageHeading="Online Construction Training Trusted Across Australia"
+  navItems={navItems}
+  noIndex={true}
+>
+  <div class="amap-banner">
+    <p class="amap-banner__title">Homepage section map</p>
+    <p class="amap-banner__body">
+      A reference copy of the live homepage (<a href="/">/</a>). Each block is
+      framed and labelled with the library component that renders it, its
+      folder, its key props, and a link to its styleguide entry. Page chrome
+      below — the H1 and last-updated stamp — comes from
+      <a href="/styleguide/page-heading"><code>&lt;PageHeading /&gt;</code></a>
+      inside
+      <code>HomepageLayout</code>; the section flow is the slot it wraps.
+    </p>
+  </div>
+
+  <AnnotatedSection
+    num="01"
+    name="AnswerCapsuleSection"
+    group="sections"
+    slug="answer-capsule-section"
+    props={['heading', 'answer', 'body']}
+    note="§01 the plain-language answer capsule (Source Serif prose)."
+  >
+    <AnswerCapsuleSection
+      heading="Who is ABE Education?"
+      answer="ABE Education is an Australian online training provider specialising in construction-industry courses. We work with registered training organisations to deliver nationally recognised qualifications, and we hold direct approval from state regulators for Owner Builder and CPD courses across Queensland, Western Australia, Tasmania, and the ACT."
+      body="Every course is built and reviewed by industry-credentialled experts, then delivered online so you can complete it from a phone, tablet, or laptop. You will never sit in a classroom, drive across the state, or take a day off work to get certified. More than 31,000 students have used ABE Education to meet a regulator's training requirement, first time, on time."
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="02"
+    name="CourseShowcase"
+    group="sections"
+    slug="course-showcase"
+    props={['heading', 'intro', 'featured', 'items ×2']}
+    note="Owner Builder featured (#01) over White Card + CPD."
+  >
+    <CourseShowcase
+      heading="What courses do we offer?"
+      intro="Three streams of construction training, each matched to the regulator that approves it in your state."
+      featured={featuredCourse}
+      items={supportingCourses}
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="03"
+    name="StateNavigator"
+    group="sections"
+    slug="state-navigator"
+    props={['heading', 'variant="board"', 'states ×5']}
+  >
+    <StateNavigator
+      heading="Find your course by state"
+      variant="board"
+      states={stateBoard}
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="04"
+    name="ScopeLimitNote"
+    group="sections"
+    slug="scope-limit-note"
+    props={['(default slot)']}
+    note="No heading prop; content is the slot."
+  >
+    <ScopeLimitNote>
+      Not in this list = not currently offered. ABE does not deliver courses in
+      Victoria, South Australia, or the Northern Territory at this time.
+    </ScopeLimitNote>
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="05"
+    name="WhyChooseList"
+    group="sections"
+    slug="why-choose-list"
+    props={['heading', 'answer', 'items ×5', 'style="ticked"']}
+  >
+    <WhyChooseList
+      heading="Why choose ABE Education?"
+      answer="ABE Education combines RTO partnerships with direct state-regulator approvals, giving you more verifiable authority than a single-RTO provider. Every course is built and reviewed by named subject-matter experts, delivered fully online, and backed by a support team based in Australia."
+      items={whyItems}
+      style="ticked"
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="06"
+    name="NumberedStepsSection"
+    group="sections"
+    slug="numbered-steps-section"
+    props={['heading', 'answer', 'steps ×3']}
+  >
+    <NumberedStepsSection
+      heading="How does ABE Education work?"
+      answer="Choose your state and course, complete the online enrolment, and start learning straight away. Most courses are self-paced, finished in a single sitting or split across a few days. When you finish, your certificate is issued by the relevant authority, usually within 1 to 2 business days."
+      steps={steps}
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="07"
+    name="RegulatorBand"
+    group="sections"
+    slug="regulator-band"
+    props={['heading', 'stats ×4']}
+    note="Trust-stripe Variant C-blue (Stripe Singleton Rule)."
+  >
+    <RegulatorBand heading="ABE Education trust signals" stats={trustStats} />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="08"
+    name="HeroTrustBar"
+    group="sections"
+    slug="hero-trust-bar"
+    props={['heading', 'label', 'credentials ×3']}
+  >
+    <HeroTrustBar
+      heading="Government provider listings"
+      label="Listed as an approved provider by"
+      credentials={[
+        { regulator: 'CBOS Tasmania', state: 'TAS' },
+        { regulator: 'Access Canberra', state: 'ACT' },
+        { regulator: 'Consumer Protection WA', state: 'WA' },
+      ]}
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="09"
+    name="CEOQuoteBlock"
+    group="sections"
+    slug="ceo-quote-block"
+    props={['heading', 'quote', 'name', 'role', 'profileHref']}
+  >
+    <CEOQuoteBlock
+      heading="A note from our CEO"
+      quote="When we started ABE Education in 2007, the brief was simple: make compliance training work for the people who actually need it. Builders, tradies, owner-builders, agents, people whose day starts on a job site or in a client's home, not in a classroom. Two decades on, every course we publish gets tested against the same question: can a busy professional finish this between appointments and walk out with the certificate they need? If the answer is no, we keep working until it is."
+      name="Dominic Ogburn"
+      role="CEO and Course Developer"
+      profileHref="/experts/dominic-ogburn"
+      profileLabel="Read Dominic's expert profile"
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="10"
+    name="InsuranceCrossSell"
+    group="sections"
+    slug="insurance-cross-sell"
+    props={['heading', 'intro', 'covers ×4', 'afslDisclosure']}
+  >
+    <InsuranceCrossSell
+      heading="Insurance for the work you're certified to do"
+      intro="Getting certified is one part of being on a job site; having the right cover is the other. ABE works with InsuranceTek (an Authorised Representative of Ausure Pty Ltd, Australian Financial Services Licence 238433) to help students explore tailored insurance options matched to the work they are trained for."
+      covers={[
+        { title: 'Owner-Builder construction insurance', description: 'Public liability and contract works for owner-builder projects.', href: '/insurance/owner-builder' },
+        { title: 'Builder cover', description: 'Public liability, contract works, and tools cover for licensed builders.', href: '/insurance/builders' },
+        { title: 'Tradie cover', description: 'Public liability and tools-of-trade cover for sub-contractors and sole traders.', href: '/insurance/tradie' },
+        { title: 'Real-estate cover', description: 'Professional indemnity for agents and property managers.', href: '/insurance/real-estate' },
+      ]}
+      afslDisclosure="Insurance is provided through InsuranceTek (ABN 61 690 267 988), Authorised Representative of Ausure Pty Ltd (AFSL 238433). ABE Education does not provide financial advice. Consider the relevant Product Disclosure Statement and your own circumstances before making any decision."
+    />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="11"
+    name="FAQSection"
+    group="sections"
+    slug="faq-section"
+    props={['heading', 'items ×5']}
+  >
+    <FAQSection heading="Frequently asked questions" items={faqs} />
+  </AnnotatedSection>
+
+  <AnnotatedSection
+    num="12"
+    name="FinalCTA"
+    group="sections"
+    slug="final-cta"
+    props={['heading', 'body', 'primaryLabel', 'primaryHref']}
+  >
+    <FinalCTA
+      heading="Get the certificate your state regulator accepts, start today"
+      body="Browse every ABE course by type or by state. Each course page lists the regulator, the certificate, and the price up front."
+      primaryLabel="Browse all courses"
+      primaryHref="/courses"
+    />
+  </AnnotatedSection>
+</HomepageLayout>
+
+<style>
+  /* Reference banner — same blue meta register as the section markers. */
+  .amap-banner {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--color-info-wash);
+    border: 1px solid var(--color-info-soft);
+  }
+  .amap-banner__title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-info-deep);
+    margin: 0;
+  }
+  .amap-banner__body {
+    margin: var(--spacing-xs) 0 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    max-width: 75ch;
+  }
+  .amap-banner__body a {
+    color: var(--color-info-deep);
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+  }
+  .amap-banner code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--color-bg);
+    padding: 1px 4px;
+  }
+</style>

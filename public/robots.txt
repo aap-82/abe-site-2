@@ -1,0 +1,15 @@
+# robots.txt — ABE Education
+# https://www.abeeducation.edu.au
+#
+# Search and AI crawlers are welcome across the public site. Per-page
+# indexing is controlled by each page's <meta name="robots"> tag, set
+# from the `noIndex` frontmatter field.
+
+User-agent: *
+Allow: /
+
+# Internal tooling and samples — not for indexing.
+Disallow: /styleguide
+Disallow: /sample
+
+Sitemap: https://www.abeeducation.edu.au/sitemap.xml

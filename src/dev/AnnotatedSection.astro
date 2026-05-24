@@ -1,0 +1,123 @@
+---
+/**
+ * AnnotatedSection — a reference-only wrapper that marks which library
+ * component renders each block of a page. Lives in src/dev/ (outside
+ * components/sections/layouts) so the styleguide auto-discovery never picks
+ * it up. Used by /styleguide/homepage-annotated to map the live homepage.
+ *
+ * The annotation chrome uses the Regulator Blue (information) register
+ * throughout, so it reads as meta overlay and never competes with the
+ * maroon action register inside the real sections.
+ */
+interface Props {
+  /** Render order on the page, e.g. "01". */
+  num: string;
+  /** PascalCase component name, e.g. "CourseShowcase". */
+  name: string;
+  /** Library folder the component lives in. */
+  group: 'sections' | 'components' | 'layouts';
+  /** kebab slug for the /styleguide/<slug> link. */
+  slug: string;
+  /** Short prop summary chips, e.g. ['variant="board"', 'states ×5']. */
+  props?: string[];
+  /** Optional one-line note about the block. */
+  note?: string;
+}
+const { num, name, group, slug, props = [], note } = Astro.props;
+---
+
+<div class="amark">
+  <div class="amark__bar">
+    <span class="amark__num">{num}</span>
+    <a class="amark__name" href={`/styleguide/${slug}`}>&lt;{name} /&gt;</a>
+    <span class="amark__group">{group}</span>
+    {
+      props.length > 0 && (
+        <ul class="amark__props">
+          {props.map((p) => (
+            <li class="amark__prop">{p}</li>
+          ))}
+        </ul>
+      )
+    }
+    {note && <p class="amark__note">{note}</p>}
+  </div>
+  <div class="amark__body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  /* Dashed blue frame marks the section's boundary; the bar names it. */
+  .amark {
+    position: relative;
+    outline: 1px dashed var(--color-info-soft);
+    outline-offset: 6px;
+  }
+
+  .amark__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 10px;
+    margin-bottom: var(--spacing-md);
+    padding: 6px 10px;
+    background: var(--color-info-wash);
+    border: 1px solid var(--color-info-soft);
+  }
+
+  .amark__num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-info-deep);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .amark__name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-info-deep);
+    text-decoration: underline dotted;
+    text-decoration-color: var(--color-info);
+    text-underline-offset: 3px;
+  }
+  .amark__name:hover {
+    color: var(--color-info);
+  }
+
+  .amark__group {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .amark__props {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .amark__prop {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-ink-2);
+    background: var(--color-bg);
+    border: 1px solid var(--color-info-soft);
+    padding: 2px 6px;
+  }
+
+  .amark__note {
+    flex-basis: 100%;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-ink-2);
+  }
+</style>

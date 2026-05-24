@@ -12,10 +12,10 @@
  *
  * BUILD STATUS — HOLD before publish. Three gates, all carried from the
  * source draft (owner-builder-qld.md v0.9):
- *   1. QBCC approval pending. `noIndex` is set so the page is not indexed
- *      until approval lands. Every approval-dependent claim uses the
- *      pre-approval-safe wording (see the "Why choose" item and the
- *      "Who approves this course?" FAQ).
+ *   1. QBCC approval pending. `noIndex: true` in the frontmatter keeps the
+ *      page out of search, /sitemap.xml and /llms.txt until approval lands.
+ *      Every approval-dependent claim uses the pre-approval-safe wording
+ *      (see the "Why choose" item and the "Who approves this course?" FAQ).
  *   2. ABE course price unconfirmed. The PricingTable row shows a visible
  *      [TO VERIFY] placeholder — replace before publish.
  *   3. No `reviewer` is passed. Warwick Smith's QLD compliance and currency
@@ -174,7 +174,7 @@ const faqs = [
   description={meta.description}
   canonical={meta.canonical}
   lastUpdated={meta.lastUpdated}
-  noIndex={true}
+  noIndex={meta.noIndex}
   pageHeading="Owner Builder Course QLD — Online Training for Your Permit"
   breadcrumbs={[
     { label: 'Home', href: '/' },

@@ -43,6 +43,11 @@ const seoFields = {
   canonical: z.string().url(),
   lastUpdated: isoDate,
   ogImage: z.string().optional(),
+  // When true the page emits <meta robots="noindex,nofollow"> and is left
+  // out of /sitemap.xml and /llms.txt. Use for pages on hold (pending
+  // regulator approval, drafts). Defaults to false, so every existing page
+  // and any new page is indexable unless it explicitly opts out.
+  noIndex: z.boolean().default(false),
 };
 
 // -- Collections --------------------------------------------------------------

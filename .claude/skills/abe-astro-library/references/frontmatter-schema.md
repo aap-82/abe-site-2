@@ -14,6 +14,7 @@ All fields below are listed as `name: type — required? — notes`.
 | `canonical` | URL string | ✓ | Full canonical URL. `https://www.abeeducation.edu.au/...`. |
 | `lastUpdated` | ISO date `YYYY-MM-DD` | ✓ | When the page content was last reviewed. Never git-derived. |
 | `ogImage` | string | — | Path to OG image. Defaults to a per-archetype fallback. |
+| `noIndex` | boolean | — | Default `false`. When `true`, the page emits `noindex,nofollow` and is excluded from `/sitemap.xml` and `/llms.txt`. Use for pages on hold (pending approval, drafts). Set here in frontmatter, never hardcoded in the route. |
 | `pageType` | literal | ✓ | One of `homepage` / `hub` / `course-state` / `expert`. |
 
 ## Collection: `pages-homepage`
